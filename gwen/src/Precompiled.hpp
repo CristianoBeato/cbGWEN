@@ -30,7 +30,8 @@
 #ifndef __PRECOMPILED_HPP__
 #define __PRECOMPILED_HPP__
 
-#include <stdlib.h>
+#include <cstdint>
+#include <cstdlib>
 #include <memory.h>
 #include <set>
 #include <list>
@@ -44,6 +45,6 @@
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Canvas.h"
 #include "Gwen/Align.h"
-//#include "Gwen/"
+#include "Gwen/Platform/Platform.h"
 
 #endif //!__PRECOMPILED_HPP__
