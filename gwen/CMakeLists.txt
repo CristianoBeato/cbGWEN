@@ -38,7 +38,6 @@ else()
 endif()
 
 ## main include dir 
-include_directories( ${CMAKE_SOURCE_DIR}/include/Gwen )
+include_directories( ${CMAKE_SOURCE_DIR}/include )
 add_subdirectory( src )
-
-
+add_subdirectory( UnitTest )

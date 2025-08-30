@@ -38,7 +38,9 @@ set( GWEN_SOURCES_MAIN
     ${CMAKE_CURRENT_SOURCE_DIR}/Skin.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utility.cpp
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platforms/Renderers/OpenGL.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platforms/Renderers/FontData.h
+
     ${CMAKE_SOURCE_DIR}/include/Gwen/Align.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Anim.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/BaseRender.h
@@ -53,7 +55,6 @@ set( GWEN_SOURCES_MAIN
     ${CMAKE_SOURCE_DIR}/include/Gwen/Hook.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/InputHandler.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Macros.h
-    ${CMAKE_SOURCE_DIR}/include/Gwen/Platform.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Skin.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Structures.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/TextObject.h
@@ -65,6 +66,8 @@ set( GWEN_SOURCES_MAIN
     ${CMAKE_SOURCE_DIR}/include/Gwen/Skins/Simple.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Skins/TexturedBase.h
     ${CMAKE_SOURCE_DIR}/include/Gwen/Skins/Texturing.h
+    ${CMAKE_SOURCE_DIR}/include/Gwen/Platform/Platform.h
+    ${CMAKE_SOURCE_DIR}/include/Gwen/Platform/Renderers/OpenGL.h
     )
 
 set( GWEN_SOURCES_CONTROLS
@@ -220,7 +223,7 @@ set( GWEN_SOURCES
     )
 
 add_library( cbGewen STATIC ${GWEN_SOURCES} )
-#target_include_directories( cbGewen PRIVATE ${CMAKE_SOURCE_DIR} )
+target_include_directories( cbGewen PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} )
 target_precompile_headers( cbGewen 
     PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Precompiled.hpp>" 
     PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_SOURCE_DIR}/include/Gwen/Gwen.h>" 
