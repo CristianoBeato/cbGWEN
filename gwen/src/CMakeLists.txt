@@ -38,6 +38,7 @@ set( GWEN_SOURCES_MAIN
     ${CMAKE_CURRENT_SOURCE_DIR}/Skin.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utility.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platforms/SDL3Platform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Platforms/Renderers/OpenGL.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Platforms/Renderers/FontData.h
 
