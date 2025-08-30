@@ -23,21 +23,20 @@ namespace Gwen
 		class Canvas;
 	}
 
-	namespace CursorType
+	enum CursorType : uint8_t
 	{
-		static const unsigned char Normal	= 0;
-		static const unsigned char Beam		= 1;
-		static const unsigned char SizeNS	= 2;
-		static const unsigned char SizeWE	= 3;
-		static const unsigned char SizeNWSE	= 4;
-		static const unsigned char SizeNESW	= 5;
-		static const unsigned char SizeAll	= 6;
-		static const unsigned char No		= 7;
-		static const unsigned char Wait		= 8;
-		static const unsigned char Finger	= 9;
-
-		static const unsigned char Count	= 10;
-	}
+		CURSOR_NORMAL	= 0,
+		CURSOR_BEAM,
+		CURSOR_SIZENS,
+		CURSOR_SIZEWE,
+		CURSOR_SIZENWSE,
+		CURSOR_SIZENESW,
+		CURSOR_SIZEALL,
+		CURSOR_NO,
+		CURSOR_WAIT,
+		CURSOR_FINGER,
+		CURSOR_COUNT
+	};
 
 	typedef std::wstring UnicodeString;
 	typedef std::string String;
