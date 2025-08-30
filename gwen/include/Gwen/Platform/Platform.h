@@ -98,4 +98,5 @@ namespace Gwen
 		};
 	}
 }
-#endif
+
+#endif //!GWEN_PLATFORM_H

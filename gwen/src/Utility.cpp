@@ -3,22 +3,16 @@
 	Copyright (c) 2010 Facepunch Studios
 	See license in Gwen.h
 */
-
-#include "Gwen/ToolTip.h"
-#include "Gwen/Utility.h"
-
-#include <cstdio>
-
-using namespace Gwen;
+#include "Precompiled.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4267)// conversion from 'size_t' to 'int', possible loss of data
 #endif
 
-#ifdef __MINGW32__
-#undef vswprintf
-#define vswprintf _vsnwprintf
-#endif
+//#ifdef __GNUC__
+//#undef vswprintf
+//#define vswprintf _vsnwprintf
+//#endif
 
 #ifdef _MSC_VER
 #define GWEN_FNULL "NUL"
@@ -31,38 +25,42 @@ UnicodeString Gwen::Utility::Format( const wchar_t* fmt, ... )
 {
 	va_list s;
 	int len = 0;
-	
+	UnicodeString strOut;
 	va_start( s, fmt );
 	
+#if 0
 	// Determine the length of the resulting string, this method is much faster
 	// than looping and reallocating a bigger buffer size.
 	{	
 		FILE* fnull = fopen( GWEN_FNULL, "wb" );
 		va_list c;
 		va_copy( c, s );
-		len = vfwprintf( fnull, fmt, c );
+		len = std::vfwprintf( fnull, fmt, c );
 		va_end( c );
 		fclose( fnull );
 	} 
 	
-	UnicodeString strOut;
 	
 	if (len > 0)
 	{
 		strOut.resize( len + 1 );
 		va_list c;
 		va_copy( c, s );
-		len = vswprintf( &strOut[0], strOut.size(), fmt, c );
+		len = std::vswprintf( &strOut[0], strOut.size(), fmt, c );
 		va_end( c );
 		strOut.resize( len );
 	}
+#else
+	static const uint32_t k_MAX_LEN = 4086;
+	wchar_t str[k_MAX_LEN];
+	std::vswprintf( str, k_MAX_LEN, fmt, s );
+	strOut = str;
+#endif
 	
 	va_end( s );
 	
 	return strOut;
 }
-
-
 
 void Gwen::Utility::Strings::Split( const Gwen::String & str, const Gwen::String & seperator, Strings::List & outbits, bool bLeave )
 {
@@ -77,7 +75,8 @@ void Gwen::Utility::Strings::Split( const Gwen::String & str, const Gwen::String
 		iOffset = i + iSepLen;
 		i = str.find( seperator, iOffset );
 
-		if ( bLeave ) { iOffset -= iSepLen; }
+		if ( bLeave )
+			iOffset -= iSepLen;
 	}
 
 	outbits.push_back( str.substr( iOffset, iLength - iOffset ) );
@@ -96,7 +95,8 @@ void Gwen::Utility::Strings::Split( const Gwen::UnicodeString & str, const Gwen:
 		iOffset = i + iSepLen;
 		i = str.find( seperator, iOffset );
 
-		if ( bLeave ) { iOffset -= iSepLen; }
+		if ( bLeave )
+			iOffset -= iSepLen;
 	}
 
 	outbits.push_back( str.substr( iOffset, iLength - iOffset ) );
@@ -104,32 +104,38 @@ void Gwen::Utility::Strings::Split( const Gwen::UnicodeString & str, const Gwen:
 
 int Gwen::Utility::Strings::To::Int( const Gwen::String & str )
 {
-	if ( str == "" ) { return 0; }
+	if ( str == "" ) 
+		return 0; 
 
-	return atoi( str.c_str() );
+	return std::atoi( str.c_str() );
 }
 
 float Gwen::Utility::Strings::To::Float( const Gwen::String & str )
 {
-	if ( str == "" ) { return 0.0f; }
+	if ( str == "" )
+		return 0.0f;
 
-	return ( float ) atof( str.c_str() );
+	return ( float ) std::atof( str.c_str() );
 }
 
 float Gwen::Utility::Strings::To::Float( const Gwen::UnicodeString & str )
 {
-	return wcstod( str.c_str(), NULL );
+	return std::wcstod( str.c_str(), nullptr );
 }
 
 bool Gwen::Utility::Strings::To::Bool( const Gwen::String & str )
 {
-	if ( str.size() == 0 ) { return false; }
+	if ( str.size() == 0 )
+		return false;
 
-	if ( str[0] == 'T' || str[0] == 't' || str[0] == 'y' || str[0] == 'Y' ) { return true; }
+	if ( str[0] == 'T' || str[0] == 't' || str[0] == 'y' || str[0] == 'Y' )
+		return true;
 
-	if ( str[0] == 'F' || str[0] == 'f' || str[0] == 'n' || str[0] == 'N' ) { return false; }
+	if ( str[0] == 'F' || str[0] == 'f' || str[0] == 'n' || str[0] == 'N' )
+		return false;
 
-	if ( str[0] == '0' ) { return false; }
+	if ( str[0] == '0' )
+		return false;
 
 	return true;
 }
@@ -189,10 +195,10 @@ void Gwen::Utility::Strings::Strip( Gwen::UnicodeString & str, const Gwen::Unico
 	Gwen::UnicodeString Source = str;
 	str = L"";
 
-	for ( unsigned int i = 0; i < Source.length(); i++ )
+	for ( uint32_t i = 0; i < Source.length(); i++ )
 	{
 		if ( chars.find( Source[i] ) != Gwen::UnicodeString::npos )
-		{ continue; }
+			continue; 
 
 		str += Source[i];
 	}
