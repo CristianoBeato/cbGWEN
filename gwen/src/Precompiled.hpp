@@ -27,8 +27,14 @@
 ============================================================================================
 */
 
-#ifndef GWEN_GWEN_H
-#define GWEN_GWEN_H
+#ifndef __PRECOMPILED_HPP__
+#define __PRECOMPILED_HPP__
+
+#include <stdlib.h>
+#include <memory.h>
+#include <set>
+#include <list>
+#include <algorithm>
 
 #include "Gwen/Macros.h"
 #include "Gwen/Config.h"
@@ -38,59 +44,6 @@
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Canvas.h"
 #include "Gwen/Align.h"
+//#include "Gwen/"
 
-// Enable the hook system (se Hook.h)
-#define GWEN_HOOKSYSTEM
-
-namespace Gwen
-{
-	namespace Controls
-	{
-		class Base;
-		class Canvas;
-	}
-
-	namespace Renderer
-	{
-		class Base;
-	}
-
-	namespace Debug
-	{
-		void GWEN_EXPORT Msg( const wchar_t* str, ... );
-		void GWEN_EXPORT Msg( const char* str, ... );
-		void GWEN_EXPORT AssertCheck( bool b, const char* strMsg );
-	}
-
-
-	namespace Colors
-	{
-		static const Color Black( 0, 0, 0, 255 );
-		static const Color Red( 255, 0, 0, 255 );
-		static const Color Yellow( 255, 255, 0, 255 );
-		static const Color White( 255, 255, 255, 255 );
-		static const Color Blue( 0, 0, 255, 255 );
-		static const Color Green( 0, 255, 0, 255 );
-		static const Color Grey( 200, 200, 200, 255 );
-		static const Color GreyLight( 230, 230, 230, 255 );
-		static const Color GwenPink( 255, 65, 199, 255 );
-
-
-	};
-
-	extern GWEN_EXPORT Controls::Base*	HoveredControl;
-	extern GWEN_EXPORT Controls::Base*	KeyboardFocus;
-	extern GWEN_EXPORT Controls::Base*	MouseFocus;
-
-	namespace Input
-	{
-		inline void Blur( void )
-		{
-			if ( KeyboardFocus )
-			{ KeyboardFocus->Blur(); }
-		}
-	}
-
-} //namespace Gwen
-
-#endif
+#endif //!__PRECOMPILED_HPP__
