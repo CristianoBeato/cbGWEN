@@ -27,62 +27,42 @@
 ============================================================================================
 */
 
-#ifndef GWEN_GWEN_H
-#define GWEN_GWEN_H
-
-#include "Gwen/Macros.h"
-#include "Gwen/Config.h"
-#include "Gwen/Exports.h"
-#include "Gwen/Structures.h"
-#include "Gwen/AutoPointer.h"
-#include "Gwen/Platform/Platform.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Canvas.h"
-#include "Gwen/Align.h"
-
-// Enable the hook system (se Hook.h)
-#define GWEN_HOOKSYSTEM
+#include "Precompiled.hpp"
+#include "Gwen/Debug.h"
 
 namespace Gwen
 {
-	namespace Controls
+	namespace Debug
 	{
-		class Base;
-		class Canvas;
-	}
-
-	namespace Renderer
-	{
-		class Base;
-	}
-
-	namespace Colors
-	{
-		static const Color Black( 0, 0, 0, 255 );
-		static const Color Red( 255, 0, 0, 255 );
-		static const Color Yellow( 255, 255, 0, 255 );
-		static const Color White( 255, 255, 255, 255 );
-		static const Color Blue( 0, 0, 255, 255 );
-		static const Color Green( 0, 255, 0, 255 );
-		static const Color Grey( 200, 200, 200, 255 );
-		static const Color GreyLight( 230, 230, 230, 255 );
-		static const Color GwenPink( 255, 65, 199, 255 );
-	};
-
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	HoveredControl;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	KeyboardFocus;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	MouseFocus;
-
-	namespace Input
-	{
-		inline void Blur( void )
+		void Msg( const char* str, ... )
 		{
-			if ( KeyboardFocus )
-			{ KeyboardFocus->Blur(); }
+			char strOut[1024];
+			va_list s;
+			va_start( s, str );
+			vsnprintf( strOut, sizeof( strOut ), str, s );
+			va_end( s );
+			GwenUtil_OutputDebugCharString( strOut );
+		}
+#ifdef UNICODE
+		void Msg( const wchar_t* str, ... )
+		{
+			wchar_t strOut[1024];
+			va_list s;
+			va_start( s, str );
+			vswprintf( strOut, sizeof( strOut ), str, s );
+			va_end( s );
+			GwenUtil_OutputDebugWideString( strOut );
+		}
+#endif
+		void AssertCheck( bool b, const char* strMsg )
+		{
+			if ( b ) { return; }
+
+			Msg( "Assert: %s\n", strMsg );
+#ifdef _WIN32
+			MessageBoxA( NULL, strMsg, "Assert", MB_ICONEXCLAMATION | MB_OK );
+			__debugbreak();
+#endif
 		}
 	}
-
-} //namespace Gwen
-
-#endif
+}

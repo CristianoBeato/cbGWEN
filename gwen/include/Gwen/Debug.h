@@ -1,6 +1,6 @@
 /*
 ============================================================================================
-	GWEN
+	cbGWEN
 
 	Copyright (c) 2010 Facepunch Studios.
 	Copyright (c) 2025 Cristiano Beato.
@@ -27,62 +27,17 @@
 ============================================================================================
 */
 
-#ifndef GWEN_GWEN_H
-#define GWEN_GWEN_H
-
-#include "Gwen/Macros.h"
-#include "Gwen/Config.h"
-#include "Gwen/Exports.h"
-#include "Gwen/Structures.h"
-#include "Gwen/AutoPointer.h"
-#include "Gwen/Platform/Platform.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Canvas.h"
-#include "Gwen/Align.h"
-
-// Enable the hook system (se Hook.h)
-#define GWEN_HOOKSYSTEM
+#ifndef __GWEN_DEBUG_H__
+#define __GWEN_DEBUG_H__
 
 namespace Gwen
 {
-	namespace Controls
+    namespace Debug
 	{
-		class Base;
-		class Canvas;
+		void GWEN_EXPORT Msg( const wchar_t* str, ... );
+		void GWEN_EXPORT Msg( const char* str, ... );
+		void GWEN_EXPORT AssertCheck( bool b, const char* strMsg );
 	}
+};
 
-	namespace Renderer
-	{
-		class Base;
-	}
-
-	namespace Colors
-	{
-		static const Color Black( 0, 0, 0, 255 );
-		static const Color Red( 255, 0, 0, 255 );
-		static const Color Yellow( 255, 255, 0, 255 );
-		static const Color White( 255, 255, 255, 255 );
-		static const Color Blue( 0, 0, 255, 255 );
-		static const Color Green( 0, 255, 0, 255 );
-		static const Color Grey( 200, 200, 200, 255 );
-		static const Color GreyLight( 230, 230, 230, 255 );
-		static const Color GwenPink( 255, 65, 199, 255 );
-	};
-
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	HoveredControl;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	KeyboardFocus;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	MouseFocus;
-
-	namespace Input
-	{
-		inline void Blur( void )
-		{
-			if ( KeyboardFocus )
-			{ KeyboardFocus->Blur(); }
-		}
-	}
-
-} //namespace Gwen
-
-#endif
+#endif //!__GWEN_DEBUG_H__
