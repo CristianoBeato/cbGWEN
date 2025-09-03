@@ -60,43 +60,43 @@ void Gwen::Platform::SDL3::SetCursor( const uint8_t in_cursorID )
 
 	switch ( in_cursorID )
 	{
-	case Normal:
+	case CURSOR_NORMAL:
 		syscur = SDL_SYSTEM_CURSOR_DEFAULT;
 		break;
 
-	case Beam:
+	case CURSOR_BEAM:
 		syscur = SDL_SYSTEM_CURSOR_TEXT;
 		break;
 
-	case SizeNS:
+	case CURSOR_SIZENS:
 		syscur = SDL_SYSTEM_CURSOR_NS_RESIZE;
 		break;
 
-	case SizeWE:
+	case CURSOR_SIZEWE:
 		syscur = SDL_SYSTEM_CURSOR_EW_RESIZE;
 		break;
 
-	case SizeNWSE:
+	case CURSOR_SIZENWSE:
 		syscur = SDL_SYSTEM_CURSOR_NESW_RESIZE;
 		break;
 
-	case SizeNESW:
+	case CURSOR_SIZENESW:
 		syscur = SDL_SYSTEM_CURSOR_NWSE_RESIZE;
 		break;
 
-	case SizeAll:
+	case CURSOR_SIZEALL:
 		syscur = SDL_SYSTEM_CURSOR_MOVE;
 		break;
 
-	case No:
+	case CURSOR_NO:
 		syscur = SDL_SYSTEM_CURSOR_NOT_ALLOWED;
 		break;
 
-	case Wait:
+	case CURSOR_WAIT:
 		syscur = SDL_SYSTEM_CURSOR_WAIT;
 		break;
 
-	case Finger:
+	case CURSOR_FINGER:
 		syscur = SDL_SYSTEM_CURSOR_POINTER;
 		break;
 
@@ -170,14 +170,16 @@ bool Gwen::Platform::SDL3::FolderOpen( const String & Name, const String & Start
 
 void* Gwen::Platform::SDL3::CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle )
 {
-	SDL3Window* newWindow = new SDL3Window();
+	// since we need to set the renderer on window creation, we don't crea the window here, 
+	// we will create the window direct in the renderer structures 
+	SDL3Window* newWindow = new SDL3Window( (uint32_t)w, (uint32_t)h, strWindowTitle.c_str() );
 	reinterpret_cast<void*>( newWindow );
 }
 
 void Gwen::Platform::SDL3::DestroyPlatformWindow( void* pPtr )
 {
 	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
-	delete window;
+	delete window; // just destroy window
 }
 
 void Gwen::Platform::SDL3::SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h )
@@ -223,7 +225,20 @@ Gwen::Platform::SDL3Window::SDL3Window(const uint32_t in_width, const uint32_t i
 {
 }
 
-bool Gwen::Platform::SDL3Window::Create( const uint32_t in_flags)
+Gwen::Platform::SDL3Window::~SDL3Window(void)
+{
+	if ( m_window != nullptr )
+	{
+		SDL_DestroyWindow( m_window ); 
+		m_window = nullptr;
+	}
+
+	m_width = 0;
+	m_height = 0;
+	m_title = nullptr;
+}
+
+bool Gwen::Platform::SDL3Window::Create(const uint32_t in_flags)
 {
 	m_window = SDL_CreateWindow( m_title, m_width, m_height, in_flags );
     return m_window != nullptr;;
