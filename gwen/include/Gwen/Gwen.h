@@ -27,8 +27,13 @@
 ============================================================================================
 */
 
-#ifndef GWEN_GWEN_H
-#define GWEN_GWEN_H
+#pragma once
+
+// can be referenced outside the source 
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
 
 #include "Gwen/Macros.h"
 #include "Gwen/Config.h"
@@ -37,9 +42,11 @@
 #include "Gwen/AutoPointer.h"
 #include "Gwen/Platform/Platform.h"
 #include "Gwen/Skin.h"
-#include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Canvas.h"
 #include "Gwen/Align.h"
+
+#ifndef GWEN_NO_ANIMATION
+#include "Gwen/Anim.h"
+#endif
 
 // Enable the hook system (se Hook.h)
 #define GWEN_HOOKSYSTEM
@@ -57,32 +64,10 @@ namespace Gwen
 		class Base;
 	}
 
-	namespace Colors
-	{
-		static const Color Black( 0, 0, 0, 255 );
-		static const Color Red( 255, 0, 0, 255 );
-		static const Color Yellow( 255, 255, 0, 255 );
-		static const Color White( 255, 255, 255, 255 );
-		static const Color Blue( 0, 0, 255, 255 );
-		static const Color Green( 0, 255, 0, 255 );
-		static const Color Grey( 200, 200, 200, 255 );
-		static const Color GreyLight( 230, 230, 230, 255 );
-		static const Color GwenPink( 255, 65, 199, 255 );
-	};
-
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	HoveredControl;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	KeyboardFocus;
-	extern GWEN_EXPORT Platform::AutoPointer<Controls::Base>	MouseFocus;
-
-	namespace Input
-	{
-		inline void Blur( void )
-		{
-			if ( KeyboardFocus )
-			{ KeyboardFocus->Blur(); }
-		}
-	}
+	extern GWEN_EXPORT AutoPointer<Controls::Base>	HoveredControl;
+	extern GWEN_EXPORT AutoPointer<Controls::Base>	KeyboardFocus;
+	extern GWEN_EXPORT AutoPointer<Controls::Base>	MouseFocus;
 
 } //namespace Gwen
 
-#endif
+#include "Gwen/Controls.h"

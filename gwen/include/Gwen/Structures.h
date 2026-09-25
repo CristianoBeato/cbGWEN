@@ -1,16 +1,33 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
 #pragma once
-#ifdef _MSC_VER
-#pragma warning( disable : 4244 )
-#pragma warning( disable : 4251 )
-#endif
-#ifndef GWEN_STRUCTURES_H
-#define GWEN_STRUCTURES_H
 
 #include "Gwen/Exports.h"
 #include <string>
@@ -134,50 +151,50 @@ namespace Gwen
 		float v;
 	};
 
-
 	struct GWEN_EXPORT Color
 	{
-		Color( unsigned char r_ = 255, unsigned char g_ = 255, unsigned char b_ = 255, unsigned char a_ = 255 )
+		Color( const uint8_t r_ = 255, const uint8_t g_ = 255, const uint8_t b_ = 255, const uint8_t a_ = 255 )
 		{
-			this->r = r_;
-			this->g = g_;
-			this->b = b_;
-			this->a = a_;
+			r = r_;
+			g = g_;
+			b = b_;
+			a = a_;
 		}
 
-		void operator = ( Color c )
+		void operator = ( const Color &c )
 		{
-			this->r = c.r;
-			this->g = c.g;
-			this->b = c.b;
-			this->a = c.a;
+			r = c.r;
+			g = c.g;
+			b = c.b;
+			a = c.a;
 		}
 
-		void operator += ( Color c )
+		void operator += ( const Color &c )
 		{
-			this->r += c.r;
-			this->g += c.g;
-			this->b += c.b;
-			this->a += c.a;
+			r += c.r;
+			g += c.g;
+			b += c.b;
+			a += c.a;
 		}
 
-		void operator -= ( Color c )
+		void operator -= ( const Color &c )
 		{
-			this->r -= c.r;
-			this->g -= c.g;
-			this->b -= c.b;
-			this->a -= c.a;
+			r -= c.r;
+			g -= c.g;
+			b -= c.b;
+			a -= c.a;
 		}
 
 		void operator *= ( float f )
 		{
-			this->r *= f;
-			this->g *= f;
-			this->b *= f;
-			this->a *= f;
+			// We can SIMDize this ?
+			r = static_cast<uint8_t>( static_cast<float>( r ) * f );
+			g = static_cast<uint8_t>( static_cast<float>( g ) * f );
+			b = static_cast<uint8_t>( static_cast<float>( b ) * f );
+			a = static_cast<uint8_t>( static_cast<float>( a ) * f );
 		}
 
-		Color operator * ( float f )
+		inline Color operator * ( float f )
 		{
 			return Color(
 					   ( float ) this->r * f,
@@ -187,24 +204,14 @@ namespace Gwen
 				   );
 		}
 
-		Color operator - ( Color c )
+		inline Color operator - ( const Color &c )
 		{
-			return Color(
-					   this->r - c.r,
-					   this->g - c.g,
-					   this->b - c.b,
-					   this->a - c.a
-				   );
+			return Color( r - c.r, g - c.g, b - c.b, a - c.a );
 		}
 
-		Color operator + ( Color c )
+		inline Color operator + ( const Color &c )
 		{
-			return Color(
-					   this->r + c.r,
-					   this->g + c.g,
-					   this->b + c.b,
-					   this->a + c.a
-				   );
+			return Color( r + c.r, g + c.g, b + c.b, a + c.a );
 		}
 
 		bool operator == ( const Color & c ) const
@@ -212,31 +219,20 @@ namespace Gwen
 			return c.r == r && c.g == g && c.b == b && c.a == a;
 		}
 
-
-		unsigned char r, g, b, a;
+		uint8_t r, g, b, a;
 	};
 
-
-	namespace DragAndDrop
+	namespace Colors
 	{
-		struct GWEN_EXPORT Package
-		{
-			Package()
-			{
-				userdata = NULL;
-				draggable = false;
-				drawcontrol = NULL;
-				holdoffset = Gwen::Point( 0, 0 );
-			}
-
-			String	name;
-			void*	userdata;
-			bool	draggable;
-
-			Gwen::Controls::Base*	drawcontrol;
-			Gwen::Point	holdoffset;
-		};
-	}
-
+		// TODO: extern and define in a header 
+		static const Color Black( 0, 0, 0, 255 );
+		static const Color Red( 255, 0, 0, 255 );
+		static const Color Yellow( 255, 255, 0, 255 );
+		static const Color White( 255, 255, 255, 255 );
+		static const Color Blue( 0, 0, 255, 255 );
+		static const Color Green( 0, 255, 0, 255 );
+		static const Color Grey( 200, 200, 200, 255 );
+		static const Color GreyLight( 230, 230, 230, 255 );
+		static const Color GwenPink( 255, 65, 199, 255 );
+	};
 }
-#endif

@@ -1,34 +1,46 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
-
-#include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Label.h"
-#include "Gwen/Gwen.h"
-#include "Gwen/BaseRender.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Platform.h"
-#include "Gwen/DragAndDrop.h"
-#include "Gwen/ToolTip.h"
-#include "Gwen/Utility.h"
-#include <list>
-
-#ifndef GWEN_NO_ANIMATION
-#include "Gwen/Anim.h"
-#endif
+#include "Base.h"
 
 using namespace Gwen;
 using namespace Controls;
 
-Base::Base( Base* pParent, const Gwen::String & Name )
+Gwen::Controls::Base::Base( Controls::Base::Pointer pParent, const Gwen::String & Name ) :
+	m_Parent(),
+	m_ActualParent(),
+	m_InnerPanel(),
+	m_Skin(),
+	m_DragAndDrop_Package()
 {
-	m_Parent = NULL;
-	m_ActualParent = NULL;
-	m_InnerPanel = NULL;
-	m_Skin = NULL;
+	
+	
 	SetName( Name );
 	SetParent( pParent );
 	m_bHidden = false;

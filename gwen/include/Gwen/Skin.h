@@ -28,18 +28,19 @@ namespace Gwen
 			static const unsigned char Dot				= 3;
 		}
 
-		class GWEN_EXPORT Base
+		class GWEN_EXPORT Base : public Object
 		{
 			public:
+				typedef AutoPointer<Skin::Base>	Pointer;
 
-				Base( Gwen::Renderer::Base* renderer = NULL )
+				Base( Renderer::Base::Pointer renderer = Renderer::Base::Pointer() )
 				{
 					m_DefaultFont.facename = L"Arial";
 					m_DefaultFont.size = 10.0f;
 					m_Render = renderer;
 				}
 
-				virtual ~Base()
+				virtual ~Base( void )
 				{
 					ReleaseFont( &m_DefaultFont );
 				}
@@ -236,7 +237,7 @@ namespace Gwen
 
 			public:
 
-				virtual Gwen::Font* GetDefaultFont()
+				virtual Gwen::Font::Pointer GetDefaultFont( void )
 				{
 					return &m_DefaultFont;
 				}
@@ -248,10 +249,8 @@ namespace Gwen
 				}
 
 			protected:
-
-				Gwen::Font m_DefaultFont;
-				Gwen::Renderer::Base* m_Render;
-
+				Gwen::Font::Pointer		m_DefaultFont;
+				Renderer::Base::Pointer m_Render;
 		};
 	};
 }

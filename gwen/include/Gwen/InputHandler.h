@@ -55,7 +55,11 @@ namespace Gwen
 			};
 		};
 
-
+		inline void Blur( void )
+		{
+			if ( KeyboardFocus )
+				KeyboardFocus->Blur();
+		}
 
 		// For use in panels
 		bool GWEN_EXPORT IsKeyDown( int iKey );

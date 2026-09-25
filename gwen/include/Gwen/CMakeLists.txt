@@ -234,16 +234,16 @@ target_precompile_headers( cbGewen
         <atomic>
         <memory.h>
     PUBLIC 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Macros.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Config.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Exports.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Structures.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Skin.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Align.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/ToolTip.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Utility.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Platform/Platform.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/include/Gwen/Gwen.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Macros.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Config.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Exports.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Structures.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Skin.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Controls/Base.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Controls/Canvas.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Align.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:ToolTip.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Utility.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Platform/Platform.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen.h>" 
     )

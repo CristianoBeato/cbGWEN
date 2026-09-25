@@ -27,224 +27,169 @@
 ============================================================================================
 */
 
-#ifndef __AUTO_POINTER_H__
-#define __AUTO_POINTER_H__
+#pragma once
 
 namespace Gwen
 {
-    namespace Platform
+    //  base object counter class
+    class Object
     {
-        //  base object counter class
-        class Object
+    public:
+        Object( void ) : m_count( 0 ) // We create the object whith new 
         {
-            
-        public:
-            Object( void );
-            ~Object( void );
-            
-            /// @brief increment the counter atomically, and return the old value
-            /// @return the previous value of the counter
-            uint32_t    IncrementReference( void );
+        }
 
-            /// @brief decrement the counte atomically, and return the old value 
-            /// @return the previous of the counter 
-            uint32_t    DecrementReference( void );    
+        virtual ~Object( void )
+        {
+        }
             
-            /// @brief 
-            /// @param in_ptr 
-            /// @return 
-            static uint32_t IncRef( void* in_ptr );
+        /// @brief increment the counter atomically, and return the old value
+        /// @return the previous value of the counter
+        uint32_t    IncrementReference( void )
+        {
+            return m_count.fetch_add( 1, std::memory_order_relaxed );
+        }
+    
+        /// @brief decrement the counte atomically, and return the old value 
+        /// @return the previous of the counter 
+        uint32_t    DecrementReference( void )
+        {
+            return m_count.fetch_sub( 1, std::memory_order_acq_rel );
+        }    
+            
+        /// @brief 
+        /// @param in_ptr 
+        /// @return 
+        static uint32_t IncRef( Object* in_ptr )
+        {
+            if( in_ptr == nullptr )
+                return 0;
 
-            /// @brief 
-            /// @param in_ptr 
-            /// @return 
-            static uint32_t DecRef( void* in_ptr );
+            return in_ptr->IncrementReference();
+        }
 
-        private:
-            std::atomic<uint32_t>   m_count;
-        };
+        /// @brief 
+        /// @param in_ptr 
+        /// @return 
+        static uint32_t DecRef( Object* &in_ptr )
+        {
+            if( in_ptr == nullptr )
+                return 0;
+
+            uint32_t old_count = in_ptr->DecrementReference();
+            if( old_count == 1 )
+            {
+                delete in_ptr;
+                in_ptr = nullptr;
+            }
+        }
+
+    private:
+        std::atomic<uint32_t>   m_count;
+    };
         
-        template<class _t>
-        class AutoPointer
-        {    
-        public:
-            typedef _t          value_type;
-	        typedef _t&         reference;
-	        typedef const _t&   const_reference;
-	        typedef _t*         pointer;
-	        typedef const _t*   const_pointer;
-	        typedef const _t*&  pointer_reference;
-	        typedef const _t*&  const_pointer_reference;
+    template<class _t>
+    class AutoPointer
+    {    
+    public:
+        typedef _t          value_type;
+	    typedef _t&         reference;
+	    typedef const _t&   const_reference;
+	    typedef _t*         pointer;
+	    typedef const _t*   const_pointer;
+	    typedef const _t*&  pointer_reference;
+	    typedef const _t*&  const_pointer_reference;
 
-            AutoPointer( void );
-            explicit AutoPointer( const_pointer &in_ref );
-            explicit AutoPointer( const_pointer in_pointr );
-            ~AutoPointer( void );
+        AutoPointer( void );
+        AutoPointer( const AutoPointer<_t> & in_ref );
+        AutoPointer( const_pointer &in_ref );
+        ~AutoPointer( void );
 
-            inline pointer operator = ( const_pointer &in_ref )
-            {
-                Decrement();
-                m_pointer = in_ref;
-                Increment();
-                return m_pointer;
-            }
+        // dynamic casting 
+        template< class _u >
+        inline AutoPointer<_t> &operator= ( const AutoPointer<_u> &in_ref );
+        inline AutoPointer<_t>  operator= ( const_pointer &in_ref );
+        inline AutoPointer<_t>  operator= ( pointer in_ptr );
+        inline AutoPointer<_t>  operator= ( const AutoPointer<_t> &in_ref );
+        inline pointer          operator -> ( void );
+	    inline const_pointer    operator -> ( void ) const;
+	    inline pointer	        operator & ( void );
+	    inline const_pointer    operator & ( void ) const;
+	    inline reference        operator *(void);
+	    inline const_reference  operator *( void ) const;
+        
+        
+        inline bool operator == ( const const_pointer &ptr );
+        inline bool operator == ( const const_pointer &ptr ) const;
+        inline bool operator == ( const AutoPointer<_t> &in_ref );
 
-            inline pointer operator=( pointer in_ptr )
-            {
-                Decrement();
-                m_pointer = in_ptr;
-                Increment();
-                return m_pointer;
-            }
+        inline bool operator != ( const_pointer &ptr );
+        inline bool operator != ( const_pointer &ptr ) const;
+        inline bool operator != ( const AutoPointer<_t> &in_ref );
+	    inline explicit operator bool( void ) const noexcept;
+        
+        template< class _u >
+        inline bool operator == ( const AutoPointer<_u> &in_ref );    
 
-            inline AutoPointer<_t> operator=( const AutoPointer<_t> &in_ref )
-            {
-                Decrement();
-                m_pointer = in_ref.m_pointer;
-                Increment();
-                return *this;
-            }
-
-            // dynamic casting 
-            template< class _u >
-            inline AutoPointer<_t> operator=( const AutoPointer<_u> &in_ref )
-            {
-                Decrement();
-                m_pointer = dynamic_cast<pointer>( in_ref.m_pointer );
-                Increment();
-                return *this;
-            }
-
-            inline pointer              operator -> ( void )
-            {
-                return m_pointer;
-            }
-
-	        inline const_pointer        operator -> ( void ) const
-            {
-                return m_pointer;
-            }
-
-	        inline pointer	            operator & ( void )
-            {
-                return m_pointer;
-            }
-
-	        inline const_pointer        operator & ( void ) const
-            {
-                return m_pointer;
-            }
-
-	        inline reference            operator *(void)
-            {
-                return m_pointer;
-            }
-
-	        inline const_reference      operator *( void ) const
-            {
-                return m_pointer;                
-            }
-
-            inline bool operator == ( const_pointer &ptr )
-            {
-                return m_pointer == ptr;
-            }
-
-            inline bool operator == ( const_pointer &ptr ) const
-            {
-                return m_pointer == ptr;
-            }
-
-            inline bool operator == ( const AutoPointer<_t> &in_ref )
-            {
-                return m_pointer == in_ref.m_pointer;
-            }
-
-            template< class _u >
-            inline bool operator == ( const AutoPointer<_u> &in_ref )
-            {
-                return m_pointer == in_ref.m_pointer;
-            }
-            
-            inline bool operator != ( const_pointer &ptr )
-            {
-                return m_pointer != ptr;
-            }
-
-            inline bool operator != ( const_pointer &ptr ) const
-            {
-                return m_pointer != ptr;
-            }
-
-            inline bool operator != ( const AutoPointer<_t> &in_ref )
-            {
-                return m_pointer != in_ref.m_pointer;
-            }
-
-            template< class _u >                
-            inline bool operator != ( const AutoPointer<_u> &in_ref )
-            {
-                return m_pointer != &in_ref;
-            }
-
-	        inline explicit operator bool( void ) const noexcept
-            {
-                return m_pointer == nullptr;
-            }
-
-        private:
+        template< class _u >                
+        inline bool operator != ( const AutoPointer<_u> &in_ref );
+        
+    private:
             pointer m_pointer;
-            inline void Increment( void );
-            inline void Decrement( void );
+    };
 
-        };
+    template <class _t>
+    inline AutoPointer<_t>::AutoPointer( void ) : m_pointer( nullptr )
+    {
+    }
 
-        template<class _t>
-        AutoPointer<_t>::AutoPointer( void ) : m_pointer( nullptr )
+    template <class _t>
+    inline AutoPointer<_t>::AutoPointer(const AutoPointer<_t> &in_ref ) : m_pointer( nullptr ) /* prevent gargbage */
+    {
+        if( in_ref )
         {
+            m_pointer = in_ref.m_pointer;
+            Object::IncRef( dynamic_cast<Object*>( m_pointer ) );
         }
-        
-        template<class _t>
-        AutoPointer<_t>::AutoPointer( const_pointer &in_ref )
-        {
-            Decrement();
-            m_pointer = in_ref;
-            Increment();
-        }
+    }
 
-        template <class _t>
-        inline AutoPointer<_t>::AutoPointer( const_pointer in_pointr)
+    template <class _t>
+    inline AutoPointer<_t>::AutoPointer(const_pointer &in_ref) : m_pointer( nullptr ) /* prevent gargbage */
+    {
+        m_pointer = in_ref;        
+        if( m_pointer )
         {
-            Decrement();
-            m_pointer = const_cast<_t*>( in_pointr );
-            Increment();
+            Object::IncRef( dynamic_cast<Object*>( m_pointer ) );
         }
+    }
 
-        template<class _t>
-        AutoPointer<_t>::~AutoPointer( void )
+    template <class _t>
+    inline AutoPointer<_t>::~AutoPointer(void)
+    {
+        if( m_pointer )
         {
-            if( m_pointer == nullptr )
-                return;
             
-            Decrement();
+            Object::DecRef( m_pointer );
+            m_pointer = nullptr;
         }
+    }
 
-        template <class _t>
-        inline void AutoPointer<_t>::Increment( void )
+    template <class _t>
+    template <class _u>
+    inline AutoPointer<_t> &AutoPointer<_t>::operator=(const AutoPointer<_u> &in_ref)
+    {
+        if( m_pointer )
         {
             Object::DecRef( m_pointer );
+            m_pointer = nullptr;
         }
 
-        template <class _t>
-        inline void AutoPointer<_t>::Decrement( void )
-        {
-            if ( Object::DecRef( m_pointer ) <= 1 )
-            {
-                delete m_pointer;
-                m_pointer = nullptr;
-            }
-        }
-    };
+        m_pointer = dynamic_cast<_t>( in_ref.m_pointer );
+
+        if( m_pointer )
+            Object::IncRef( m_pointer );
+
+        return *this;
+    }
+
 };
-
-#endif //__AUTO_POINTER_H__

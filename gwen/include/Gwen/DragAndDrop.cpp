@@ -1,34 +1,52 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
+#include "DragAndDrop.h"
 
-#include "Gwen/Gwen.h"
-#include "Gwen/DragAndDrop.h"
-#include "Gwen/Utility.h"
-#include "Gwen/Platform.h"
+Gwen::AutoPointer<Gwen::DragAndDrop::Package> DragAndDrop::CurrentPackage = Gwen::AutoPointer<Gwen::DragAndDrop::Package>();
+Gwen::AutoPointer<Gwen::Controls::Base> DragAndDrop::HoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
+Gwen::AutoPointer<Gwen::Controls::Base> DragAndDrop::SourceControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 
-using namespace Gwen;
-using namespace Gwen::DragAndDrop;
-
-DragAndDrop::Package* DragAndDrop::CurrentPackage = NULL;
-Gwen::Controls::Base* DragAndDrop::HoveredControl = NULL;
-Gwen::Controls::Base* DragAndDrop::SourceControl = NULL;
-
-static Gwen::Controls::Base* LastPressedControl = NULL;
-static Gwen::Controls::Base* NewHoveredControl = NULL;
+static Gwen::AutoPointer<Gwen::Controls::Base> LastPressedControl = nullptr;
+static Gwen::AutoPointer<Gwen::Controls::Base> NewHoveredControl = nullptr;
 static Gwen::Point LastPressedPos;
+static int m_iMouseX = 0;
+static int m_iMouseY = 0;
 
-void DragAndDrop::ControlDeleted( Gwen::Controls::Base* pControl )
+void Gwen::DragAndDrop::ControlDeleted( Gwen::Controls::Base* pControl )
 {
 	if ( SourceControl == pControl )
 	{
-		SourceControl = NULL;
-		CurrentPackage = NULL;
-		HoveredControl = NULL;
-		LastPressedControl = NULL;
+		SourceControl = nullptr;
+		CurrentPackage = nullptr;
+		HoveredControl = nullptr;
+		LastPressedControl = nullptr;
 	}
 
 	if ( LastPressedControl == pControl )
@@ -41,10 +59,7 @@ void DragAndDrop::ControlDeleted( Gwen::Controls::Base* pControl )
 	{ NewHoveredControl = NULL; }
 }
 
-static int m_iMouseX = 0;
-static int m_iMouseY = 0;
-
-bool DragAndDrop::Start( Gwen::Controls::Base* pControl, Package* pPackage )
+bool Gwen::DragAndDrop::Start( Gwen::Controls::Base* pControl, Package* pPackage )
 {
 	if ( CurrentPackage )
 	{

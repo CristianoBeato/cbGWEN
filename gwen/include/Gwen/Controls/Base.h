@@ -1,12 +1,33 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
 #pragma once
-#ifndef GWEN_CONTROLS_BASE_H
-#define GWEN_CONTROLS_BASE_H
 
 #include <list>
 #include <map>
@@ -52,33 +73,35 @@ namespace Gwen
 	{
 		class Canvas;
 
-		class GWEN_EXPORT Base : public Event::Handler
+		class GWEN_EXPORT Base : 
+			public Object,
+			public Event::Handler
 		{
 			public:
-
-				typedef std::list<Base*> List;
+				typedef AutoPointer<Base> Pointer;
+				typedef std::list<Pointer> List;
 
 				typedef std::map<Gwen::UnicodeString, Gwen::Event::Caller*> AccelMap;
 
-				Base( Base* pParent, const Gwen::String & Name = "" );
-				virtual ~Base();
+				Base( Pointer pParent, const Gwen::String & Name = "" );
+				virtual ~Base( void );
 
 				virtual const char* GetTypeName() { return "Base"; }
 
 				virtual void DelayedDelete();
-				virtual void PreDelete( Gwen::Skin::Base* skin ) {};
+				virtual void PreDelete( Skin::Base::Pointer skin ) {};
 
-				virtual void SetParent( Controls::Base* pParent );
-				virtual Controls::Base* GetParent() const { return m_Parent; }
-				virtual Controls::Canvas* GetCanvas();
+				virtual void SetParent( Controls::Base::Pointer pParent );
+				virtual Controls::Base::Pointer GetParent( void ) const { return m_Parent; }
+				virtual Controls::Canvas::Pointer GetCanvas( void );
 
 				virtual Base::List & GetChildren() { if ( m_InnerPanel ) { return m_InnerPanel->GetChildren(); } return Children; }
 				virtual bool IsChild( Controls::Base* pChild );
 				virtual unsigned int NumChildren();
-				virtual Controls::Base* GetChild( unsigned int i );
+				virtual Controls::Base::Pointer GetChild( unsigned int i );
 				virtual bool SizeToChildren( bool w = true, bool h = true );
 				virtual Gwen::Point ChildrenSize();
-				virtual Controls::Base* FindChildByName( const Gwen::String & name, bool bRecursive = false );
+				virtual Controls::Base::Pointer FindChildByName( const Gwen::String & name, bool bRecursive = false );
 
 				template <typename T> T* FindChild( const Gwen::String & name, bool bRecursive = false );
 
@@ -89,18 +112,18 @@ namespace Gwen
 
 			protected:
 
-				virtual void AddChild( Controls::Base* pChild );
-				virtual void RemoveChild( Controls::Base* pParent );
-				virtual void OnChildAdded( Controls::Base* pChild );
-				virtual void OnChildRemoved( Controls::Base* pChild );
+				virtual void AddChild( Controls::Base::Pointer pChild );
+				virtual void RemoveChild( Controls::Base::Pointer pParent );
+				virtual void OnChildAdded( Controls::Base::Pointer pChild );
+				virtual void OnChildRemoved( Controls::Base::Pointer pChild );
 
 			public:
 
-				virtual void RemoveAllChildren();
+				virtual void RemoveAllChildren( void );
 
 				virtual void SendToBack( void );
 				virtual void BringToFront( void );
-				virtual void BringNextToControl( Controls::Base* pChild, bool bBehind );
+				virtual void BringNextToControl( Controls::Base::Pointer pChild, bool bBehind );
 
 				virtual Gwen::Point LocalPosToCanvas( const Gwen::Point & in = Point( 0, 0 ) );
 				virtual Gwen::Point CanvasPosToLocal( const Gwen::Point & in );
@@ -434,22 +457,21 @@ namespace Gwen
 				virtual void DragAndDrop_SetPackage( bool bDraggable, const String & strName = "", void* pUserData = NULL );
 				virtual bool DragAndDrop_Draggable();
 				virtual bool DragAndDrop_ShouldStartDrag() { return true; }
-				virtual void DragAndDrop_StartDragging( Gwen::DragAndDrop::Package* pPackage, int x, int y );
-				virtual Gwen::DragAndDrop::Package* DragAndDrop_GetPackage( int x, int y );
+				virtual void DragAndDrop_StartDragging( DragAndDrop::Package::pointer pPackage, int x, int y );
+				virtual DragAndDrop::Package::pointer DragAndDrop_GetPackage( int x, int y );
 				virtual void DragAndDrop_EndDragging( bool /*bSuccess*/, int /*x*/, int /*y*/ ) {};
 
 			protected:
-
-				DragAndDrop::Package*	m_DragAndDrop_Package;
+				DragAndDrop::Package::pointer	m_DragAndDrop_Package;
 
 			public:
 
 				// Receiver
-				virtual void DragAndDrop_HoverEnter( Gwen::DragAndDrop::Package* /*pPackage*/, int /*x*/, int /*y*/ ) { }
-				virtual void DragAndDrop_HoverLeave( Gwen::DragAndDrop::Package* /*pPackage*/ ) { }
-				virtual void DragAndDrop_Hover( Gwen::DragAndDrop::Package* /*pPackage*/, int /*x*/, int /*y*/ ) {};
-				virtual bool DragAndDrop_HandleDrop( Gwen::DragAndDrop::Package* pPackage, int x, int y );
-				virtual bool DragAndDrop_CanAcceptPackage( Gwen::DragAndDrop::Package* /*pPackage*/ ) { return false; }
+				virtual void DragAndDrop_HoverEnter( DragAndDrop::Package::pointer /*pPackage*/, int /*x*/, int /*y*/ ) { }
+				virtual void DragAndDrop_HoverLeave( DragAndDrop::Package::pointer /*pPackage*/ ) { }
+				virtual void DragAndDrop_Hover( DragAndDrop::Package::pointer /*pPackage*/, int /*x*/, int /*y*/ ) {};
+				virtual bool DragAndDrop_HandleDrop( DragAndDrop::Package::pointer pPackage, int x, int y );
+				virtual bool DragAndDrop_CanAcceptPackage( DragAndDrop::Package::pointer /*pPackage*/ ) { return false; }
 
 
 				//
@@ -476,7 +498,7 @@ namespace Gwen
 					return ident;
 				};
 
-				virtual Gwen::Controls::Base* DynamicCast( const char* Variable )
+				virtual GwenControls::Base* DynamicCast( const char* Variable )
 				{
 					return NULL;
 				}
@@ -539,37 +561,39 @@ namespace Gwen
 */
 
 template< class T >
-T* gwen_cast( Gwen::Controls::Base* p )
+Gwen::AutoPointer<T> gwen_cast( Gwen::Controls::Base::Pointer p )
 {
-	if ( !p ) { return NULL; }
+	if ( !p ) 
+		return nullptr;
 
-	Gwen::Controls::Base* pReturn = p->DynamicCast( T::GetIdentifier() );
+	Gwen::Controls::Base::Pointer pReturn = p->DynamicCast( T::GetIdentifier() );
 
-	if ( !pReturn ) { return NULL; }
+	if ( !pReturn )
+		return nullptr;
 
-	return static_cast<T*>( pReturn );
+	return AutoPointer<T>( pReturn ); // static_cast<T*>( pReturn );
 }
 
 
 template <typename T>
-T* Gwen::Controls::Base::FindChild( const Gwen::String & name, bool bRecursive )
+T* Gwen::Controls::Base::FindChild( const Gwen::String & name, const bool bRecursive )
 {
 	return gwen_cast<T> ( FindChildByName( name, bRecursive ) );
 }
 
-#define GWEN_DYNAMIC( ThisName, BaseName )									\
-																			\
-	static const char* GetIdentifier()										\
-	{																		\
-		static const char* ident = #BaseName ":" #ThisName;					\
-		return ident;														\
-	};																		\
-	virtual Gwen::Controls::Base* DynamicCast( const char* Variable )		\
-	{																		\
-		if ( GetIdentifier() == Variable )									\
-		return this;														\
-																			\
-		return BaseClass::DynamicCast( Variable);							\
+#define GWEN_DYNAMIC( ThisName, BaseName )										\
+																				\
+	static const char* GetIdentifier( void )									\
+	{																			\
+		static const char* ident = #BaseName ":" #ThisName;						\
+		return ident;															\
+	};																			\
+	virtual Gwen::Controls::Base::Pointer DynamicCast( const char* Variable )	\
+	{																			\
+		if ( GetIdentifier() == Variable )										\
+			return this;														\
+																				\
+		return BaseClass::DynamicCast( Variable);								\
 	}
 
 #define GWEN_CLASS( ThisName, BaseName )\
@@ -589,8 +613,4 @@ T* Gwen::Controls::Base::FindChild( const Gwen::String & name, bool bRecursive )
 	GWEN_CONTROL( ThisName, BaseName ) : BaseClass( pParent, pName )
 
 #define GWEN_CONTROL_CONSTRUCTOR( ThisName )\
-	ThisName::ThisName( Gwen::Controls::Base* pParent, const Gwen::String& pName ) : BaseClass( pParent, pName )
-
-
-
-#endif
+	ThisName::ThisName( Gwen::Controls::Base::Pointer pParent, const Gwen::String& pName ) : BaseClass( pParent, pName )
