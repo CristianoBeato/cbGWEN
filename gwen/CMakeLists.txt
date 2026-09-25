@@ -1,8 +1,9 @@
 #
 #============================================================================================
-#	GWEN
-#
-#	Copyright (c) 2025 Cristiano Beato.
+#	cbGWEN
+#   
+#   Copyright (c) 2010 Facepunch Studios.
+#	Copyright (c) 2025-2026 Cristiano Beato.
 #
 #	MIT License
 #
@@ -28,8 +29,8 @@
 cmake_minimum_required( VERSION 3.16 )
 project( cbGWEN )
 
-## STD 17
-set( CMAKE_CXX_STANDARD 17 )
+## STD 20
+set( CMAKE_CXX_STANDARD 20 )
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
 else()
@@ -39,5 +40,5 @@ endif()
 
 ## main include dir 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
-add_subdirectory( src )
+add_subdirectory( include/Gwen )
 add_subdirectory( UnitTest )
