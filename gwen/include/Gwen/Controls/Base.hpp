@@ -3,7 +3,7 @@
 	GWEN
 
 	Copyright (c) 2010 Facepunch Studios.
-	Copyright (c) 2025 Cristiano Beato.
+	Copyright (c) 2025-2026 Cristiano Beato.
 
 	MIT License
 
@@ -29,25 +29,13 @@
 
 #pragma once
 
-#include <list>
-#include <map>
-#include <algorithm>
-
-#include "Gwen/Exports.h"
-#include "Gwen/Structures.h"
-#include "Gwen/BaseRender.h"
 #include "Gwen/Events.h"
-#include "Gwen/Utility.h"
-#include "Gwen/TextObject.h"
-#include "Gwen/Skin.h"
-#include "Gwen/ControlList.h"
-#include "Gwen/UserData.h"
-
 
 namespace Gwen
 {
 	namespace Pos
 	{
+		/// @todo make all uppercase  
 		enum
 		{
 			None		= 0,
@@ -86,17 +74,17 @@ namespace Gwen
 				Base( Pointer pParent, const Gwen::String & Name = "" );
 				virtual ~Base( void );
 
-				virtual const char* GetTypeName() { return "Base"; }
+				virtual const char* GetTypeName( void ) { return "Base"; }
 
-				virtual void DelayedDelete();
+				virtual void DelayedDelete( void );
 				virtual void PreDelete( Skin::Base::Pointer skin ) {};
 
 				virtual void SetParent( Controls::Base::Pointer pParent );
 				virtual Controls::Base::Pointer GetParent( void ) const { return m_Parent; }
-				virtual Controls::Canvas::Pointer GetCanvas( void );
+				virtual AutoPointer<Controls::Canvas> GetCanvas( void );
 
 				virtual Base::List & GetChildren() { if ( m_InnerPanel ) { return m_InnerPanel->GetChildren(); } return Children; }
-				virtual bool IsChild( Controls::Base* pChild );
+				virtual bool IsChild( Controls::Base::Pointer pChild );
 				virtual unsigned int NumChildren();
 				virtual Controls::Base::Pointer GetChild( unsigned int i );
 				virtual bool SizeToChildren( bool w = true, bool h = true );
@@ -164,14 +152,14 @@ namespace Gwen
 
 				virtual const Gwen::Rect & GetBounds() const { return m_Bounds; }
 
-				virtual Controls::Base* GetControlAt( int x, int y, bool bOnlyIfMouseEnabled = true );
+				virtual Controls::Base::Pointer GetControlAt( int x, int y, bool bOnlyIfMouseEnabled = true );
 
 
 
 			protected:
 
 				virtual void OnBoundsChanged( Gwen::Rect oldBounds );
-				virtual void OnChildBoundsChanged( Gwen::Rect oldChildBounds, Base* pChild );
+				virtual void OnChildBoundsChanged( Gwen::Rect oldChildBounds, Base::Pointer pChild );
 
 				virtual void OnScaleChanged();
 
@@ -195,18 +183,18 @@ namespace Gwen
 
 			public:
 
-				virtual void DoRender( Gwen::Skin::Base* skin );
-				virtual void DoCacheRender( Gwen::Skin::Base* skin, Gwen::Controls::Base* pMaster );
-				virtual void RenderRecursive( Gwen::Skin::Base* skin, const Gwen::Rect & cliprect );
+				virtual void DoRender( Gwen::Skin::Base::Pointer skin );
+				virtual void DoCacheRender( Gwen::Skin::Base::Pointer skin, Gwen::Controls::Base::Pointer pMaster );
+				virtual void RenderRecursive( Gwen::Skin::Base::Pointer skin, const Gwen::Rect & cliprect );
 
 				virtual bool ShouldClip() { return true; }
 
 			protected:
 
-				virtual void Render( Gwen::Skin::Base* skin );
-				virtual void RenderUnder( Gwen::Skin::Base* /*skin*/ ) {};
-				virtual void RenderOver( Gwen::Skin::Base* /*skin*/ ) {};
-				virtual void RenderFocus( Gwen::Skin::Base* /*skin*/ );
+				virtual void Render( Gwen::Skin::Base::Pointer skin );
+				virtual void RenderUnder( Gwen::Skin::Base::Pointer /*skin*/ ) {};
+				virtual void RenderOver( Gwen::Skin::Base::Pointer /*skin*/ ) {};
+				virtual void RenderFocus( Gwen::Skin::Base::Pointer /*skin*/ );
 
 			public:
 
@@ -217,8 +205,8 @@ namespace Gwen
 				virtual void Show() { SetHidden( false ); }
 
 				//Skin
-				virtual void SetSkin( Skin::Base* skin, bool doChildren = false );
-				virtual Gwen::Skin::Base* GetSkin( void );
+				virtual void SetSkin( Skin::Base::Pointer skin, bool doChildren = false );
+				virtual Gwen::Skin::Base::Pointer GetSkin( void );
 
 				// Background drawing
 				virtual bool ShouldDrawBackground() { return m_bDrawBackground; }
@@ -226,7 +214,7 @@ namespace Gwen
 
 			protected:
 
-				virtual void OnSkinChanged( Gwen::Skin::Base* newSkin );
+				virtual void OnSkinChanged( Gwen::Skin::Base::Pointer newSkin );
 
 			public:
 
@@ -251,10 +239,10 @@ namespace Gwen
 				virtual bool OnKeyPress( int iKey, bool bPress = true );
 				virtual bool OnKeyRelease( int iKey );
 
-				virtual void OnPaste( Controls::Base* /*pFrom*/ ) {}
-				virtual void OnCopy( Controls::Base* /*pFrom*/ ) {}
-				virtual void OnCut( Controls::Base* /*pFrom*/ ) {}
-				virtual void OnSelectAll( Controls::Base* /*pFrom*/ ) {}
+				virtual void OnPaste( Controls::Base::Pointer /*pFrom*/ ) {}
+				virtual void OnCopy( Controls::Base::Pointer /*pFrom*/ ) {}
+				virtual void OnCut( Controls::Base::Pointer /*pFrom*/ ) {}
+				virtual void OnSelectAll( Controls::Base::Pointer /*pFrom*/ ) {}
 
 				virtual bool OnKeyTab( bool bDown );
 				virtual bool OnKeySpace( bool /*bDown*/ ) { return false; }
@@ -275,7 +263,7 @@ namespace Gwen
 				virtual bool ShouldDrawHover();
 
 				virtual void Touch();
-				virtual void OnChildTouched( Controls::Base* pChild );
+				virtual void OnChildTouched( Controls::Base::Pointer pChild );
 
 				virtual bool IsOnTop();
 
@@ -299,8 +287,8 @@ namespace Gwen
 				virtual Gwen::Point GetMaximumSize() { return Gwen::Point( 4096, 4096 ); }
 
 				virtual void SetToolTip( const Gwen::TextObject & strText );
-				virtual void SetToolTip( Base* tooltip ) { m_ToolTip = tooltip; if ( m_ToolTip ) { m_ToolTip->SetParent( this ); m_ToolTip->SetHidden( true ); } }
-				virtual Base* GetToolTip() { return m_ToolTip; }
+				virtual void SetToolTip( Controls::Base::Pointer tooltip ) { m_ToolTip = tooltip; if ( m_ToolTip ) { m_ToolTip->SetParent( this ); m_ToolTip->SetHidden( true ); } }
+				virtual Controls::Base::Pointer GetToolTip() { return m_ToolTip; }
 
 				virtual bool IsMenuComponent();
 				virtual void CloseMenus();
@@ -312,7 +300,7 @@ namespace Gwen
 
 
 				//Accelerator functionality
-				void DefaultAccel( Gwen::Controls::Base* /*pCtrl*/ ) { AcceleratePressed(); }
+				void DefaultAccel( Gwen::Controls::Base::Pointer /*pCtrl*/ ) { AcceleratePressed(); }
 				virtual void AcceleratePressed() {};
 				virtual bool AccelOnlyFocus() { return false; }
 				virtual bool HandleAccelerator( Gwen::UnicodeString & accelerator );
@@ -392,30 +380,29 @@ namespace Gwen
 
 				// The logical parent
 				// It's usually what you expect, the control you've parented it to.
-				Base* m_Parent;
+				Controls::Base::Pointer m_Parent;
 
 				// If the innerpanel exists our children will automatically
 				//  become children of that instead of us - allowing us to move
 				//  them all around by moving that panel (useful for scrolling etc)
-				Base* m_InnerPanel;
-				virtual Base* Inner() { return m_InnerPanel; }
+				Controls::Base::Pointer m_InnerPanel;
+				virtual Controls::Base::Pointer Inner( void ) { return m_InnerPanel; }
 
 				// This is the panel's actual parent - most likely the logical
 				//  parent's InnerPanel (if it has one). You should rarely need this.
-				Base* m_ActualParent;
+				Controls::Base::Pointer	m_ActualParent;
 
-				Base* m_ToolTip;
+				Controls::Base::Pointer m_ToolTip;
 
-				Skin::Base* m_Skin;
+				Skin::Base::Pointer 	m_Skin;
 
-				Gwen::Rect		m_Bounds;
-				Gwen::Rect		m_RenderBounds;
+				Gwen::Rect				m_Bounds;
+				Gwen::Rect				m_RenderBounds;
 
-				Padding		m_Padding;
-				Margin		m_Margin;
+				Padding					m_Padding;
+				Margin					m_Margin;
 
-				Gwen::String m_Name;
-
+				Gwen::String 			m_Name;
 
 				bool m_bRestrictToParent;
 				bool m_bDisabled;
@@ -440,9 +427,9 @@ namespace Gwen
 
 			protected:
 
-				virtual void RecurseLayout( Skin::Base* skin );
-				virtual void Layout( Skin::Base* skin );
-				virtual void PostLayout( Skin::Base* /*skin*/ ) {};
+				virtual void RecurseLayout( Skin::Base::Pointer skin );
+				virtual void Layout( Skin::Base::Pointer skin );
+				virtual void PostLayout( Skin::Base::Pointer /*skin*/ ) {};
 
 				bool m_bNeedsLayout;
 				bool m_bCacheTextureDirty;
@@ -498,9 +485,9 @@ namespace Gwen
 					return ident;
 				};
 
-				virtual GwenControls::Base* DynamicCast( const char* Variable )
+				virtual Controls::Base::Pointer DynamicCast( const char* Variable )
 				{
-					return NULL;
+					return Base::Pointer();
 				}
 
 
@@ -531,6 +518,15 @@ namespace Gwen
 		};
 
 	}
+	
+	namespace Align
+	{
+		inline void PlaceBelow( Controls::Base* ctrl, Controls::Base* below, int iBorder = 0 )
+		{
+			ctrl->SetPos( ctrl->X(), below->Bottom() + iBorder );
+		}
+	}
+
 }
 /*
 	To avoid using dynamic_cast we have gwen_cast.

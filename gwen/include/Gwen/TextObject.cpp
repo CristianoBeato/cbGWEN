@@ -27,4 +27,72 @@
 ============================================================================================
 */
 
-#include "TextObject.h"
+#include "TextObject.hpp"
+
+Gwen::TextObject::TextObject(void)
+{
+}
+
+Gwen::TextObject::TextObject( const Gwen::String & text )
+{
+	m_String = text;
+	m_Unicode = StringToUnicode( m_String );
+}
+			
+Gwen::TextObject::TextObject( const char* text )
+{
+	m_String = text;
+	m_Unicode = StringToUnicode( m_String );
+}
+
+Gwen::TextObject::TextObject( const wchar_t* text )
+{
+	m_Unicode = text;
+	m_String = UnicodeToString( m_Unicode );
+}
+
+Gwen::TextObject::TextObject( const Gwen::UnicodeString & unicode )
+{
+	*this = unicode;
+}
+
+void Gwen::TextObject::operator = ( const char* str )
+{
+	m_String = str;
+	m_Unicode = StringToUnicode( m_String );
+}
+
+void Gwen::TextObject::operator = ( const Gwen::String & str )
+{
+	m_String = str;
+	m_Unicode = StringToUnicode( m_String );
+}
+
+void Gwen::TextObject::operator = ( const Gwen::UnicodeString & unicodeStr )
+{
+	m_Unicode = unicodeStr;
+	m_String = UnicodeToString( m_Unicode );
+}
+
+Gwen::String Gwen::TextObject::UnicodeToString( const UnicodeString & strIn )
+{
+    if ( !strIn.length() ) { return "\0"; }
+
+	String temp( strIn.length(), ( char ) 0 );
+	std::use_facet< std::ctype<wchar_t> > ( std::locale() ). \
+	narrow( &strIn[0], &strIn[0] + strIn.length(), ' ', &temp[0] );
+	return temp;
+}
+
+Gwen::UnicodeString Gwen::TextObject::StringToUnicode( const String & strIn )
+{
+    if ( !strIn.length() )     
+    { 
+        return L"\0"; 
+    }
+
+	UnicodeString temp( strIn.length(), ( wchar_t ) 0 );
+	std::use_facet< std::ctype<wchar_t> > ( std::locale() ). \
+	widen( &strIn[0], &strIn[0] + strIn.length(), &temp[0] );
+	return temp;
+}

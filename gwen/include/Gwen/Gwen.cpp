@@ -3,7 +3,7 @@
 	GWEN
 
 	Copyright (c) 2010 Facepunch Studios.
-	Copyright (c) 2025 Cristiano Beato.
+	Copyright (c) 2025-2026 Cristiano Beato.
 
 	MIT License
 
@@ -28,11 +28,3 @@
 */
 
 #include "Gwen/Gwen.h"
-
-namespace Gwen
-{
-	// Globals
-	GWEN_EXPORT Platform::AutoPointer<Controls::Base> HoveredControl = Platform::AutoPointer<Controls::Base>();
-	GWEN_EXPORT Platform::AutoPointer<Controls::Base> KeyboardFocus = Platform::AutoPointer<Controls::Base>();
-	GWEN_EXPORT Platform::AutoPointer<Controls::Base> MouseFocus = Platform::AutoPointer<Controls::Base>();
-}

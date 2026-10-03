@@ -103,6 +103,7 @@ namespace Gwen
         AutoPointer( void );
         AutoPointer( const AutoPointer<_t> & in_ref );
         AutoPointer( const_pointer &in_ref );
+        AutoPointer( const_pointer in_const_ );
         ~AutoPointer( void );
 
         // dynamic casting 
@@ -117,7 +118,6 @@ namespace Gwen
 	    inline const_pointer    operator & ( void ) const;
 	    inline reference        operator *(void);
 	    inline const_reference  operator *( void ) const;
-        
         
         inline bool operator == ( const const_pointer &ptr );
         inline bool operator == ( const const_pointer &ptr ) const;
@@ -158,9 +158,15 @@ namespace Gwen
     {
         m_pointer = in_ref;        
         if( m_pointer )
-        {
             Object::IncRef( dynamic_cast<Object*>( m_pointer ) );
-        }
+    }
+
+    template<class _t>
+    inline AutoPointer<_t>::AutoPointer( const_pointer in_const_ )
+    {
+        m_pointer = in_const_;        
+        if( m_pointer )
+            Object::IncRef( dynamic_cast<Object*>( m_pointer ) );   
     }
 
     template <class _t>

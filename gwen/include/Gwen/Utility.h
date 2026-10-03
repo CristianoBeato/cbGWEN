@@ -34,46 +34,6 @@ namespace Gwen
 			return y;
 		}
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#endif
-
-		inline String UnicodeToString( const UnicodeString & strIn )
-		{
-			if ( !strIn.length() ) { return ""; }
-
-			String temp( strIn.length(), ( char ) 0 );
-			std::use_facet< std::ctype<wchar_t> > ( std::locale() ). \
-			narrow( &strIn[0], &strIn[0] + strIn.length(), ' ', &temp[0] );
-			return temp;
-		}
-
-		inline UnicodeString StringToUnicode( const String & strIn )
-		{
-			if ( !strIn.length() ) { return L""; }
-
-			UnicodeString temp( strIn.length(), ( wchar_t ) 0 );
-			std::use_facet< std::ctype<wchar_t> > ( std::locale() ). \
-			widen( &strIn[0], &strIn[0] + strIn.length(), &temp[0] );
-			return temp;
-		}
-
-		template<typename T> void Replace( T & str, const T & strFind, const T & strReplace )
-		{
-			size_t pos = 0;
-
-			while ( ( pos = str.find( strFind, pos ) ) != T::npos )
-			{
-				str.replace( pos, strFind.length(), strReplace );
-				pos += strReplace.length();
-			}
-		}
-
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
-
 		template <class T>
 		String ToString( const T & object )
 		{

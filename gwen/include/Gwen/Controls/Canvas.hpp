@@ -5,12 +5,6 @@
 */
 
 #pragma once
-#ifndef GWEN_CONTROLS_CANVAS_H
-#define GWEN_CONTROLS_CANVAS_H
-
-#include <set>
-#include "Gwen/Controls/Base.h"
-#include "Gwen/InputHandler.h"
 
 namespace Gwen
 {
@@ -56,7 +50,7 @@ namespace Gwen
 
 				// Childpanels call parent->GetCanvas() until they get to
 				// this top level function.
-				virtual Controls::Canvas::Pointer GetCanvas( void ) { return AutoPointer<Controls::Canvas>( this ); }
+				virtual Controls::Canvas::Pointer GetCanvas( void ) { return Controls::Canvas::Pointer( this ); }
 
 				virtual void SetScale( float f );
 				virtual float Scale( void ) const { return m_fScale; }
@@ -99,4 +93,3 @@ namespace Gwen
 		};
 	}
 }
-#endif

@@ -29,9 +29,6 @@
 
 #pragma once
 
-#include "Gwen/AutoPointer.h"
-#include "Gwen/BaseRender.h"
-
 namespace Gwen
 {
 	class Font : public Object
@@ -40,13 +37,22 @@ namespace Gwen
 		typedef AutoPointer<Font>			Pointer;
 		typedef std::list<Font::Pointer>	List;
 
-		Font( void )
+		Font( void ) : 
+			data( nullptr ),
+			realsize( 0 ),
+			bold( 0 )
 		{
-			data = nullptr;
 			facename = L"Arial";
 			size = 10;
-			realsize = 0;
-			bold = false;
+		}
+
+		Font( const UnicodeString in_face, const float in_size ) :
+			data( nullptr ),
+			realsize( 0 ),
+			bold( 0 )
+		{
+			size = in_size;
+			facename = in_face;
 		}
 
 		UnicodeString	facename;

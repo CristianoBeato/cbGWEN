@@ -1,22 +1,39 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025-2026 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
 #pragma once
-#ifndef GWEN_EVENTS_H
-#define GWEN_EVENTS_H
 
-#include <list>
-#include "Gwen/Exports.h"
-#include "Gwen/Structures.h"
-#include "Gwen/TextObject.h"
-#include "Gwen/ControlList.h"
+#include "AutoPointer.h"
+#include "ControlList.h"
 
 namespace Gwen
 {
-
 	namespace Controls
 	{
 		class Base;
@@ -31,34 +48,33 @@ namespace Gwen
 		*/
 		struct Information
 		{
-			Information() { Init(); }
+			Information( void ) { Init(); }
 			Information( Gwen::Controls::Base* pctrl ) { Init(); Control = pctrl; }
 
-			void Init()
+			void Init( void )
 			{
-				ControlCaller	= NULL;
-				Data			= NULL;
-				Control			= NULL;
+				ControlCaller	= nullptr;
+				Data			= nullptr;
+				Control			= nullptr;
 				Integer			= 0;
 			}
 
 			// This is set by the event caller, it will always be
 			// the control which is calling the event.
-			Gwen::Controls::Base*	ControlCaller;
+			AutoPointer<Controls::Base>	ControlCaller;
 
 			// This is set by the event hook
-			void*					Data;
+			void*						Data;
 
 			//
 			// These are set by the event and may or may not be set.
 			//
-			Gwen::Controls::Base*	Control;
+			AutoPointer<Controls::Base>	Control;
 
-			Gwen::ControlList		ControlList;
-			Gwen::TextObject		String;
-			Gwen::Point				Point;
-			int						Integer;
-
+			Gwen::ControlList			ControlList;
+			Gwen::TextObject			String;
+			Gwen::Point					Point;
+			int							Integer;
 		};
 
 		typedef const Gwen::Event::Information & Info;
@@ -84,10 +100,10 @@ namespace Gwen
 
 			public:
 
-				typedef void ( Handler::*Function )( Gwen::Controls::Base* pFromPanel );
+				typedef void ( Handler::*Function )( AutoPointer<Controls::Base> pFromPanel );
 				typedef void ( Handler::*FunctionBlank )();
 				typedef void ( Handler::*FunctionWithInformation )( Gwen::Event::Info info );
-				typedef void ( *GlobalFunction )( Gwen::Controls::Base* pFromPanel );
+				typedef void ( *GlobalFunction )( AutoPointer<Controls::Base> pFromPanel );
 				typedef void ( *GlobalFunctionBlank )();
 				typedef void ( *GlobalFunctionWithInformation )( Gwen::Event::Info info );
 
@@ -102,11 +118,11 @@ namespace Gwen
 		{
 			public:
 
-				Caller();
-				~Caller();
+				Caller( void );
+				~Caller( void );
 
-				void Call( Controls::Base* pThis );
-				void Call( Controls::Base* pThis, Gwen::Event::Info info );
+				void Call( AutoPointer<Controls::Base> pThis );
+				void Call( AutoPointer<Controls::Base> pThis, Gwen::Event::Info info );
 
 				template <typename T> void Add( Event::Handler* ob, T f ) {	AddInternal( ob, static_cast<Handler::Function>( f ) ); }
 				template <typename T> void Add( Event::Handler* ob, void ( T::*f )( Gwen::Event::Info ) ) { AddInternal( ob, static_cast<Handler::FunctionWithInformation>( f ) ); }
@@ -158,8 +174,5 @@ namespace Gwen
 
 				std::list<handler> m_Handlers;
 		};
-
 	}
-
 }
-#endif

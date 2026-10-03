@@ -1,15 +1,33 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025-2026 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
 #pragma once
-#ifndef GWEN_SKIN_H
-#define GWEN_SKIN_H
-
-#include "Gwen/BaseRender.h"
-#include "Gwen/Font.h"
 
 namespace Gwen
 {
@@ -22,10 +40,10 @@ namespace Gwen
 	{
 		namespace Symbol
 		{
-			static const unsigned char None				= 0;
-			static const unsigned char ArrowRight		= 1;
-			static const unsigned char Check			= 2;
-			static const unsigned char Dot				= 3;
+			inline constexpr unsigned char None				= 0;
+			inline constexpr unsigned char ArrowRight		= 1;
+			inline constexpr unsigned char Check			= 2;
+			inline constexpr unsigned char Dot				= 3;
 		}
 
 		class GWEN_EXPORT Base : public Object
@@ -33,92 +51,76 @@ namespace Gwen
 			public:
 				typedef AutoPointer<Skin::Base>	Pointer;
 
-				Base( Renderer::Base::Pointer renderer = Renderer::Base::Pointer() )
-				{
-					m_DefaultFont.facename = L"Arial";
-					m_DefaultFont.size = 10.0f;
-					m_Render = renderer;
-				}
+				Base( Renderer::Base::Pointer renderer = Renderer::Base::Pointer() );
+				
+				virtual ~Base( void );
 
-				virtual ~Base( void )
-				{
-					ReleaseFont( &m_DefaultFont );
-				}
+				virtual void ReleaseFont( Gwen::Font::Pointer fnt );
+				
+				virtual void DrawGenericPanel( AutoPointer<Controls::Base> control ) = 0;
 
-				virtual void ReleaseFont( Gwen::Font* fnt )
-				{
-					if ( !fnt ) { return; }
+				virtual void DrawButton( AutoPointer<Controls::Base> control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
+				virtual void DrawTabButton( AutoPointer<Controls::Base> control, bool bActive, int dir ) = 0;
+				virtual void DrawTabControl( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawTabTitleBar( AutoPointer<Controls::Base> control ) = 0;
 
-					if ( !m_Render ) { return; }
+				virtual void DrawMenuItem( AutoPointer<Controls::Base> control, bool bSubmenuOpen, bool bChecked ) = 0;
+				virtual void DrawMenuStrip( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawMenu( AutoPointer<Controls::Base> control, bool bPaddingDisabled ) = 0;
+				virtual void DrawMenuRightArrow( AutoPointer<Controls::Base> control ) = 0;
 
-					m_Render->FreeFont( fnt );
-				}
+				virtual void DrawRadioButton( AutoPointer<Controls::Base> control, bool bSelected, bool bDepressed ) = 0;
+				virtual void DrawCheckBox( AutoPointer<Controls::Base> control, bool bSelected, bool bDepressed ) = 0;
+				virtual void DrawGroupBox( AutoPointer<Controls::Base> control, int textStart, int textHeight, int textWidth ) = 0;
+				virtual void DrawTextBox( AutoPointer<Controls::Base> control ) = 0;
 
-				virtual void DrawGenericPanel( Controls::Base* control ) = 0;
+				virtual void DrawWindow( AutoPointer<Controls::Base> control, int topHeight, bool inFocus ) = 0;
+				virtual void DrawWindowCloseButton( Gwen::AutoPointer<Controls::Base> control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
+				virtual void DrawWindowMaximizeButton( Gwen::AutoPointer<Controls::Base> control, bool bDepressed, bool bHovered, bool bDisabled, bool bMaximized ) = 0;
+				virtual void DrawWindowMinimizeButton( Gwen::AutoPointer<Controls::Base> control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
 
-				virtual void DrawButton( Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
-				virtual void DrawTabButton( Controls::Base* control, bool bActive, int dir ) = 0;
-				virtual void DrawTabControl( Controls::Base* control ) = 0;
-				virtual void DrawTabTitleBar( Controls::Base* control ) = 0;
+				virtual void DrawHighlight( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawStatusBar( AutoPointer<Controls::Base> control ) = 0;
 
+				virtual void DrawShadow( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawScrollBarBar( AutoPointer<Controls::Base> control, bool bDepressed, bool isHovered, bool isHorizontal ) = 0;
+				virtual void DrawScrollBar( AutoPointer<Controls::Base> control, bool isHorizontal, bool bDepressed ) = 0;
+				virtual void DrawScrollButton( AutoPointer<Controls::Base> control, int iDirection, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
+				virtual void DrawProgressBar( AutoPointer<Controls::Base> control, bool isHorizontal, float progress ) = 0;
 
-				virtual void DrawMenuItem( Controls::Base* control, bool bSubmenuOpen, bool bChecked ) = 0;
-				virtual void DrawMenuStrip( Controls::Base* control ) = 0;
-				virtual void DrawMenu( Controls::Base* control, bool bPaddingDisabled ) = 0;
-				virtual void DrawMenuRightArrow( Controls::Base* control ) = 0;
+				virtual void DrawListBox( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawListBoxLine( AutoPointer<Controls::Base> control, bool bSelected, bool bEven ) = 0;
 
-				virtual void DrawRadioButton( Controls::Base* control, bool bSelected, bool bDepressed ) = 0;
-				virtual void DrawCheckBox( Controls::Base* control, bool bSelected, bool bDepressed ) = 0;
-				virtual void DrawGroupBox( Controls::Base* control, int textStart, int textHeight, int textWidth ) = 0;
-				virtual void DrawTextBox( Controls::Base* control ) = 0;
+				virtual void DrawSlider( AutoPointer<Controls::Base> control, bool bIsHorizontal, int numNotches, int barSize ) = 0;
+				virtual void DrawSlideButton( Gwen::AutoPointer<Controls::Base> control, bool bDepressed, bool bHorizontal ) = 0;
 
-				virtual void DrawWindow( Controls::Base* control, int topHeight, bool inFocus ) = 0;
-				virtual void DrawWindowCloseButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
-				virtual void DrawWindowMaximizeButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled, bool bMaximized ) = 0;
-				virtual void DrawWindowMinimizeButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
+				virtual void DrawComboBox( AutoPointer<Controls::Base> control, bool bIsDown, bool bIsMenuOpen ) = 0;
+				virtual void DrawComboDownArrow( Gwen::AutoPointer<Controls::Base> control, bool bHovered, bool bDown, bool bOpen, bool bDisabled ) = 0;
+				virtual void DrawKeyboardHighlight( AutoPointer<Controls::Base> control, const Gwen::Rect & rect, int offset ) = 0;
+				virtual void DrawToolTip( AutoPointer<Controls::Base> control ) = 0;
 
+				virtual void DrawNumericUpDownButton( AutoPointer<Controls::Base> control, bool bDepressed, bool bUp ) = 0;
 
-				virtual void DrawHighlight( Controls::Base* control ) = 0;
-				virtual void DrawStatusBar( Controls::Base* control ) = 0;
-
-				virtual void DrawShadow( Controls::Base* control ) = 0;
-				virtual void DrawScrollBarBar( Controls::Base* control, bool bDepressed, bool isHovered, bool isHorizontal ) = 0;
-				virtual void DrawScrollBar( Controls::Base* control, bool isHorizontal, bool bDepressed ) = 0;
-				virtual void DrawScrollButton( Controls::Base* control, int iDirection, bool bDepressed, bool bHovered, bool bDisabled ) = 0;
-				virtual void DrawProgressBar( Controls::Base* control, bool isHorizontal, float progress ) = 0;
-
-				virtual void DrawListBox( Controls::Base* control ) = 0;
-				virtual void DrawListBoxLine( Controls::Base* control, bool bSelected, bool bEven ) = 0;
-
-				virtual void DrawSlider( Controls::Base* control, bool bIsHorizontal, int numNotches, int barSize ) = 0;
-				virtual void DrawSlideButton( Gwen::Controls::Base* control, bool bDepressed, bool bHorizontal ) = 0;
-
-				virtual void DrawComboBox( Controls::Base* control, bool bIsDown, bool bIsMenuOpen ) = 0;
-				virtual void DrawComboDownArrow( Gwen::Controls::Base* control, bool bHovered, bool bDown, bool bOpen, bool bDisabled ) = 0;
-				virtual void DrawKeyboardHighlight( Controls::Base* control, const Gwen::Rect & rect, int offset ) = 0;
-				virtual void DrawToolTip( Controls::Base* control ) = 0;
-
-				virtual void DrawNumericUpDownButton( Controls::Base* control, bool bDepressed, bool bUp ) = 0;
-
-				virtual void DrawTreeButton( Controls::Base* control, bool bOpen ) = 0;
-				virtual void DrawTreeControl( Controls::Base* control ) = 0;
-				virtual void DrawTreeNode( Controls::Base* ctrl, bool bOpen, bool bSelected, int iLabelHeight, int iLabelWidth, int iHalfWay, int iLastBranch, bool bIsRoot );
+				virtual void DrawTreeButton( AutoPointer<Controls::Base> control, bool bOpen ) = 0;
+				virtual void DrawTreeControl( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawTreeNode( AutoPointer<Controls::Base> ctrl, bool bOpen, bool bSelected, int iLabelHeight, int iLabelWidth, int iHalfWay, int iLastBranch, bool bIsRoot );
 
 				virtual void DrawPropertyRow( Controls::Base* control, int iWidth, bool bBeingEdited, bool bHovered );
-				virtual void DrawPropertyTreeNode( Controls::Base* control, int BorderLeft, int BorderTop );
-				virtual void DrawColorDisplay( Controls::Base* control, Gwen::Color color ) = 0;
-				virtual void DrawModalControl( Controls::Base* control ) = 0;
-				virtual void DrawMenuDivider( Controls::Base* control ) = 0;
+				virtual void DrawPropertyTreeNode( AutoPointer<Controls::Base> control, int BorderLeft, int BorderTop );
+				virtual void DrawColorDisplay( AutoPointer<Controls::Base> control, Gwen::Color color ) = 0;
+				virtual void DrawModalControl( AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawMenuDivider( AutoPointer<Controls::Base> control ) = 0;
 
-				virtual void DrawCategoryHolder( Controls::Base* ctrl ) = 0;
-				virtual void DrawCategoryInner( Controls::Base* ctrl, bool bCollapsed ) = 0;
+				virtual void DrawCategoryHolder( AutoPointer<Controls::Base> ctrl ) = 0;
+				virtual void DrawCategoryInner( AutoPointer<Controls::Base> ctrl, bool bCollapsed ) = 0;
 
 
-				virtual void SetRender( Gwen::Renderer::Base* renderer )
+				virtual void SetRender( Gwen::Renderer::Base::Pointer renderer )
 				{
 					m_Render = renderer;
 				}
-				virtual Gwen::Renderer::Base* GetRender()
+
+				virtual Gwen::Renderer::Base::Pointer GetRender( void )
 				{
 					return m_Render;
 				}
@@ -236,17 +238,8 @@ namespace Gwen
 
 
 			public:
-
-				virtual Gwen::Font::Pointer GetDefaultFont( void )
-				{
-					return &m_DefaultFont;
-				}
-
-				virtual void SetDefaultFont( const Gwen::UnicodeString & strFacename, float fSize = 10.0f )
-				{
-					m_DefaultFont.facename = strFacename;
-					m_DefaultFont.size = fSize;
-				}
+				virtual Font::Pointer GetDefaultFont( void );
+				virtual void SetDefaultFont( const Gwen::UnicodeString & strFacename, const float fSize = 10.0f );
 
 			protected:
 				Gwen::Font::Pointer		m_DefaultFont;
@@ -254,4 +247,3 @@ namespace Gwen
 		};
 	};
 }
-#endif

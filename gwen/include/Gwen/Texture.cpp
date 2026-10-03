@@ -3,7 +3,7 @@
 	GWEN
 
 	Copyright (c) 2010 Facepunch Studios.
-	Copyright (c) 2025-2026 Cristiano Beato.
+	Copyright (c) 2025 Cristiano Beato.
 
 	MIT License
 
@@ -27,44 +27,34 @@
 ============================================================================================
 */
 
-#pragma once
 
-// can be referenced outside the source 
-#include <cmath>
-#include <string>
-#include <algorithm>
-#include <set>
-#include <vector>
-#include <list>
-#include <map>
-#include <queue>
+#include "Texture.hpp"
 
-// Enable the hook system (se Hook.h)
-#define GWEN_HOOKSYSTEM
-
-#include "Gwen/Macros.h"
-#include "Gwen/Config.h"
-#include "Gwen/Exports.h"
-#include "Gwen/Structures.h"
-#include "Gwen/AutoPointer.h"
-#include "Gwen/Platform/Platform.h"
-#include "Gwen/TextObject.hpp"
-#include "Gwen/Font.h"
-#include "Gwen/Texture.hpp"
-#include "Gwen/Renderer/Base.hpp"
-#include "Gwen/Skins/Base.hpp"
-#include "Gwen/InputHandler.h"
-#include "Gwen/ControlList.h"
-#include "Gwen/Events.h"
-#include "Gwen/DragAndDrop.h"
-#include "Gwen/UserData.h"
-#include "Gwen/Controls.h"
-
-#ifndef GWEN_NO_ANIMATION
-#include "Gwen/Anim.h"
-#endif
-
-namespace Gwen
+Gwen::Texture::Texture( void ) : 
+    data( nullptr ),
+    width( 0 ),
+    height( 0 ),
+    failed( true )
 {
+}
 
-} //namespace Gwen
+Gwen::Texture::~Texture( void )
+{
+}
+
+void Gwen::Texture::Load( const TextObject & str, AutoPointer<Renderer::Base> render )
+{
+	name = str;
+	Gwen::Debug::AssertCheck( render != NULL, "No renderer!" );
+	render->LoadTexture( this );
+}
+
+void Gwen::Texture::Release( AutoPointer<Renderer::Base> render )
+{
+	render->FreeTexture( this );
+}
+
+bool Gwen::Texture::FailedToLoad( void ) const
+{
+	return failed;
+}

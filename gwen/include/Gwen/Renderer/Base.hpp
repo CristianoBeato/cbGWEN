@@ -42,19 +42,19 @@ namespace Gwen
 	{
 		class Base;
 
-		class ICacheToTexture
+		class GWEN_EXPORT ICacheToTexture: public Object
 		{
 			public:
-
-				virtual ~ICacheToTexture() {}
-				virtual void Initialize() = 0;
-				virtual void ShutDown() = 0;
-				virtual void SetupCacheTexture( Gwen::Controls::Base* control ) = 0;
-				virtual void FinishCacheTexture( Gwen::Controls::Base* control ) = 0;
-				virtual void DrawCachedControlTexture( Gwen::Controls::Base* control ) = 0;
-				virtual void CreateControlCacheTexture( Gwen::Controls::Base* control ) = 0;
-				virtual void UpdateControlCacheTexture( Gwen::Controls::Base* control ) = 0;
-				virtual void SetRenderer( Gwen::Renderer::Base* renderer ) = 0;
+				typedef AutoPointer<Renderer::Base>	Pointer;
+				virtual ~ICacheToTexture( void ) {}
+				virtual void Initialize( void ) = 0;
+				virtual void ShutDown( void ) = 0;
+				virtual void SetupCacheTexture(  AutoPointer<Controls::Base> control ) = 0;
+				virtual void FinishCacheTexture(  AutoPointer<Controls::Base> control ) = 0;
+				virtual void DrawCachedControlTexture(  AutoPointer<Controls::Base> control ) = 0;
+				virtual void CreateControlCacheTexture(  AutoPointer<Controls::Base> control ) = 0;
+				virtual void UpdateControlCacheTexture( AutoPointer<Controls::Base> control ) = 0;
+				virtual void SetRenderer( AutoPointer<Renderer::Base> renderer ) = 0;
 
 		};
 
@@ -86,10 +86,10 @@ namespace Gwen
 
 				virtual ICacheToTexture* GetCTT() { return NULL; }
 
-				virtual void LoadFont( Gwen::Font* pFont ) {};
-				virtual void FreeFont( Gwen::Font* pFont ) {};
-				virtual void RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::UnicodeString & text );
-				virtual Gwen::Point MeasureText( Gwen::Font* pFont, const Gwen::UnicodeString & text );
+				virtual void LoadFont( Gwen::Font::Pointer pFont ) {};
+				virtual void FreeFont( Gwen::Font::Pointer pFont ) {};
+				virtual void RenderText( Gwen::Font::Pointer pFont, Gwen::Point pos, const Gwen::UnicodeString & text );
+				virtual Gwen::Point MeasureText( Gwen::Font::Pointer pFont, const Gwen::UnicodeString & text );
 
 				//
 				// No need to implement these functions in your derived class, but if
@@ -98,8 +98,8 @@ namespace Gwen
 				virtual void DrawLinedRect( Gwen::Rect rect );
 				virtual void DrawPixel( int x, int y );
 				virtual void DrawShavedCornerRect( Gwen::Rect rect, bool bSlight = false );
-				virtual Gwen::Point MeasureText( Gwen::Font* pFont, const Gwen::String & text );
-				virtual void RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::String & text );
+				virtual Gwen::Point MeasureText( Gwen::Font::Pointer pFont, const Gwen::String & text );
+				virtual void RenderText( Gwen::Font::Pointer pFont, Gwen::Point pos, const Gwen::String & text );
 
 			public:
 

@@ -22,6 +22,29 @@ namespace Gwen
 
 		*/
 
+		Base::Base( Renderer::Base::Pointer renderer = Renderer::Base::Pointer() )
+		{
+			m_DefaultFont = Font::Pointer( new Font( L"Arial", 10.0f ) );  
+			m_Render = renderer;
+		}
+
+		Base::~Base( void )
+		{
+			ReleaseFont( &m_DefaultFont );
+		}
+
+		void ReleaseFont( Gwen::Font::Pointer fnt )
+		{
+			if ( !fnt )
+				return;
+
+			if ( !m_Render )
+				return;
+
+			m_Render->FreeFont( fnt );
+		}
+
+
 		void Base::DrawArrowDown( Gwen::Rect rect )
 		{
 			float x = ( rect.w / 5.0f );
@@ -77,7 +100,7 @@ namespace Gwen
 			m_Render->DrawFilledRect( Gwen::Rect( rect.x + x * 4.0f, rect.y + y * 0.0f, x * 2, y * 2 ) );
 		}
 
-		void Base::DrawTreeNode( Controls::Base* ctrl, bool bOpen, bool bSelected, int iLabelHeight, int iLabelWidth, int iHalfWay, int iLastBranch, bool bIsRoot )
+		void Base::DrawTreeNode( AutoPointer<Controls::Base> ctrl, bool bOpen, bool bSelected, int iLabelHeight, int iLabelWidth, int iHalfWay, int iLastBranch, bool bIsRoot )
 		{
 			GetRender()->SetDrawColor( Colors.Tree.Lines );
 
@@ -89,7 +112,7 @@ namespace Gwen
 			GetRender()->DrawFilledRect( Gwen::Rect( 14 + 7, iLabelHeight + 1, 1, iLastBranch + iHalfWay - iLabelHeight ) );
 		}
 
-		void Base::DrawPropertyTreeNode( Controls::Base* control, int BorderLeft, int BorderTop )
+		void Base::DrawPropertyTreeNode( AutoPointer<Controls::Base> control, int BorderLeft, int BorderTop )
 		{
 			Gwen::Rect rect = control->GetRenderBounds();
 			m_Render->SetDrawColor( Colors.Properties.Border );
@@ -97,7 +120,7 @@ namespace Gwen
 			m_Render->DrawFilledRect( Gwen::Rect( rect.x + BorderLeft, rect.y, rect.w - BorderLeft, BorderTop ) );
 		}
 
-		void Base::DrawPropertyRow( Controls::Base* control, int iWidth, bool bBeingEdited, bool bHovered )
+		void Base::DrawPropertyRow( AutoPointer<Controls::Base> control, int iWidth, bool bBeingEdited, bool bHovered )
 		{
 			Gwen::Rect rect = control->GetRenderBounds();
 
@@ -115,6 +138,16 @@ namespace Gwen
 			rect.y += rect.h - 1;
 			rect.h = 1;
 			m_Render->DrawFilledRect( rect );
+		}
+
+		Font::Pointer Base::GetDefaultFont( void )
+		{
+			return &m_DefaultFont;
+		}
+
+		void Base::SetDefaultFont( const Gwen::UnicodeString & strFacename, const float fSize = 10.0f )
+		{	
+			m_DefaultFont = new Font( strFacename, fSize );
 		}
 	}
 }
