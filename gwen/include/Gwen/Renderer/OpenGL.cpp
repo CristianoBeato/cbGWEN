@@ -5,31 +5,31 @@
 #include <SDL3/SDL_surface.h>
 #include <GL/glcorearb.h>
 
-static PFNGLGETBOOLEANVPROC					glGetBooleanv = nullptr;
-static PFNGLGETINTEGERVPROC					glGetIntegerv = nullptr;
-static PFNGLGETFLOATVPROC					glGetFloatv = nullptr;
+static PFNGLGETBOOLEANVPROC						glGetBooleanv = nullptr;
+static PFNGLGETINTEGERVPROC						glGetIntegerv = nullptr;
+static PFNGLGETFLOATVPROC						glGetFloatv = nullptr;
 
-static PFNGLENABLEPROC						glEnable = nullptr;
-static PFNGLDISABLEPROC						glDisable = nullptr;
+static PFNGLENABLEPROC							glEnable = nullptr;
+static PFNGLDISABLEPROC							glDisable = nullptr;
 
-static PFNGLFLUSHPROC						glFlush = nullptr;
-static PFNGLFINISHPROC						glFinish = nullptr;
+static PFNGLFLUSHPROC							glFlush = nullptr;
+static PFNGLFINISHPROC							glFinish = nullptr;
 
-static PFNGLSCISSORPROC						glScissor = nullptr;
+static PFNGLSCISSORPROC							glScissor = nullptr;
 
-static PFNGLBLENDFUNCPROC 					glBlendFunc = nullptr;
-static PFNGLCLEARCOLORPROC					glClearColor = nullptr;
-static PFNGLCLEARPROC						glClear = nullptr;
+static PFNGLBLENDFUNCPROC 						glBlendFunc = nullptr;
+static PFNGLCLEARCOLORPROC						glClearColor = nullptr;
+static PFNGLCLEARPROC							glClear = nullptr;
 
-static PFNGLDRAWARRAYSPROC					glDrawArrays = nullptr;
-static PFNGLDRAWELEMENTSINDIRECTPROC		glDrawElementsIndirect = nullptr;
+static PFNGLDRAWARRAYSPROC						glDrawArrays = nullptr;
+static PFNGLDRAWELEMENTSINDIRECTPROC			glDrawElementsIndirect = nullptr;
 
 // Buffer Objects
-static PFNGLCREATEBUFFERSPROC				glCreateBuffers = nullptr;
-static PFNGLDELETEBUFFERSPROC				glDeleteBuffers = nullptr;
-static PFNGLNAMEDBUFFERSTORAGEPROC			glNamedBufferStorage = nullptr;
-static PFNGLMAPNAMEDBUFFERRANGEPROC			glMapNamedBufferRange = nullptr;
-static PFNGLUNMAPNAMEDBUFFERPROC			glUnmapNamedBuffer = nullptr;
+static PFNGLCREATEBUFFERSPROC					glCreateBuffers = nullptr;
+static PFNGLDELETEBUFFERSPROC					glDeleteBuffers = nullptr;
+static PFNGLNAMEDBUFFERSTORAGEPROC				glNamedBufferStorage = nullptr;
+static PFNGLMAPNAMEDBUFFERRANGEPROC				glMapNamedBufferRange = nullptr;
+static PFNGLUNMAPNAMEDBUFFERPROC				glUnmapNamedBuffer = nullptr;
 
 // Sampler object
 static PFNGLCREATESAMPLERSPROC					glCreateSamplers = nullptr;

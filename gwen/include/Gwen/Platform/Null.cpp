@@ -5,7 +5,7 @@
 */
 
 #include "Gwen/Macros.h"
-#include "Gwen/Platform.h"
+#include "Gwen/Platform/Platform.h"
 
 #if !defined(_WIN32) && !defined(GWEN_ALLEGRO_PLATFORM)
 

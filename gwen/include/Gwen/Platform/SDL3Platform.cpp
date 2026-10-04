@@ -27,9 +27,7 @@
 ============================================================================================
 */
 
-#include "Precompiled.hpp"
 #include "Gwen/Platform/SDL3Platform.h"
-
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_clipboard.h>
