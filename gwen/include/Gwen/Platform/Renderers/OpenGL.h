@@ -4,26 +4,22 @@
 	See license in Gwen.h
 */
 
-#ifndef GWEN_RENDERERS_OPENGL_H
-#define GWEN_RENDERERS_OPENGL_H
-
+#pragma once
 #include "Gwen/Gwen.h"
-#include "Gwen/BaseRender.h"
+
+class glBuffer;
+class glSampler;
+class glTexture;
 
 namespace Gwen
 {
 	namespace Renderer
 	{
+		inline constexpr int MAX_TEXTURE_COUNT = 512;
+
 		class OpenGL : public Gwen::Renderer::Base
 		{
 			public:
-				struct Vertex
-				{
-					float x, y, z;
-					float u, v;
-					unsigned char r, g, b, a;
-				};
-
 				OpenGL( void );
 				~OpenGL( void );
 				virtual void Init( void );
@@ -41,33 +37,39 @@ namespace Gwen
 				virtual Gwen::Color PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color & col_default );
 
 			protected:
-
-				static const int	MaxVerts = 1024;
 				void Flush( void );
-				void AddVert( int x, int y, float u = 0.0f , float v = 0.0f );
 
 				Gwen::Color			m_Color;
-				int					m_iVertNum;
-				Vertex				m_Vertices[ MaxVerts ];
 				Gwen::Texture*		m_pFontTexture;
 				float				m_fFontScale[2];
 				float				m_fLetterSpacing;
+				glBuffer*			m_indirectDraw;
+				glBuffer*			m_vertexBuffer;
+				glBuffer*			m_indexBuffer;
+				glBuffer*			m_textureHandleBuffer;
+				glSampler*			m_whiteSamp;
+				glTexture*			m_white;
+				glSampler*			m_fontSamp;
+				glTexture*			m_fontText;
+				glTexture*			m_textureArray[MAX_TEXTURE_COUNT];			
 
 			public:
 				//
 				// Self Initialization
 				//
-				void CreateDebugFont( void );
-				void DestroyDebugFont( void );
-				virtual bool InitializeContext( Gwen::WindowProvider* pWindow );
-				virtual bool ShutdownContext( Gwen::WindowProvider* pWindow );
-				virtual bool PresentContext( Gwen::WindowProvider* pWindow );
-				virtual bool ResizedContext( Gwen::WindowProvider* pWindow, int w, int h );
-				virtual bool BeginContext( Gwen::WindowProvider* pWindow );
-				virtual bool EndContext( Gwen::WindowProvider* pWindow );
-				void*	m_pContext;
+				void			CreateBuffers( void );
+				void			CreateShaders( void );
+				void			CreateDebugFont( void );
+				void			DestroyDebugFont( void );
+				void			DestoryShaders( void );
+				void			DestroyBuffers( void );
+				virtual bool	InitializeContext( Gwen::WindowProvider* pWindow );
+				virtual bool	ShutdownContext( Gwen::WindowProvider* pWindow );
+				virtual bool	PresentContext( Gwen::WindowProvider* pWindow );
+				virtual bool	ResizedContext( Gwen::WindowProvider* pWindow, int w, int h );
+				virtual bool	BeginContext( Gwen::WindowProvider* pWindow );
+				virtual bool	EndContext( Gwen::WindowProvider* pWindow );
 		};
 
 	}
 }
-#endif
