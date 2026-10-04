@@ -168,22 +168,18 @@ bool Gwen::Platform::SDL3::FolderOpen( const String & Name, const String & Start
 
 void* Gwen::Platform::SDL3::CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle )
 {
-	// since we need to set the renderer on window creation, we don't crea the window here, 
-	// we will create the window direct in the renderer structures 
-	SDL3Window* newWindow = new SDL3Window( (uint32_t)w, (uint32_t)h, strWindowTitle.c_str() );
-	reinterpret_cast<void*>( newWindow );
+	// Just store the window properties, we need create the window acordly to the renderer 
+	return reinterpret_cast<void*>( new SDL3WindowHandle( w, h, strWindowTitle ) );
 }
 
 void Gwen::Platform::SDL3::DestroyPlatformWindow( void* pPtr )
 {
-	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
+	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
 	delete window; // just destroy window
 }
 
 void Gwen::Platform::SDL3::SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h )
-{
-	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
-	// TODO:
+{	// TODO:
 }
 
 void Gwen::Platform::SDL3::MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget )
@@ -193,13 +189,13 @@ void Gwen::Platform::SDL3::MessagePump( void* pWindow, Gwen::Controls::Canvas* p
 
 bool Gwen::Platform::SDL3::HasFocusPlatformWindow( void* pPtr )
 {
-	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
+	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
 	return window->HasFocus();
 }
 
 void Gwen::Platform::SDL3::SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize )
 {
-	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
+	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
 	if ( bMaximized )
 		window->Maximize();
 	else
@@ -208,57 +204,62 @@ void Gwen::Platform::SDL3::SetWindowMaximized( void* pPtr, bool bMaximized, Gwen
 
 void Gwen::Platform::SDL3::SetWindowMinimized( void* pPtr, bool bMinimized )
 {
-	SDL3Window* window = static_cast<SDL3Window*>( pPtr );
+	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
 	if ( bMinimized )
 		window->Minimize();
 	else
 		window->Restore();	
 }
 
-Gwen::Platform::SDL3Window::SDL3Window(const uint32_t in_width, const uint32_t in_height, const char *in_title ) : 
-	m_width( in_width ),
-	m_height( in_height ),
-	m_title( in_title ),
-	m_window( nullptr )
+Gwen::Platform::SDL3WindowHandle::SDL3WindowHandle(const int in_width, const int in_height, String &in_name )
 {
+	m_width = in_width;
+	m_height = in_height;
+	m_name = in_name;
 }
 
-Gwen::Platform::SDL3Window::~SDL3Window(void)
+Gwen::Platform::SDL3WindowHandle::~SDL3WindowHandle( void )
 {
-	if ( m_window != nullptr )
+	if ( m_handle != nullptr )
 	{
-		SDL_DestroyWindow( m_window ); 
-		m_window = nullptr;
+		SDL_DestroyWindow( m_handle ); 
+		m_handle = nullptr;
 	}
 
 	m_width = 0;
 	m_height = 0;
-	m_title = nullptr;
 }
 
-bool Gwen::Platform::SDL3Window::Create(const uint32_t in_flags)
+void Gwen::Platform::SDL3WindowHandle::Maximize(void)
 {
-	m_window = SDL_CreateWindow( m_title, m_width, m_height, in_flags );
-    return m_window != nullptr;;
+	if ( !m_handle )
+		return;
+
+	SDL_MaximizeWindow( m_handle );
 }
 
-void Gwen::Platform::SDL3Window::Maximize(void)
+void Gwen::Platform::SDL3WindowHandle::Minimize(void)
 {
-	SDL_MaximizeWindow( m_window );
+	if ( !m_handle )
+		return;
+
+	SDL_MinimizeWindow( m_handle );
 }
 
-void Gwen::Platform::SDL3Window::Minimize(void)
+void Gwen::Platform::SDL3WindowHandle::Restore(void)
 {
-	SDL_MinimizeWindow( m_window );
+	if ( !m_handle )
+		return;
+
+	SDL_RestoreWindow( m_handle );
 }
 
-void Gwen::Platform::SDL3Window::Restore(void)
+bool Gwen::Platform::SDL3WindowHandle::HasFocus(void) const
 {
-	SDL_RestoreWindow( m_window );
-}
+	if ( !m_handle )
+		return false;
 
-bool Gwen::Platform::SDL3Window::HasFocus(void) const
-{
-	SDL_WindowFlags flags = SDL_GetWindowFlags( m_window );
+
+	SDL_WindowFlags flags = SDL_GetWindowFlags( m_handle );
 	return flags & SDL_WINDOW_INPUT_FOCUS;
 }

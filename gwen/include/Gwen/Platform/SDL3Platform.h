@@ -27,8 +27,7 @@
 ============================================================================================
 */
 
-#ifndef GWEN_SDL_PLATFORM_H
-#define GWEN_SDL_PLATFORM_H
+#pragma once
 
 #include "Gwen/Structures.h"
 #include "Gwen/Events.h"
@@ -37,22 +36,33 @@ namespace Gwen
 {
 	namespace Platform
 	{
-		class SDL3Window
+		class SDL3WindowHandle
 		{
 		public:
-			SDL3Window( const uint32_t in_width, const uint32_t in_height, const char* in_title );
-			~SDL3Window( void );
-			bool	Create( const uint32_t in_flags );
+			SDL3WindowHandle( const int in_width, const int in_height, String &in_name );
+			~SDL3WindowHandle( void );
+
+			/// @brief Create a OpenGL Based Window
+			/// @return true on success 
+			bool	CreateWindowOpenGL( void );
+			
+			/// @brief Create a Window Hadle 
+			/// @return true on succes 
+			bool	CreateWindowRenderer( void );
+
 			void	Maximize( void );
 			void	Minimize( void );
 			void	Restore( void );
+
 			bool	HasFocus( void ) const;
 
+			SDL_Window*	GetHandle( void ) const { return m_handle; }
+
 		private:
-			const char*			m_title;
-			uint32_t			m_width;
-			uint32_t			m_height;
-			struct SDL_Window*	m_window;
+			int 		m_width;
+			int			m_height;
+			String		m_name;
+			SDL_Window*	m_handle;
 		};
 
 		class GWEN_EXPORT SDL3 : public Platform::Base
@@ -106,15 +116,13 @@ namespace Gwen
 				//
 				// Window Creation
 				//
-				virtual void* CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle ) { return nullptr; }
-				virtual void DestroyPlatformWindow( void* pPtr ) {}
-				virtual void SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h ) { }
-				virtual void MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget ) { }
-				virtual bool HasFocusPlatformWindow( void* pPtr ) { return false; }
-				virtual void SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize ) {}
-				virtual void SetWindowMinimized( void* pPtr, bool bMinimized ) {}
+				virtual void* CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle );
+				virtual void DestroyPlatformWindow( void* pPtr );
+				virtual void SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h );
+				virtual void MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget );
+				virtual bool HasFocusPlatformWindow( void* pPtr );
+				virtual void SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize );
+				virtual void SetWindowMinimized( void* pPtr, bool bMinimized );
 		};
 	}
 }
-
-#endif // !GWEN_SDL_PLATFORM_H
