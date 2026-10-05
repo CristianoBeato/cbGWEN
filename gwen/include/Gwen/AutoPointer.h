@@ -127,13 +127,7 @@ namespace Gwen
         inline bool operator != ( const_pointer &ptr ) const;
         inline bool operator != ( const AutoPointer<_t> &in_ref );
 	    inline explicit operator bool( void ) const noexcept;
-        
-        template< class _u >
-        inline bool operator == ( const AutoPointer<_u> &in_ref );    
 
-        template< class _u >                
-        inline bool operator != ( const AutoPointer<_u> &in_ref );
-        
     private:
             pointer m_pointer;
     };
@@ -164,7 +158,7 @@ namespace Gwen
     template<class _t>
     inline AutoPointer<_t>::AutoPointer( const_pointer in_const_ )
     {
-        m_pointer = in_const_;        
+        m_pointer = const_cast<pointer>( in_const_ );        
         if( m_pointer )
             Object::IncRef( dynamic_cast<Object*>( m_pointer ) );   
     }
@@ -174,8 +168,8 @@ namespace Gwen
     {
         if( m_pointer )
         {
-            
-            Object::DecRef( m_pointer );
+            auto p = dynamic_cast<Object*>( m_pointer );
+            Object::DecRef( p );
             m_pointer = nullptr;
         }
     }
