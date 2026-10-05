@@ -38,14 +38,14 @@ namespace Gwen
 			public:
 
 				typedef std::list<Animation*> ChildList;
-				typedef std::map< Gwen::Controls::Base*, ChildList > List;
+				typedef std::map<AutoPointer<Controls::Base>, ChildList > List;
 
 				virtual void Think() = 0;
 				virtual bool Finished() { return false; }
 
 				virtual ~Animation() {}
 
-				Gwen::Controls::Base*	m_Control;
+				AutoPointer<Controls::Base>	m_Control;
 		};
 
 		GWEN_EXPORT void Add( Gwen::Controls::Base* control, Animation* animation );

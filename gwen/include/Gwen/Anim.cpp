@@ -137,14 +137,16 @@ float GetEased( float fTime, float fEase )
 	return pow( fTime, fEase );
 }
 
-void Gwen::Anim::TimedAnimation::Think()
+void Gwen::Anim::TimedAnimation::Think( void )
 {
-	if ( m_bFinished ) { return; }
+	if ( m_bFinished )
+		return;
 
 	float fCurrent = Platform::GetTimeInSeconds();
 	float fSecondsIn = fCurrent - m_fStart;
 
-	if ( fSecondsIn < 0.0f ) { return; }
+	if ( fSecondsIn < 0.0f ) 
+		return;
 
 	if ( !m_bStarted )
 	{
