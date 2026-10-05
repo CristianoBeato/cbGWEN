@@ -27,8 +27,7 @@
 ============================================================================================
 */
 
-#ifndef GWEN_PLATFORM_H
-#define GWEN_PLATFORM_H
+#pragma once
 
 #include "Gwen/Structures.h"
 #include "Gwen/Events.h"
@@ -37,29 +36,61 @@ namespace Gwen
 {
 	namespace Platform
 	{
-		class GWEN_EXPORT Base
+		class GWEN_EXPORT WindowHandle : public Object
 		{
 			public:
-				Base( void );
-				virtual ~Base( void );
+				typedef AutoPointer<Platform::WindowHandle>	Pointer;
+
+				/// @brief Create the Object
+				/// @param in_position Window position coordinates.
+				/// @param in_width 
+				/// @param in_height 
+				/// @param in_title 
+				/// @return true on success false on error 
+				virtual bool Create( const Gwen::Rect &in_rect, const Gwen::String & in_title ) = 0;
+
+				/// @brief Release window object
+				virtual void	Destroy( void ) = 0;
+				
+				///
+				virtual void 	SetBounds( const Gwen::Rect &in_rect ) = 0;
+
+				///
+				virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget ) = 0;
+				
+				virtual bool	HasFocusPlatformWindow( void ) const = 0;
+				
+				virtual void	SetWindowMaximized( const bool bMaximized, const Gwen::Rect &out_rect ) = 0;
+				
+				virtual void	SetWindowMinimized( const bool bMinimized ) = 0;
+		};
+
+		class GWEN_EXPORT Base : public Object
+		{
+			public:
 				
 				/// @brief Do nothing for this many milliseconds
 				/// @param in_ms to wait 
-				virtual void Sleep( const uint32_t in_ms ) {};
+				virtual void Sleep( const uint32_t in_ms ) = 0;
 
 				/// @brief Set the system cursor to iCursor
 				/// Cursors are defined in Structures.h
 				/// @param in_cursorID cursor indetity
-				virtual void SetCursor( const uint8_t in_cursorID ) {};
+				virtual void SetCursor( const uint8_t in_cursorID ) = 0;
+
+				/// @brief 
+				/// @param  
+				/// @return 
+				virtual float GetTimeInSeconds( void ) = 0;
 
 				/// @brief Get the relative cursor position
 				/// @param p position of the cursos
-				virtual void GetCursorPos( Gwen::Point & p ) {};
+				virtual void GetCursorPos( Gwen::Point & p ) = 0;
 				
 				/// @brief get the size of the current desktop composition 
 				/// @param w desktop Width 
 				/// @param h desktop height
-				virtual void GetDesktopSize( int & w, int & h ) {};
+				virtual void GetDesktopSize( int & w, int & h ) = 0;
 
 				//
 				// Used by copy/paste
@@ -67,16 +98,12 @@ namespace Gwen
 
 				/// @brief aquire the clipboard string content  
 				/// @return the clipboard content 
-				virtual UnicodeString GetClipboardText( void ) {};
+				virtual UnicodeString GetClipboardText( void ) = 0;
 
 				/// @brief Set the clipboard text 
 				/// @param str 
 				/// @return 
-				virtual bool SetClipboardText( const UnicodeString & str ) { return false; };
-
-				/// @brief Needed for things like double click
-				/// @return 
-				virtual float GetTimeInSeconds( void ) {};
+				virtual bool SetClipboardText( const UnicodeString & str ) = 0;
 
 				//
 				// System Dialogs ( Can return false if unhandled )
@@ -84,19 +111,6 @@ namespace Gwen
 				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
 				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
 				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
-
-				//
-				// Window Creation
-				//
-				virtual void* CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle );
-				virtual void DestroyPlatformWindow( void* pPtr );
-				virtual void SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h );
-				virtual void MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget );
-				virtual bool HasFocusPlatformWindow( void* pPtr );
-				virtual void SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize );
-				virtual void SetWindowMinimized( void* pPtr, bool bMinimized );
 		};
 	}
 }
-
-#endif //!GWEN_PLATFORM_H

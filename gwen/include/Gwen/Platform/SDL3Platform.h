@@ -32,15 +32,26 @@
 #include "Gwen/Structures.h"
 #include "Gwen/Events.h"
 
+#include <SDL3/SDL_video.h>
+
 namespace Gwen
 {
 	namespace Platform
 	{
-		class SDL3WindowHandle
+		class SDL3WindowHandle : public WindowHandle
 		{
 		public:
-			SDL3WindowHandle( const int in_width, const int in_height, String &in_name );
+			SDL3WindowHandle( void );
 			~SDL3WindowHandle( void );
+
+			/// Just store the properties of the window
+			virtual bool	Create( const Gwen::Rect &in_rect, const Gwen::String & in_title ) override;
+			virtual void	Destroy( void ) override;
+			virtual void 	SetBounds( const Gwen::Rect &in_rect );
+			virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget );	
+			virtual bool	HasFocus( void ) const;	
+			virtual void	SetMaximized( const bool bMaximized, Gwen::Rect &out_rect );				
+			virtual void	SetMinimized( const bool bMinimized ) const;
 
 			/// @brief Create a OpenGL Based Window
 			/// @return true on success 
@@ -50,19 +61,13 @@ namespace Gwen
 			/// @return true on succes 
 			bool	CreateWindowRenderer( void );
 
-			void	Maximize( void );
-			void	Minimize( void );
-			void	Restore( void );
-
-			bool	HasFocus( void ) const;
-
 			SDL_Window*	GetHandle( void ) const { return m_handle; }
 
 		private:
-			int 		m_width;
-			int			m_height;
-			String		m_name;
-			SDL_Window*	m_handle;
+			Gwen::Rect			m_bounds;
+			SDL_WindowID		m_ID;
+			String				m_title;
+			SDL_Window*			m_handle;
 		};
 
 		class GWEN_EXPORT SDL3 : public Platform::Base
@@ -100,11 +105,11 @@ namespace Gwen
 				/// @brief Set the clipboard text 
 				/// @param str 
 				/// @return 
-				virtual bool SetClipboardText( const UnicodeString & str ) { return false; };
+				virtual bool SetClipboardText( const UnicodeString & str );
 
 				/// @brief Needed for things like double click
 				/// @return 
-				virtual float GetTimeInSeconds( void ) { return 0.0f; };
+				virtual float GetTimeInSeconds( void );
 
 				//
 				// System Dialogs ( Can return false if unhandled )
@@ -112,17 +117,6 @@ namespace Gwen
 				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
 				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
 				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
-
-				//
-				// Window Creation
-				//
-				virtual void* CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle );
-				virtual void DestroyPlatformWindow( void* pPtr );
-				virtual void SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h );
-				virtual void MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget );
-				virtual bool HasFocusPlatformWindow( void* pPtr );
-				virtual void SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize );
-				virtual void SetWindowMinimized( void* pPtr, bool bMinimized );
 		};
 	}
 }

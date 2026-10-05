@@ -34,14 +34,123 @@
 #include <SDL3/SDL_video.h>
 #include "SDL3Platform.h"
 
+Gwen::Platform::SDL3WindowHandle::SDL3WindowHandle( void ) : 
+	m_ID( 0 ),
+	m_handle( nullptr )
+{
+}
+
+Gwen::Platform::SDL3WindowHandle::~SDL3WindowHandle( void )
+{
+	Destroy();
+}
+
+bool Gwen::Platform::SDL3WindowHandle::Create( const Gwen::Rect &in_rect, const Gwen::String &in_title)
+{
+	m_bounds = in_rect;
+	m_title = in_title;
+	return true;
+}
+
+void Gwen::Platform::SDL3WindowHandle::Destroy( void )
+{
+	if ( m_handle != nullptr )
+	{
+		SDL_DestroyWindow( m_handle ); 
+		m_handle = nullptr;
+	}
+
+	m_bounds.x = 0;
+	m_bounds.y = 0;
+	m_bounds.w = 0;
+	m_bounds.h = 0;
+	m_ID = 0;
+}
+
+void Gwen::Platform::SDL3WindowHandle::SetBounds(const Gwen::Rect &in_rect )
+{
+	if( !m_handle )
+		return;
+
+	m_bounds = in_rect;
+	SDL_SetWindowPosition( m_handle, m_bounds.x, m_bounds.y );
+	SDL_SetWindowSize( m_handle, m_bounds.w, m_bounds.h );
+}
+
+bool Gwen::Platform::SDL3WindowHandle::HasFocus( void ) const
+{
+	SDL_WindowFlags flags = SDL_GetWindowFlags( m_handle );
+	return flags & SDL_WINDOW_INPUT_FOCUS;
+}
+
+void Gwen::Platform::SDL3WindowHandle::SetMaximized( const bool bMaximized, Gwen::Rect &out_rect )
+{
+	int x = 0, y = 0, w = 0, h = 0;
+	if( !m_handle )
+		return;
+
+	if( bMaximized )
+		SDL_MaximizeWindow( m_handle );
+	else
+		SDL_RestoreWindow( m_handle );
+
+	SDL_GetWindowPosition( m_handle, &x, &y );
+
+#if 0
+	SDL_GetWindowSize( m_handle, &w, &h );
+#else
+	SDL_GetWindowSizeInPixels( m_handle, &w, &h );
+#endif
+
+	/// Update bounds 
+	m_bounds.x = x;
+	m_bounds.y = y;
+	m_bounds.w = w;
+	m_bounds.h = h;	
+
+	out_rect = m_bounds;
+}
+
+void Gwen::Platform::SDL3WindowHandle::SetMinimized(const bool bMinimized) const
+{
+	if ( !m_handle )
+		return;
+
+	if( bMinimized )	
+		SDL_MinimizeWindow( m_handle );
+	else
+		SDL_RestoreWindow( m_handle );
+}
+
+bool Gwen::Platform::SDL3WindowHandle::CreateWindowOpenGL(void)
+{
+#if 0
+	auto windowProperties = SDL_CreateProperties();
+	SDL_CreateWindowWithProperties( windowProperties );
+#else
+	m_handle = SDL_CreateWindow( m_title.c_str(), m_bounds.w, m_bounds.h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS );
+#endif
+	if( !m_handle )
+		return false;
+
+	return true;
+}
+
+bool Gwen::Platform::SDL3WindowHandle::CreateWindowRenderer(void)
+{
+	m_handle = SDL_CreateWindow( m_title.c_str(), m_bounds.w, m_bounds.h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS );
+	if( !m_handle )
+		return false;
+
+    return true ;
+}
+
 Gwen::Platform::SDL3::SDL3( void )
 {
-
 }
 
 Gwen::Platform::SDL3::~SDL3( void )
 {
-
 }
 
 void Gwen::Platform::SDL3::Sleep( const uint32_t in_ms )
@@ -164,102 +273,4 @@ bool Gwen::Platform::SDL3::FileSave( const String & Name, const String & StartPa
 bool Gwen::Platform::SDL3::FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback )
 {
 	return false; //TODO: SDL3 now suport file open Dialog
-}
-
-void* Gwen::Platform::SDL3::CreatePlatformWindow( int x, int y, int w, int h, const Gwen::String & strWindowTitle )
-{
-	// Just store the window properties, we need create the window acordly to the renderer 
-	return reinterpret_cast<void*>( new SDL3WindowHandle( w, h, strWindowTitle ) );
-}
-
-void Gwen::Platform::SDL3::DestroyPlatformWindow( void* pPtr )
-{
-	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
-	delete window; // just destroy window
-}
-
-void Gwen::Platform::SDL3::SetBoundsPlatformWindow( void* pPtr, int x, int y, int w, int h )
-{	// TODO:
-}
-
-void Gwen::Platform::SDL3::MessagePump( void* pWindow, Gwen::Controls::Canvas* ptarget )
-{
-	// TODO:
-}
-
-bool Gwen::Platform::SDL3::HasFocusPlatformWindow( void* pPtr )
-{
-	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
-	return window->HasFocus();
-}
-
-void Gwen::Platform::SDL3::SetWindowMaximized( void* pPtr, bool bMaximized, Gwen::Point & pNewPos, Gwen::Point & pNewSize )
-{
-	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
-	if ( bMaximized )
-		window->Maximize();
-	else
-		window->Restore();
-}
-
-void Gwen::Platform::SDL3::SetWindowMinimized( void* pPtr, bool bMinimized )
-{
-	SDL3WindowHandle* window = static_cast<SDL3WindowHandle*>( pPtr );
-	if ( bMinimized )
-		window->Minimize();
-	else
-		window->Restore();	
-}
-
-Gwen::Platform::SDL3WindowHandle::SDL3WindowHandle(const int in_width, const int in_height, String &in_name )
-{
-	m_width = in_width;
-	m_height = in_height;
-	m_name = in_name;
-}
-
-Gwen::Platform::SDL3WindowHandle::~SDL3WindowHandle( void )
-{
-	if ( m_handle != nullptr )
-	{
-		SDL_DestroyWindow( m_handle ); 
-		m_handle = nullptr;
-	}
-
-	m_width = 0;
-	m_height = 0;
-}
-
-void Gwen::Platform::SDL3WindowHandle::Maximize(void)
-{
-	if ( !m_handle )
-		return;
-
-	SDL_MaximizeWindow( m_handle );
-}
-
-void Gwen::Platform::SDL3WindowHandle::Minimize(void)
-{
-	if ( !m_handle )
-		return;
-
-	SDL_MinimizeWindow( m_handle );
-}
-
-void Gwen::Platform::SDL3WindowHandle::Restore(void)
-{
-	if ( !m_handle )
-		return;
-
-	SDL_RestoreWindow( m_handle );
-}
-
-bool Gwen::Platform::SDL3WindowHandle::HasFocus(void) const
-{
-	if ( !m_handle )
-		return false;
-
-
-	SDL_WindowFlags flags = SDL_GetWindowFlags( m_handle );
-	return flags & SDL_WINDOW_INPUT_FOCUS;
 }
