@@ -28,6 +28,7 @@
 */
 
 #include "Gwen/Platform/Renderers/SDLOpenGL.hpp"
+#include "Gwen/WindowProvider.h"
 #include "Gwen/Platform/SDL3Platform.h"
 
 
@@ -81,12 +82,14 @@ bool Gwen::Renderer::SDLOpenGL::ShutdownContext( Gwen::WindowProvider* pWindow )
 	return true;
 }
 
-bool Gwen::Renderer::SDLOpenGL::PresentContext(Gwen::WindowProvider *pWindow)
+bool Gwen::Renderer::SDLOpenGL::PresentContext( Gwen::WindowProvider *pWindow )
 {
+	/// Retrieve window handler 
 	Platform::SDL3WindowHandle* window = static_cast<Platform::SDL3WindowHandle*>( pWindow->GetWindow() );
 	if( !window || !window->GetHandle() )
 		return false; /// no window created
 
+	// Swap window buffers
 	SDL_GL_SwapWindow( window->GetHandle() );
     return OpenGL::PresentContext( pWindow );
 }

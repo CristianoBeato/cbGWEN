@@ -15,7 +15,8 @@ void ControlList::Enable()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->SetDisabled( false );
+		auto ctr = ( *it );
+		ctr->SetDisabled( false );
 	}
 }
 
@@ -23,7 +24,8 @@ void ControlList::Disable()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->SetDisabled( true );
+		auto ctr = ( *it );
+		ctr->SetDisabled( true );
 	}
 }
 
@@ -31,7 +33,8 @@ void ControlList::Show()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->Show();
+		auto ctr = ( *it );
+		ctr->Show();
 	}
 }
 
@@ -39,7 +42,8 @@ void ControlList::Hide()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->Hide();
+		auto ctr = ( *it );
+		ctr->Hide();
 	}
 }
 
@@ -47,7 +51,8 @@ Gwen::TextObject ControlList::GetValue()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		return ( *it )->GetValue();
+		auto ctr = ( *it );
+		ctr->GetValue();
 	}
 
 	return "";
@@ -57,7 +62,8 @@ void ControlList::SetValue( const Gwen::TextObject & value )
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->SetValue( value );
+		auto ctr = ( *it );
+		ctr->SetValue( value );
 	}
 }
 
@@ -65,7 +71,8 @@ void ControlList::MoveBy( const Gwen::Point & point )
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->MoveBy( point.x, point.y );
+		auto ctr = ( *it );
+		ctr->MoveBy( point.x, point.y );
 	}
 }
 
@@ -73,7 +80,8 @@ void ControlList::DoAction()
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->DoAction();
+		auto ctr = ( *it );
+		ctr->DoAction();
 	}
 }
 
@@ -81,6 +89,7 @@ void ControlList::SetActionInternal( Gwen::Event::Handler* pObject, void ( Gwen:
 {
 	for ( List::const_iterator it = list.begin(); it != list.end(); ++it )
 	{
-		( *it )->SetAction( pObject, f, packet );
+		auto ctr = ( *it );
+		ctr->SetAction( pObject, f, packet );
 	}
 }

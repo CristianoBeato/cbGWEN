@@ -698,10 +698,19 @@ void Base::Blur()
 	Redraw();
 }
 
-bool Base::IsOnTop()
+void Base::SetDisabled( const bool active )
+{ 
+	if ( m_bDisabled == active ) 
+		return;
+
+	m_bDisabled = active; 
+	Redraw(); 
+}
+				
+bool Base::IsOnTop( void )
 {
 	if ( !GetParent() )
-	{ return false; }
+		return false;
 
 	Base::List::iterator iter = GetParent()->Children.begin();
 	Base* pChild = *iter;

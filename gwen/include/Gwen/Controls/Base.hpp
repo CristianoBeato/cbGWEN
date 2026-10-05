@@ -272,7 +272,7 @@ namespace Gwen
 				virtual void Blur();
 
 				//Other
-				virtual void SetDisabled( bool active ) { if ( m_bDisabled == active ) { return; } m_bDisabled = active; Redraw(); }
+				virtual void SetDisabled( const bool active );
 				virtual bool IsDisabled() { return m_bDisabled; }
 
 				virtual void Redraw() { UpdateColours(); m_bCacheTextureDirty = true; if ( m_Parent ) { m_Parent->Redraw(); } }
