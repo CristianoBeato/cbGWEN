@@ -28,13 +28,14 @@
 */
 
 #include "DragAndDrop.h"
+#include "Platform/Platform.h"
 
-Gwen::DragAndDrop::Package*						Gwen::DragAndDrop::CurrentPackage = nullptr;
+Gwen::AutoPointer<Gwen::DragAndDrop::Package>	Gwen::DragAndDrop::CurrentPackage = Gwen::AutoPointer<Gwen::DragAndDrop::Package>();
 Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::HoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::SourceControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 
-static Gwen::AutoPointer<Gwen::Controls::Base> LastPressedControl = nullptr;
-static Gwen::AutoPointer<Gwen::Controls::Base> NewHoveredControl = nullptr;
+static Gwen::AutoPointer<Gwen::Controls::Base> LastPressedControl = Gwen::AutoPointer<Gwen::Controls::Base>();
+static Gwen::AutoPointer<Gwen::Controls::Base> NewHoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 static Gwen::Point LastPressedPos;
 static int m_iMouseX = 0;
 static int m_iMouseY = 0;
@@ -50,21 +51,19 @@ void Gwen::DragAndDrop::ControlDeleted( AutoPointer<Controls::Base> pControl )
 	}
 
 	if ( LastPressedControl == pControl )
-	{ LastPressedControl = NULL; }
+		LastPressedControl = nullptr; 
 
 	if ( HoveredControl == pControl )
-	{ HoveredControl = NULL; }
+		HoveredControl = nullptr;
 
 	if ( NewHoveredControl == pControl )
-	{ NewHoveredControl = NULL; }
+		NewHoveredControl = nullptr;
 }
 
-bool Gwen::DragAndDrop::Start( Gwen::Controls::Base* pControl, Package* pPackage )
+bool Gwen::DragAndDrop::Start( AutoPointer<Controls::Base> pControl, AutoPointer<Package> pPackage )
 {
 	if ( CurrentPackage )
-	{
 		return false;
-	}
 
 	CurrentPackage = pPackage;
 	SourceControl = pControl;
@@ -75,21 +74,21 @@ bool OnDrop( int x, int y )
 {
 	bool bSuccess = false;
 
-	if ( DragAndDrop::HoveredControl )
+	if ( Gwen::DragAndDrop::HoveredControl )
 	{
-		DragAndDrop::HoveredControl->DragAndDrop_HoverLeave( DragAndDrop::CurrentPackage );
-		bSuccess = DragAndDrop::HoveredControl->DragAndDrop_HandleDrop( DragAndDrop::CurrentPackage, x, y );
+		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverLeave( Gwen::DragAndDrop::CurrentPackage );
+		bSuccess = Gwen::DragAndDrop::HoveredControl->DragAndDrop_HandleDrop( Gwen::DragAndDrop::CurrentPackage, x, y );
 	}
 
 	// Report back to the source control, to tell it if we've been successful.
-	DragAndDrop::SourceControl->DragAndDrop_EndDragging( bSuccess, x, y );
-	DragAndDrop::SourceControl->Redraw();
-	DragAndDrop::CurrentPackage = NULL;
-	DragAndDrop::SourceControl = NULL;
+	Gwen::DragAndDrop::SourceControl->DragAndDrop_EndDragging( bSuccess, x, y );
+	Gwen::DragAndDrop::SourceControl->Redraw();
+	Gwen::DragAndDrop::CurrentPackage = nullptr;
+	Gwen::DragAndDrop::SourceControl = nullptr;
 	return true;
 }
 
-bool DragAndDrop::OnMouseButton( Gwen::Controls::Base* pHoveredControl, int x, int y, bool bDown )
+bool Gwen::DragAndDrop::OnMouseButton( AutoPointer<Controls::Base> pHoveredControl, int x, int y, bool bDown )
 {
 	if ( !bDown )
 	{
@@ -127,36 +126,36 @@ bool ShouldStartDraggingControl( int x, int y )
 	if ( iLength < 5 ) { return false; }
 
 	// Create the dragging package
-	DragAndDrop::CurrentPackage = LastPressedControl->DragAndDrop_GetPackage( LastPressedPos.x, LastPressedPos.y );
+	Gwen::DragAndDrop::CurrentPackage = LastPressedControl->DragAndDrop_GetPackage( LastPressedPos.x, LastPressedPos.y );
 
 	// We didn't create a package!
-	if ( !DragAndDrop::CurrentPackage )
+	if ( !Gwen::DragAndDrop::CurrentPackage )
 	{
 		LastPressedControl = NULL;
-		DragAndDrop::SourceControl = NULL;
+		Gwen::DragAndDrop::SourceControl = NULL;
 		return false;
 	}
 
 	// Now we're dragging something!
-	DragAndDrop::SourceControl = LastPressedControl;
+	Gwen::DragAndDrop::SourceControl = LastPressedControl;
 	Gwen::MouseFocus = NULL;
 	LastPressedControl = NULL;
-	DragAndDrop::CurrentPackage->drawcontrol = NULL;
+	Gwen::DragAndDrop::CurrentPackage->drawcontrol = NULL;
 
 	// Some controls will want to decide whether they should be dragged at that moment.
 	// This function is for them (it defaults to true)
-	if ( !DragAndDrop::SourceControl->DragAndDrop_ShouldStartDrag() )
+	if ( !Gwen::DragAndDrop::SourceControl->DragAndDrop_ShouldStartDrag() )
 	{
-		DragAndDrop::SourceControl = NULL;
-		DragAndDrop::CurrentPackage = NULL;
+		Gwen::DragAndDrop::SourceControl = NULL;
+		Gwen::DragAndDrop::CurrentPackage = NULL;
 		return false;
 	}
 
-	DragAndDrop::SourceControl->DragAndDrop_StartDragging( DragAndDrop::CurrentPackage, LastPressedPos.x, LastPressedPos.y );
+	Gwen::DragAndDrop::SourceControl->DragAndDrop_StartDragging( Gwen::DragAndDrop::CurrentPackage, LastPressedPos.x, LastPressedPos.y );
 	return true;
 }
 
-void UpdateHoveredControl( Gwen::Controls::Base* pCtrl, int x, int y )
+void UpdateHoveredControl( Gwen::AutoPointer<Gwen::Controls::Base> pCtrl, int x, int y )
 {
 	//
 	// We use this global variable to represent our hovered control
@@ -167,21 +166,24 @@ void UpdateHoveredControl( Gwen::Controls::Base* pCtrl, int x, int y )
 	NewHoveredControl = pCtrl;
 
 	// Nothing to change..
-	if ( DragAndDrop::HoveredControl == NewHoveredControl ) { return; }
+	if ( Gwen::DragAndDrop::HoveredControl == NewHoveredControl ) 
+		return;
+
+	auto platform = NewHoveredControl->GetPlatfom();
 
 	// We changed - tell the old hovered control that it's no longer hovered.
-	if ( DragAndDrop::HoveredControl && DragAndDrop::HoveredControl != NewHoveredControl )
-	{ DragAndDrop::HoveredControl->DragAndDrop_HoverLeave( DragAndDrop::CurrentPackage ); }
+	if ( Gwen::DragAndDrop::HoveredControl && Gwen::DragAndDrop::HoveredControl != NewHoveredControl )
+		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverLeave( Gwen::DragAndDrop::CurrentPackage ); 
 
 	// If we're hovering where the control came from, just forget it.
 	// By changing it to NULL here we're not going to show any error cursors
 	// it will just do nothing if you drop it.
-	if ( NewHoveredControl == DragAndDrop::SourceControl )
-	{ NewHoveredControl = NULL; }
+	if ( NewHoveredControl == Gwen::DragAndDrop::SourceControl )
+		NewHoveredControl = nullptr;
 
 	// Check to see if the new potential control can accept this type of package.
 	// If not, ignore it and show an error cursor.
-	while ( NewHoveredControl && !NewHoveredControl->DragAndDrop_CanAcceptPackage( DragAndDrop::CurrentPackage ) )
+	while ( NewHoveredControl && !NewHoveredControl->DragAndDrop_CanAcceptPackage( Gwen::DragAndDrop::CurrentPackage ) )
 	{
 		// We can't drop on this control, so lets try to drop
 		// onto its parent..
@@ -190,25 +192,25 @@ void UpdateHoveredControl( Gwen::Controls::Base* pCtrl, int x, int y )
 		// Its parents are dead. We can't drop it here.
 		// Show the NO WAY cursor.
 		if ( !NewHoveredControl )
-		{
-			Platform::SetCursor( CursorType::No );
-		}
+			platform->SetCursor( Gwen::CursorType::CURSOR_NO );
 	}
 
 	// Become out new hovered control
-	DragAndDrop::HoveredControl = NewHoveredControl;
+	Gwen::DragAndDrop::HoveredControl = NewHoveredControl;
 
 	// If we exist, tell us that we've started hovering.
-	if ( DragAndDrop::HoveredControl )
+	if ( Gwen::DragAndDrop::HoveredControl )
 	{
-		DragAndDrop::HoveredControl->DragAndDrop_HoverEnter( DragAndDrop::CurrentPackage, x, y );
+		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverEnter( Gwen::DragAndDrop::CurrentPackage, x, y );
 	}
 
 	NewHoveredControl = NULL;
 }
 
-void DragAndDrop::OnMouseMoved( Gwen::Controls::Base* pHoveredControl, int x, int y )
+void Gwen::DragAndDrop::OnMouseMoved( Gwen::AutoPointer<Gwen::Controls::Base> pHoveredControl, int x, int y )
 {
+	auto platform = pHoveredControl->GetPlatfom();
+
 	// Always keep these up to date, they're used to draw the dragged control.
 	m_iMouseX = x;
 	m_iMouseY = y;
@@ -232,13 +234,14 @@ void DragAndDrop::OnMouseMoved( Gwen::Controls::Base* pHoveredControl, int x, in
 	HoveredControl->DragAndDrop_Hover( CurrentPackage, x, y );
 	// Override the cursor - since it might have been set my underlying controls
 	// Ideally this would show the 'being dragged' control. TODO
-	Platform::SetCursor( CursorType::Normal );
+	platform->SetCursor( Gwen::CursorType::CURSOR_NORMAL );
 	pHoveredControl->Redraw();
 }
 
-void DragAndDrop::RenderOverlay( Gwen::Controls::Canvas* /*pCanvas*/, Skin::Base* skin )
+void Gwen::DragAndDrop::RenderOverlay( AutoPointer<Controls::Canvas> /*pCanvas*/, AutoPointer<Skin::Base> skin )
 {
-	if ( !CurrentPackage ) { return; }
+	if ( !CurrentPackage ) 
+		 return; 
 
 	if ( !CurrentPackage->drawcontrol ) { return; }
 

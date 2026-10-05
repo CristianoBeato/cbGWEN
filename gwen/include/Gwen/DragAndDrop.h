@@ -55,15 +55,14 @@ namespace Gwen
 			Point						holdoffset;
 		};
 		
-		
-		extern GWEN_EXPORT Package*	CurrentPackage;
+		extern GWEN_EXPORT AutoPointer<Package>			CurrentPackage;
 		extern GWEN_EXPORT AutoPointer<Controls::Base>	SourceControl;
 		extern GWEN_EXPORT AutoPointer<Controls::Base>	HoveredControl;
+
 		bool GWEN_EXPORT Start( AutoPointer<Controls::Base> pControl, AutoPointer<Package> pPackage );
 		bool GWEN_EXPORT OnMouseButton( AutoPointer<Controls::Base> pHoveredControl, const int x, const int y, const bool bDown );
 		void GWEN_EXPORT OnMouseMoved( AutoPointer<Controls::Base> pHoveredControl, const int x, const int y );
 		void GWEN_EXPORT RenderOverlay( AutoPointer<Controls::Canvas> pCanvas, AutoPointer<Skin::Base> skin );
 		void GWEN_EXPORT ControlDeleted( AutoPointer<Controls::Base> pControl );
 	}
-
 }
