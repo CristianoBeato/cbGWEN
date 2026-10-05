@@ -68,6 +68,7 @@ namespace Gwen
 		class GWEN_EXPORT Base : public Object
 		{
 			public:
+				AutoPointer<Platform::Base>	Pointer;
 				
 				/// @brief Do nothing for this many milliseconds
 				/// @param in_ms to wait 

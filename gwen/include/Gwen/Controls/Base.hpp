@@ -206,7 +206,9 @@ namespace Gwen
 
 				//Skin
 				virtual void SetSkin( Skin::Base::Pointer skin, bool doChildren = false );
-				virtual Gwen::Skin::Base::Pointer GetSkin( void );
+				virtual void SetPlatform( Platform::Base* platform );
+				virtual Gwen::Skin::Base::Pointer 		GetSkin( void );
+				virtual Gwen::Platform::Base*			GetPlatfom( void );
 
 				// Background drawing
 				virtual bool ShouldDrawBackground() { return m_bDrawBackground; }
