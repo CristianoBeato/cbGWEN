@@ -67,8 +67,10 @@ set( GWEN_SOURCES
     # Renderers 
     ${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Base.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Base.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Renderers/OpenGL.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Renderers/OpenGL.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Renderer/OpenGL.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Renderer/OpenGL.hpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Renderers/SDLOpenGL.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Renderers/SDLOpenGL.hpp
     
     # Skins
     ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Base.cpp

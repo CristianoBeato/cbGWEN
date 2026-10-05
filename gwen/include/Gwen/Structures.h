@@ -80,7 +80,10 @@ namespace Gwen
 			return m;
 		}
 
-		int top, bottom, left, right;
+		int32_t top;
+		int32_t bottom;
+		int32_t left;
+		int32_t right;
 	};
 
 
@@ -107,13 +110,16 @@ namespace Gwen
 			return m;
 		}
 
-		int x, y, w, h;
+		int32_t x;
+		int32_t y;
+		int32_t w;
+		int32_t h;
 	};
 
 
 	struct GWEN_EXPORT Point
 	{
-		Point( int x_ = 0, int y_ = 0 )
+		Point( int32_t x_ = 0, int32_t y_ = 0 )
 		{
 			this->x = x_;
 			this->y = y_;
@@ -141,7 +147,7 @@ namespace Gwen
 			return Point( x - p.x, y - p.y );
 		}
 
-		int x, y;
+		int32_t x, y;
 	};
 
 	struct GWEN_EXPORT HSV

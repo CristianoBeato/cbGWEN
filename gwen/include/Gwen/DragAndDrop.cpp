@@ -29,9 +29,9 @@
 
 #include "DragAndDrop.h"
 
-Gwen::AutoPointer<Gwen::DragAndDrop::Package> DragAndDrop::CurrentPackage = Gwen::AutoPointer<Gwen::DragAndDrop::Package>();
-Gwen::AutoPointer<Gwen::Controls::Base> DragAndDrop::HoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
-Gwen::AutoPointer<Gwen::Controls::Base> DragAndDrop::SourceControl = Gwen::AutoPointer<Gwen::Controls::Base>();
+Gwen::DragAndDrop::Package*						Gwen::DragAndDrop::CurrentPackage = nullptr;
+Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::HoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
+Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::SourceControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 
 static Gwen::AutoPointer<Gwen::Controls::Base> LastPressedControl = nullptr;
 static Gwen::AutoPointer<Gwen::Controls::Base> NewHoveredControl = nullptr;
@@ -39,7 +39,7 @@ static Gwen::Point LastPressedPos;
 static int m_iMouseX = 0;
 static int m_iMouseY = 0;
 
-void Gwen::DragAndDrop::ControlDeleted( Gwen::Controls::Base* pControl )
+void Gwen::DragAndDrop::ControlDeleted( AutoPointer<Controls::Base> pControl )
 {
 	if ( SourceControl == pControl )
 	{

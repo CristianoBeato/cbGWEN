@@ -67,14 +67,14 @@ void Caller::CleanLinks()
 	m_Handlers.clear();
 }
 
-void Caller::Call( Controls::Base* pThis )
+void Caller::Call( Controls::Base::Pointer pThis )
 {
 	static Gwen::Event::Information info;
 	info.Control = pThis;
 	Call( pThis, info );
 }
 
-void Caller::Call( Controls::Base* pThis, Gwen::Event::Info information )
+void Caller::Call( Controls::Base::Pointer pThis, Gwen::Event::Info information )
 {
 	Gwen::Event::Information info;
 	info = information;
