@@ -28,7 +28,8 @@
 */
 
 
-#include "Texture.hpp"
+#include "Gwen/Texture.hpp"
+#include "Gwen/Debug.h"
 
 Gwen::Texture::Texture( void ) : 
     data( nullptr ),

@@ -220,9 +220,10 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Dialogs/Query.h
     )
 
-add_library( cbGewen STATIC ${GWEN_SOURCES} )
-target_include_directories( cbGewen PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} )
-target_precompile_headers( cbGewen 
+add_library( cbGwen STATIC ${GWEN_SOURCES} )
+target_include_directories( cbGwen PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} )
+target_compile_definitions( cbGwen PRIVATE "-DGWEN_NO_ANIMATION" )
+target_precompile_headers( cbGwen 
     PRIVATE 
         <cstdio>
         <cstdint>
