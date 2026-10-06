@@ -41,8 +41,8 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/inputhandler.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Inputhandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Hook.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Macros.h
@@ -61,8 +61,8 @@ set( GWEN_SOURCES
     # Platform
     #${CMAKE_CURRENT_SOURCE_DIR}/Platform/Null.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Platform/SDL3Platform.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/SDL3Platform.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Platform.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/SDL3Platform.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platform/Platform.hpp
 
     # Renderers 
     ${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Base.cpp
@@ -241,7 +241,7 @@ target_precompile_headers( cbGwen
         "$<$<COMPILE_LANGUAGE:CXX>:Macros.h>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Config.h>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Exports.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Platform/Platform.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Platform/Platform.hpp>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Structures.h>"
         "$<$<COMPILE_LANGUAGE:CXX>:AutoPointer.h>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Utility.h>" 
