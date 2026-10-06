@@ -93,14 +93,14 @@ namespace Gwen
 		inline bool IsControlDown() { return IsKeyDown( Gwen::Key::Control ); }
 
 		// Does copy, paste etc
-		bool GWEN_EXPORT DoSpecialKeys( Controls::Base* pCanvas, Gwen::UnicodeChar chr );
-		bool GWEN_EXPORT HandleAccelerator( Controls::Base* pCanvas, Gwen::UnicodeChar chr );
+		bool GWEN_EXPORT DoSpecialKeys( AutoPointer<Controls::Base> pCanvas, Gwen::UnicodeChar chr );
+		bool GWEN_EXPORT HandleAccelerator( AutoPointer<Controls::Base> pCanvas, Gwen::UnicodeChar chr );
 
 		// Send input to canvas for study
-		void GWEN_EXPORT OnMouseMoved( Controls::Base* pCanvas, int x, int y, int deltaX, int deltaY );
-		bool GWEN_EXPORT OnMouseClicked( Controls::Base* pCanvas, int iButton, bool bDown );
-		bool GWEN_EXPORT OnKeyEvent( Controls::Base* pCanvas, int iKey, bool bDown );
-		void GWEN_EXPORT OnCanvasThink( Controls::Base* pControl );
+		void GWEN_EXPORT OnMouseMoved( AutoPointer<Controls::Base> pCanvas, const Point &in_pos, const Point &in_delta );
+		bool GWEN_EXPORT OnMouseClicked( AutoPointer<Controls::Base> pCanvas, int iButton, bool bDown );
+		bool GWEN_EXPORT OnKeyEvent( AutoPointer<Controls::Base> pCanvas, int iKey, bool bDown );
+		void GWEN_EXPORT OnCanvasThink( AutoPointer<Controls::Base> pControl );
 
 
 	};

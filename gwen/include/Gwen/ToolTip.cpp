@@ -15,7 +15,7 @@ GWEN_EXPORT bool Gwen::ToolTip::TooltipActive()
 	return g_ToolTip != nullptr;
 }
 
-void Gwen::ToolTip::Enable( Controls::Base* pControl )
+void Gwen::ToolTip::Enable( AutoPointer<Controls::Base> pControl )
 {
 	if ( !pControl->GetToolTip() )
 		return;

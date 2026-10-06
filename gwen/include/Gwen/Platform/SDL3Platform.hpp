@@ -31,6 +31,7 @@
 
 #include "Gwen/Structures.h"
 #include "Gwen/Events.h"
+#include "Gwen/Platform/Platform.h"
 
 #include <SDL3/SDL_video.h>
 
