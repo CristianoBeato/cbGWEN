@@ -71,17 +71,14 @@ namespace Gwen
         /// @brief 
         /// @param in_ptr 
         /// @return 
-        static uint32_t DecRef( Object* &in_ptr )
+        static uint32_t DecRef( Object* in_ptr )
         {
             if( in_ptr == nullptr )
                 return 0;
 
             uint32_t old_count = in_ptr->DecrementReference();
             if( old_count == 1 )
-            {
                 delete in_ptr;
-                in_ptr = nullptr;
-            }
         }
 
     private:
@@ -123,9 +120,22 @@ namespace Gwen
         inline bool operator == ( const const_pointer &ptr ) const;
         inline bool operator == ( const AutoPointer<_t> &in_ref );
 
+        template< class _u>
+        inline bool operator == ( const AutoPointer<_u> &in_ref ) const
+        {
+            return ( m_pointer == in_ref.m_pointer );
+        }
+
         inline bool operator != ( const_pointer &ptr );
         inline bool operator != ( const_pointer &ptr ) const;
         inline bool operator != ( const AutoPointer<_t> &in_ref );
+
+        template< class _u>
+        inline bool operator != ( const AutoPointer<_u> &in_ref ) const
+        {
+            return ( m_pointer != in_ref.m_pointer );
+        }
+
 	    inline explicit operator bool( void ) const noexcept;
 
     private:
@@ -175,6 +185,40 @@ namespace Gwen
     }
 
     template <class _t>
+    inline AutoPointer<_t> AutoPointer<_t>::operator=(const_pointer &in_ref)
+    {
+        if( m_pointer )
+        {
+            Object::DecRef( m_pointer );
+            m_pointer = nullptr;
+        }
+
+        m_pointer = dynamic_cast<_t>( in_ref.m_pointer );
+
+        if( m_pointer )
+            Object::IncRef( m_pointer );
+
+        return *this;
+    }
+
+    template <class _t>
+    inline AutoPointer<_t> AutoPointer<_t>::operator=(pointer in_ptr)
+    {
+        if( m_pointer )
+        {
+            Object::DecRef( m_pointer );
+            m_pointer = nullptr;
+        }
+
+        m_pointer = in_ptr;
+
+        if( m_pointer )
+            Object::IncRef( m_pointer );
+
+        return *this;
+    }
+
+    template <class _t>
     template <class _u>
     inline AutoPointer<_t> &AutoPointer<_t>::operator=(const AutoPointer<_u> &in_ref)
     {
@@ -192,4 +236,45 @@ namespace Gwen
         return *this;
     }
 
+    template <class _t>
+    inline AutoPointer<_t>::pointer AutoPointer<_t>::operator->(void)
+    {
+        return m_pointer;
+    }
+
+    template <class _t>
+    inline AutoPointer<_t>::const_pointer AutoPointer<_t>::operator->(void) const
+    {
+        return m_pointer;
+    }
+    
+    template <class _t>
+    inline AutoPointer<_t>::reference AutoPointer<_t>::operator*(void)
+    {
+        return *m_pointer;
+    }
+
+    template <class _t>
+    inline AutoPointer<_t>::const_reference AutoPointer<_t>::operator*(void) const
+    {
+        return *m_pointer;
+    }
+
+    template <class _t>
+    inline bool AutoPointer<_t>::operator==( const const_pointer &ptr )
+    {
+        return m_pointer == const_cast<pointer>( ptr );
+    }
+
+    template <class _t>
+    inline bool AutoPointer<_t>::operator==(const const_pointer &ptr) const
+    {
+        return m_pointer == const_cast<pointer>( ptr );
+    }
+
+    template <class _t>
+    inline bool AutoPointer<_t>::operator==(const AutoPointer<_t> &in_ref)
+    {
+        return ( m_pointer == in_ref.m_pointer );
+    }
 };
