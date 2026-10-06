@@ -152,7 +152,7 @@ namespace Gwen
 
 				virtual const Gwen::Rect & GetBounds() const { return m_Bounds; }
 
-				virtual Controls::Base::Pointer GetControlAt( int x, int y, bool bOnlyIfMouseEnabled = true );
+				virtual Controls::Base::Pointer GetControlAt( const Point &in_pos, bool bOnlyIfMouseEnabled = true );
 
 
 
@@ -220,12 +220,12 @@ namespace Gwen
 
 			public:
 
-				virtual void OnMouseMoved( int x, int y, int deltaX, int deltaY );
+				virtual void OnMouseMoved( const Point &in_pos, const Point &in_delta );
 				virtual bool OnMouseWheeled( int iDelta );
-				virtual void OnMouseClickLeft( int /*x*/, int /*y*/, bool /*bDown*/ ) {};
-				virtual void OnMouseClickRight( int /*x*/, int /*y*/, bool /*bDown*/ ) {}
-				virtual void OnMouseDoubleClickLeft( int x, int y ) { OnMouseClickLeft( x, y, true ); };
-				virtual void OnMouseDoubleClickRight( int x, int y ) { OnMouseClickRight( x, y, true ); };
+				virtual void OnMouseClickLeft( const Point &in_pos, bool /*bDown*/ ) {};
+				virtual void OnMouseClickRight( const Point &in_pos, bool /*bDown*/ ) {}
+				virtual void OnMouseDoubleClickLeft( const Point &in_pos ) { OnMouseClickLeft( in_pos, true ); };
+				virtual void OnMouseDoubleClickRight( const Point &in_pos ) { OnMouseClickRight( in_pos, true ); };
 				virtual void OnLostKeyboardFocus() {}
 				virtual void OnKeyboardFocus() {}
 
@@ -446,9 +446,9 @@ namespace Gwen
 				virtual void DragAndDrop_SetPackage( bool bDraggable, const String & strName = "", void* pUserData = NULL );
 				virtual bool DragAndDrop_Draggable();
 				virtual bool DragAndDrop_ShouldStartDrag() { return true; }
-				virtual void DragAndDrop_StartDragging( DragAndDrop::Package::pointer pPackage, int x, int y );
+				virtual void DragAndDrop_StartDragging( DragAndDrop::Package::pointer pPackage, const Point &in_pos );
 				virtual DragAndDrop::Package::pointer DragAndDrop_GetPackage( int x, int y );
-				virtual void DragAndDrop_EndDragging( bool /*bSuccess*/, int /*x*/, int /*y*/ ) {};
+				virtual void DragAndDrop_EndDragging( bool /*bSuccess*/, const Point &/*xy*/ ) {};
 
 			protected:
 				DragAndDrop::Package::pointer	m_DragAndDrop_Package;
@@ -456,10 +456,10 @@ namespace Gwen
 			public:
 
 				// Receiver
-				virtual void DragAndDrop_HoverEnter( DragAndDrop::Package::pointer /*pPackage*/, int /*x*/, int /*y*/ ) { }
+				virtual void DragAndDrop_HoverEnter( DragAndDrop::Package::pointer /*pPackage*/, const Point &in_pos ) { }
 				virtual void DragAndDrop_HoverLeave( DragAndDrop::Package::pointer /*pPackage*/ ) { }
-				virtual void DragAndDrop_Hover( DragAndDrop::Package::pointer /*pPackage*/, int /*x*/, int /*y*/ ) {};
-				virtual bool DragAndDrop_HandleDrop( DragAndDrop::Package::pointer pPackage, int x, int y );
+				virtual void DragAndDrop_Hover( DragAndDrop::Package::pointer /*pPackage*/, const Point &in_pos ) {};
+				virtual bool DragAndDrop_HandleDrop( DragAndDrop::Package::pointer pPackage, const Point &in_pos );
 				virtual bool DragAndDrop_CanAcceptPackage( DragAndDrop::Package::pointer /*pPackage*/ ) { return false; }
 
 

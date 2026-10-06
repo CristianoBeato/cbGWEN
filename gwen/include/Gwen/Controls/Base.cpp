@@ -27,7 +27,7 @@
 ============================================================================================
 */
 
-#include "Base.h"
+#include "Base.hpp"
 
 using namespace Gwen;
 using namespace Controls;
@@ -53,7 +53,7 @@ Gwen::Controls::Base::Base( Controls::Base::Pointer pParent, const Gwen::String 
 	SetMouseInputEnabled( true );
 	SetKeyboardInputEnabled( false );
 	Invalidate();
-	SetCursor( Gwen::CursorType::Normal );
+	SetCursor( Gwen::CursorType::CURSOR_NORMAL );
 	SetToolTip( NULL );
 	SetTabable( false );
 	SetShouldDrawBackground( true );
@@ -102,8 +102,12 @@ Base::~Base()
 
 	if ( m_DragAndDrop_Package )
 	{
+#if 0
 		delete m_DragAndDrop_Package;
 		m_DragAndDrop_Package = NULL;
+#else
+		m_DragAndDrop_Package = AutoPointer<Controls::Base>();
+#endif 
 	}
 }
 
@@ -733,33 +737,34 @@ void Base::OnChildTouched( Controls::Base* /*pChild*/ )
 	Touch();
 }
 
-Base* Base::GetControlAt( int x, int y, bool bOnlyIfMouseEnabled )
+Gwen::Controls::Base::Pointer Gwen::Controls::Base::GetControlAt( const Point &in_pos, bool bOnlyIfMouseEnabled )
 {
 	if ( Hidden() )
-	{ return NULL; }
+		return Controls::Base::Pointer();
 
-	if ( x < 0 || y < 0 || x >= Width() || y >= Height() )
-	{ return NULL; }
+	if ( in_pos.x < 0 || in_pos.y < 0 || in_pos.x >= Width() || in_pos.y >= Height() )
+		return Controls::Base::Pointer();
 
 	Base::List::reverse_iterator iter;
 
 	for ( iter = Children.rbegin(); iter != Children.rend(); ++iter )
 	{
-		Base* pChild = *iter;
-		Base* pFound = NULL;
+		Base::Pointer pChild = *iter;
+		Base::Pointer pFound = NULL;
 		pFound = pChild->GetControlAt( x - pChild->X(), y - pChild->Y(), bOnlyIfMouseEnabled );
 
-		if ( pFound ) { return pFound; }
+		if ( pFound ) 
+			return pFound;
 	}
 
 	if ( bOnlyIfMouseEnabled && !GetMouseInputEnabled() )
-	{ return NULL; }
+		return Base::Pointer();
 
 	return this;
 }
 
 
-void Base::Layout( Skin::Base* skin )
+void Base::Layout( Skin::Base::Pointer skin )
 {
 	if ( skin->GetRender()->GetCTT() && ShouldCacheToTexture() )
 	{ skin->GetRender()->GetCTT()->CreateControlCacheTexture( this ); }
@@ -949,12 +954,12 @@ void Base::UpdateCursor()
 	Platform::SetCursor( m_Cursor );
 }
 
-DragAndDrop::Package* Base::DragAndDrop_GetPackage( int /*x*/, int /*y*/ )
+DragAndDrop::Package* Base::DragAndDrop_GetPackage( const Point &in_pos )
 {
 	return m_DragAndDrop_Package;
 }
 
-bool Base::DragAndDrop_HandleDrop( Gwen::DragAndDrop::Package* /*pPackage*/, int /*x*/, int /*y*/ )
+bool Base::DragAndDrop_HandleDrop( Gwen::DragAndDrop::Package* /*pPackage*/, const Point &in_pos )
 {
 	DragAndDrop::SourceControl->SetParent( this );
 	return true;
@@ -979,9 +984,9 @@ void Base::DragAndDrop_SetPackage( bool bDraggable, const String & strName, void
 	m_DragAndDrop_Package->userdata = pUserData;
 }
 
-void Base::DragAndDrop_StartDragging( Gwen::DragAndDrop::Package* pPackage, int x, int y )
+void Base::DragAndDrop_StartDragging( Gwen::DragAndDrop::Package* pPackage, const Point &in_pos )
 {
-	pPackage->holdoffset = CanvasPosToLocal( Gwen::Point( x, y ) );
+	pPackage->holdoffset = CanvasPosToLocal( in_pos );
 	pPackage->drawcontrol = this;
 }
 
