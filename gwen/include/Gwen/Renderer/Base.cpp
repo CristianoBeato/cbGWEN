@@ -39,15 +39,15 @@ Gwen::Renderer::Base::~Base( void)
 		GetCTT()->ShutDown();
 }
 
-void Gwen::Renderer::Base::RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::String & text )
+void Gwen::Renderer::Base::RenderText( Gwen::Font::Pointer pFont, Gwen::Point pos, const Gwen::String & text )
 {
-	Gwen::UnicodeString str = Gwen::Utility::StringToUnicode( text );
+	Gwen::UnicodeString str = Gwen::TextObject::StringToUnicode( text );
 	RenderText( pFont, pos, str );
 }
 
-Gwen::Point Gwen::Renderer::Base::MeasureText( Gwen::Font* pFont, const Gwen::String & text )
+Gwen::Point Gwen::Renderer::Base::MeasureText( Gwen::Font::Pointer pFont, const Gwen::String & text )
 {
-	Gwen::UnicodeString str = Gwen::Utility::StringToUnicode( text );
+	Gwen::UnicodeString str = Gwen::TextObject::StringToUnicode( text );
 	return MeasureText( pFont, str );
 }
 
@@ -93,15 +93,15 @@ void Gwen::Renderer::Base::Translate( int & x, int & y )
 {
 	x += m_RenderOffset.x;
 	y += m_RenderOffset.y;
-	x = ceilf( ( ( float ) x ) * m_fScale );
-	y = ceilf( ( ( float ) y ) * m_fScale );
+	x = std::ceil( ( ( float ) x ) * m_fScale );
+	y = std::ceil( ( ( float ) y ) * m_fScale );
 }
 
 void Gwen::Renderer::Base::Translate( Gwen::Rect & rect )
 {
 	Translate( rect.x, rect.y );
-	rect.w = ceilf( ( ( float ) rect.w ) * m_fScale );
-	rect.h = ceilf( ( ( float ) rect.h ) * m_fScale );
+	rect.w = std::ceil( ( ( float ) rect.w ) * m_fScale );
+	rect.h = std::ceil( ( ( float ) rect.h ) * m_fScale );
 }
 
 void Gwen::Renderer::Base::SetClipRegion( Gwen::Rect rect )
@@ -160,7 +160,7 @@ void Gwen::Renderer::Base::DrawMissingImage( Gwen::Rect pTargetRect )
 
 //	If they haven't defined these font functions in their renderer code
 //	we just draw some rects where the letters would be to give them an idea.
-void Gwen::Renderer::Base::RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::UnicodeString & text )
+void Gwen::Renderer::Base::RenderText( Gwen::Font::Pointer pFont, Gwen::Point pos, const Gwen::UnicodeString & text )
 {
 	float fSize = pFont->size * Scale();
 	for ( float i = 0; i < text.length(); i++ )
@@ -206,7 +206,7 @@ void Gwen::Renderer::Base::RenderText( Gwen::Font* pFont, Gwen::Point pos, const
 	}
 }
 
-Gwen::Point Gwen::Renderer::Base::MeasureText( Gwen::Font* pFont, const Gwen::UnicodeString & text )
+Gwen::Point Gwen::Renderer::Base::MeasureText( Gwen::Font::Pointer pFont, const Gwen::UnicodeString & text )
 {
 	Gwen::Point p;
 	p.x = pFont->size * Scale() * ( float ) text.length() * 0.4;
