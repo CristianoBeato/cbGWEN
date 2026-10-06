@@ -29,12 +29,12 @@
 
 #include "Gwen/Platform/Renderers/SDLOpenGL.hpp"
 #include "Gwen/WindowProvider.h"
-#include "Gwen/Platform/SDL3Platform.h"
+#include "Gwen/Platform/SDL3Platform.hpp"
 
 
 bool Gwen::Renderer::SDLOpenGL::InitializeContext(Gwen::WindowProvider *pWindow)
 {
-	Platform::SDL3WindowHandle* window = static_cast<Platform::SDL3WindowHandle*>( pWindow->GetWindow() );
+	Platform::SDL3WindowHandle* window = pWindow->GetWindow();
 	if( !window )
 		return false; /// no window created
 

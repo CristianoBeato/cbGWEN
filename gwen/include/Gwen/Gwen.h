@@ -53,7 +53,7 @@
 #include "Gwen/Texture.hpp"
 #include "Gwen/Renderer/Base.hpp"
 #include "Gwen/Skins/Base.hpp"
-#include "Gwen/InputHandler.h"
+#include "Gwen/InputHandler.hpp"
 #include "Gwen/ControlList.h"
 #include "Gwen/Events.h"
 #include "Gwen/DragAndDrop.h"

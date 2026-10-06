@@ -31,7 +31,7 @@
 
 #include "Gwen/Structures.h"
 #include "Gwen/Events.h"
-#include "Gwen/Platform/Platform.h"
+#include "Gwen/Platform/Platform.hpp"
 
 #include <SDL3/SDL_video.h>
 
@@ -115,9 +115,9 @@ namespace Gwen
 				//
 				// System Dialogs ( Can return false if unhandled )
 				//
-				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
-				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
-				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false };
+				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
+				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
+				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
 		};
 	}
 }

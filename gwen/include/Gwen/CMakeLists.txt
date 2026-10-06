@@ -82,10 +82,10 @@ set( GWEN_SOURCES
     # Controls 
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.hpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.hpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CollapsibleCategory.cpp

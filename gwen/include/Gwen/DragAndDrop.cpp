@@ -28,7 +28,7 @@
 */
 
 #include "DragAndDrop.h"
-#include "Platform/Platform.h"
+#include "Platform/Platform.hpp"
 
 Gwen::AutoPointer<Gwen::DragAndDrop::Package>	Gwen::DragAndDrop::CurrentPackage = Gwen::AutoPointer<Gwen::DragAndDrop::Package>();
 Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::HoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
@@ -37,8 +37,7 @@ Gwen::AutoPointer<Gwen::Controls::Base>			Gwen::DragAndDrop::SourceControl = Gwe
 static Gwen::AutoPointer<Gwen::Controls::Base> LastPressedControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 static Gwen::AutoPointer<Gwen::Controls::Base> NewHoveredControl = Gwen::AutoPointer<Gwen::Controls::Base>();
 static Gwen::Point LastPressedPos;
-static int m_iMouseX = 0;
-static int m_iMouseY = 0;
+static Gwen::Point m_iMouse = { 0, 0 };
 
 void Gwen::DragAndDrop::ControlDeleted( AutoPointer<Controls::Base> pControl )
 {
@@ -70,25 +69,25 @@ bool Gwen::DragAndDrop::Start( AutoPointer<Controls::Base> pControl, AutoPointer
 	return true;
 }
 
-bool OnDrop( int x, int y )
+static bool OnDrop( const Gwen::Point &in_pos )
 {
 	bool bSuccess = false;
 
 	if ( Gwen::DragAndDrop::HoveredControl )
 	{
 		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverLeave( Gwen::DragAndDrop::CurrentPackage );
-		bSuccess = Gwen::DragAndDrop::HoveredControl->DragAndDrop_HandleDrop( Gwen::DragAndDrop::CurrentPackage, x, y );
+		bSuccess = Gwen::DragAndDrop::HoveredControl->DragAndDrop_HandleDrop( Gwen::DragAndDrop::CurrentPackage, in_pos );
 	}
 
 	// Report back to the source control, to tell it if we've been successful.
-	Gwen::DragAndDrop::SourceControl->DragAndDrop_EndDragging( bSuccess, x, y );
+	Gwen::DragAndDrop::SourceControl->DragAndDrop_EndDragging( bSuccess, in_pos );
 	Gwen::DragAndDrop::SourceControl->Redraw();
 	Gwen::DragAndDrop::CurrentPackage = nullptr;
 	Gwen::DragAndDrop::SourceControl = nullptr;
 	return true;
 }
 
-bool Gwen::DragAndDrop::OnMouseButton( AutoPointer<Controls::Base> pHoveredControl, int x, int y, bool bDown )
+bool Gwen::DragAndDrop::OnMouseButton( AutoPointer<Controls::Base> pHoveredControl, const Point &in_pos, bool bDown )
 {
 	if ( !bDown )
 	{
@@ -99,7 +98,7 @@ bool Gwen::DragAndDrop::OnMouseButton( AutoPointer<Controls::Base> pHoveredContr
 		{ return false; }
 
 		// We were carrying something, drop it.
-		OnDrop( x, y );
+		OnDrop( in_pos );
 		return true;
 	}
 
@@ -110,18 +109,18 @@ bool Gwen::DragAndDrop::OnMouseButton( AutoPointer<Controls::Base> pHoveredContr
 	// Store the last clicked on control. Don't do anything yet,
 	// we'll check it in OnMouseMoved, and if it moves further than
 	// x pixels with the mouse down, we'll start to drag.
-	LastPressedPos = Gwen::Point( x, y );
+	LastPressedPos = in_pos;
 	LastPressedControl = pHoveredControl;
 	return false;
 }
 
-bool ShouldStartDraggingControl( int x, int y )
+static bool ShouldStartDraggingControl( const Gwen::Point &in_pos )
 {
 	// We're not holding a control down..
 	if ( !LastPressedControl ) { return false; }
 
 	// Not been dragged far enough
-	int iLength = abs( x - LastPressedPos.x ) + abs( y - LastPressedPos.y );
+	int iLength = std::abs( in_pos.x - LastPressedPos.x ) + std::abs( in_pos.y - LastPressedPos.y );
 
 	if ( iLength < 5 ) { return false; }
 
@@ -151,11 +150,11 @@ bool ShouldStartDraggingControl( int x, int y )
 		return false;
 	}
 
-	Gwen::DragAndDrop::SourceControl->DragAndDrop_StartDragging( Gwen::DragAndDrop::CurrentPackage, LastPressedPos.x, LastPressedPos.y );
+	Gwen::DragAndDrop::SourceControl->DragAndDrop_StartDragging( Gwen::DragAndDrop::CurrentPackage, LastPressedPos );
 	return true;
 }
 
-void UpdateHoveredControl( Gwen::AutoPointer<Gwen::Controls::Base> pCtrl, int x, int y )
+static void UpdateHoveredControl( Gwen::AutoPointer<Gwen::Controls::Base> pCtrl, const Gwen::Point &in_pos )
 {
 	//
 	// We use this global variable to represent our hovered control
@@ -201,23 +200,22 @@ void UpdateHoveredControl( Gwen::AutoPointer<Gwen::Controls::Base> pCtrl, int x,
 	// If we exist, tell us that we've started hovering.
 	if ( Gwen::DragAndDrop::HoveredControl )
 	{
-		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverEnter( Gwen::DragAndDrop::CurrentPackage, x, y );
+		Gwen::DragAndDrop::HoveredControl->DragAndDrop_HoverEnter( Gwen::DragAndDrop::CurrentPackage, in_pos );
 	}
 
 	NewHoveredControl = NULL;
 }
 
-void Gwen::DragAndDrop::OnMouseMoved( Gwen::AutoPointer<Gwen::Controls::Base> pHoveredControl, int x, int y )
+void Gwen::DragAndDrop::OnMouseMoved( Gwen::AutoPointer<Gwen::Controls::Base> pHoveredControl, const Point &in_pos )
 {
 	auto platform = pHoveredControl->GetPlatfom();
 
 	// Always keep these up to date, they're used to draw the dragged control.
-	m_iMouseX = x;
-	m_iMouseY = y;
+	m_iMouse = in_pos;
 
 	// If we're not carrying anything, then check to see if we should
 	// pick up from a control that we're holding down. If not, then forget it.
-	if ( !CurrentPackage && !ShouldStartDraggingControl( x, y ) )
+	if ( !CurrentPackage && !ShouldStartDraggingControl( in_pos ) )
 	{ return; }
 
 	// Make sure the canvas redraws when we move
@@ -225,13 +223,13 @@ void Gwen::DragAndDrop::OnMouseMoved( Gwen::AutoPointer<Gwen::Controls::Base> pH
 	{ CurrentPackage->drawcontrol->Redraw(); }
 
 	// Swap to this new hovered control and notify them of the change.
-	UpdateHoveredControl( pHoveredControl, x, y );
+	UpdateHoveredControl( pHoveredControl, in_pos );
 
 	if ( !HoveredControl ) { return; }
 
 	// Update the hovered control every mouse move, so it can show where
 	// the dropped control will land etc..
-	HoveredControl->DragAndDrop_Hover( CurrentPackage, x, y );
+	HoveredControl->DragAndDrop_Hover( CurrentPackage, in_pos );
 	// Override the cursor - since it might have been set my underlying controls
 	// Ideally this would show the 'being dragged' control. TODO
 	platform->SetCursor( Gwen::CursorType::CURSOR_NORMAL );
@@ -246,7 +244,7 @@ void Gwen::DragAndDrop::RenderOverlay( AutoPointer<Controls::Canvas> /*pCanvas*/
 	if ( !CurrentPackage->drawcontrol ) { return; }
 
 	Gwen::Point pntOld = skin->GetRender()->GetRenderOffset();
-	skin->GetRender()->AddRenderOffset( Gwen::Rect( m_iMouseX - SourceControl->X() - CurrentPackage->holdoffset.x, m_iMouseY - SourceControl->Y() - CurrentPackage->holdoffset.y, 0, 0 ) );
+	skin->GetRender()->AddRenderOffset( Gwen::Rect( m_iMouse.x - SourceControl->X() - CurrentPackage->holdoffset.x, m_iMouse.y - SourceControl->Y() - CurrentPackage->holdoffset.y, 0, 0 ) );
 	CurrentPackage->drawcontrol->DoRender( skin );
 	skin->GetRender()->SetRenderOffset( pntOld );
 }

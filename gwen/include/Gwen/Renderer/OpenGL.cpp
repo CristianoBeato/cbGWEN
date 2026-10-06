@@ -1,5 +1,5 @@
 
-#include "Gwen/Renderers/OpenGL.h"
+#include "Gwen/Renderer/OpenGL.hpp"
 #include "Gwen/WindowProvider.h"
 
 #include <SDL3/SDL_surface.h>

@@ -27,12 +27,11 @@
 ============================================================================================
 */
 
-#include "Gwen/Platform/SDL3Platform.h"
+#include "Gwen/Platform/SDL3Platform.hpp"
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_clipboard.h>
 #include <SDL3/SDL_video.h>
-#include "SDL3Platform.h"
 
 Gwen::Platform::SDL3WindowHandle::SDL3WindowHandle( void ) : 
 	m_ID( 0 ),

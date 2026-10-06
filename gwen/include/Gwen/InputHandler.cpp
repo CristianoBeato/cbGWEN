@@ -27,10 +27,8 @@
 ============================================================================================
 */
 
-#include "Gwen/InputHandler.h"
-#include "Gwen/DragAndDrop.h"
+#include "Gwen/InputHandler.hpp"
 #include "Gwen/Hook.h"
-#include "Gwen/Platform/Platform.h"
 
 constexpr float DOUBLE_CLICK_SPEED = 0.5f;
 constexpr int MAX_MOUSE_BUTTONS = 5;
@@ -277,7 +275,7 @@ bool Gwen::Input::OnMouseClicked( AutoPointer<Controls::Base> pCanvas, int iMous
 
 	if ( bDown )
 	{
-		if ( Hook::CallHook( &Hook::BaseHook::OnControlClicked, Gwen::HoveredControl, MousePosition.x, MousePosition.y ) )
+		if ( Gwen::Hook::CallHook( &Gwen::Hook::BaseHook::OnControlClicked, Gwen::HoveredControl, MousePosition ) )
 		{ return true; }
 	}
 
@@ -287,19 +285,19 @@ bool Gwen::Input::OnMouseClicked( AutoPointer<Controls::Base> pCanvas, int iMous
 	{
 		case 0:
 			{
-				if ( DragAndDrop::OnMouseButton( Gwen::HoveredControl, MousePosition.x, MousePosition.y, bDown ) )
+				if ( DragAndDrop::OnMouseButton( Gwen::HoveredControl, MousePosition, bDown ) )
 				{ return true; }
 
-				if ( bIsDoubleClick )	{ Gwen::HoveredControl->OnMouseDoubleClickLeft( MousePosition.x, MousePosition.y ); }
-				else					{ Gwen::HoveredControl->OnMouseClickLeft( MousePosition.x, MousePosition.y, bDown ); }
+				if ( bIsDoubleClick )	{ Gwen::HoveredControl->OnMouseDoubleClickLeft( MousePosition ); }
+				else					{ Gwen::HoveredControl->OnMouseClickLeft( MousePosition, bDown ); }
 
 				return true;
 			}
 
 		case 1:
 			{
-				if ( bIsDoubleClick )	{ Gwen::HoveredControl->OnMouseDoubleClickRight( MousePosition.x, MousePosition.y ); }
-				else					{ Gwen::HoveredControl->OnMouseClickRight( MousePosition.x, MousePosition.y, bDown ); }
+				if ( bIsDoubleClick )	{ Gwen::HoveredControl->OnMouseDoubleClickRight( MousePosition ); }
+				else					{ Gwen::HoveredControl->OnMouseClickRight( MousePosition, bDown ); }
 
 				return true;
 			}
