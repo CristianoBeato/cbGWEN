@@ -6,11 +6,11 @@
 
 
 #pragma once
+
 #ifndef GWEN_UNITTEST_UNITTEST_H
 #define GWEN_UNITTEST_UNITTEST_H
 
 #include "Gwen/Gwen.h"
-#include "Gwen/Align.h"
 #include "Gwen/Utility.h"
 #include "Gwen/Controls/WindowControl.h"
 #include "Gwen/Controls/TabControl.h"
