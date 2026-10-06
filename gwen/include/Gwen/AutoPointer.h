@@ -123,7 +123,7 @@ namespace Gwen
         template< class _u>
         inline bool operator == ( const AutoPointer<_u> &in_ref ) const
         {
-            return ( m_pointer == in_ref.m_pointer );
+            return ( m_pointer == &in_ref );
         }
 
         inline bool operator != ( const_pointer &ptr );
@@ -133,7 +133,7 @@ namespace Gwen
         template< class _u>
         inline bool operator != ( const AutoPointer<_u> &in_ref ) const
         {
-            return ( m_pointer != in_ref.m_pointer );
+            return ( m_pointer != &in_ref );
         }
 
 	    inline explicit operator bool( void ) const noexcept;
