@@ -66,7 +66,7 @@ namespace Gwen
 			public Event::Handler
 		{
 			public:
-				typedef AutoPointer<Base> Pointer;
+				typedef AutoPointer<Controls::Base> Pointer;
 				typedef std::list<Pointer> List;
 
 				typedef std::map<Gwen::UnicodeString, Gwen::Event::Caller*> AccelMap;
@@ -81,7 +81,7 @@ namespace Gwen
 
 				virtual void SetParent( Controls::Base::Pointer pParent );
 				virtual Controls::Base::Pointer GetParent( void ) const { return m_Parent; }
-				virtual AutoPointer<Controls::Canvas> GetCanvas( void );
+				virtual AutoPointer<Controls::Canvas> GetCanvas( void ) const;
 
 				virtual Base::List & GetChildren() { if ( m_InnerPanel ) { return m_InnerPanel->GetChildren(); } return Children; }
 				virtual bool IsChild( Controls::Base::Pointer pChild );
@@ -159,7 +159,7 @@ namespace Gwen
 			protected:
 
 				virtual void OnBoundsChanged( Gwen::Rect oldBounds );
-				virtual void OnChildBoundsChanged( Gwen::Rect oldChildBounds, Base::Pointer pChild );
+				virtual void OnChildBoundsChanged( Gwen::Rect oldChildBounds, Controls::Base::Pointer pChild );
 
 				virtual void OnScaleChanged();
 
@@ -396,6 +396,8 @@ namespace Gwen
 
 				Controls::Base::Pointer m_ToolTip;
 
+				Platform::Base*			m_Platform;
+
 				Skin::Base::Pointer 	m_Skin;
 
 				Gwen::Rect				m_Bounds;
@@ -413,11 +415,11 @@ namespace Gwen
 				bool m_bKeyboardInputEnabled;
 				bool m_bDrawBackground;
 
-				int m_iDock;
+				int 	m_iDock;
+				bool 	m_Tabable;
 
-				unsigned char	m_Cursor;
+				uint8_t	m_Cursor;
 
-				bool m_Tabable;
 
 			public:
 
@@ -446,21 +448,21 @@ namespace Gwen
 				virtual void DragAndDrop_SetPackage( bool bDraggable, const String & strName = "", void* pUserData = NULL );
 				virtual bool DragAndDrop_Draggable();
 				virtual bool DragAndDrop_ShouldStartDrag() { return true; }
-				virtual void DragAndDrop_StartDragging( DragAndDrop::Package::pointer pPackage, const Point &in_pos );
-				virtual DragAndDrop::Package::pointer DragAndDrop_GetPackage( int x, int y );
+				virtual void DragAndDrop_StartDragging( DragAndDrop::Package::Pointer pPackage, const Point &in_pos );
+				virtual Gwen::AutoPointer<Gwen::DragAndDrop::Package> DragAndDrop_GetPackage( const Gwen::Point &in_pos );
 				virtual void DragAndDrop_EndDragging( bool /*bSuccess*/, const Point &/*xy*/ ) {};
 
 			protected:
-				DragAndDrop::Package::pointer	m_DragAndDrop_Package;
+				DragAndDrop::Package::Pointer	m_DragAndDrop_Package;
 
 			public:
 
 				// Receiver
-				virtual void DragAndDrop_HoverEnter( DragAndDrop::Package::pointer /*pPackage*/, const Point &in_pos ) { }
-				virtual void DragAndDrop_HoverLeave( DragAndDrop::Package::pointer /*pPackage*/ ) { }
-				virtual void DragAndDrop_Hover( DragAndDrop::Package::pointer /*pPackage*/, const Point &in_pos ) {};
-				virtual bool DragAndDrop_HandleDrop( DragAndDrop::Package::pointer pPackage, const Point &in_pos );
-				virtual bool DragAndDrop_CanAcceptPackage( DragAndDrop::Package::pointer /*pPackage*/ ) { return false; }
+				virtual void DragAndDrop_HoverEnter( DragAndDrop::Package::Pointer /*pPackage*/, const Gwen::Point &in_pos ) { }
+				virtual void DragAndDrop_HoverLeave( DragAndDrop::Package::Pointer /*pPackage*/ ) { }
+				virtual void DragAndDrop_Hover( DragAndDrop::Package::Pointer /*pPackage*/, const Gwen::Point &in_pos ) {};
+				virtual bool DragAndDrop_HandleDrop( DragAndDrop::Package::Pointer pPackage, const Gwen::Point &in_pos );
+				virtual bool DragAndDrop_CanAcceptPackage( DragAndDrop::Package::Pointer /*pPackage*/ ) { return false; }
 
 
 				//

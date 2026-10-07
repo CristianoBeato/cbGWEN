@@ -36,7 +36,7 @@ namespace Gwen
 		class GWEN_EXPORT Package : public Object
 		{
 		public:
-			typedef AutoPointer<Package> pointer;
+			typedef AutoPointer<Package> Pointer;
 
 
 			Package( void )
