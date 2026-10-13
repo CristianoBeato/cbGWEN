@@ -125,7 +125,7 @@ static bool ShouldStartDraggingControl( const Gwen::Point &in_pos )
 	if ( iLength < 5 ) { return false; }
 
 	// Create the dragging package
-	Gwen::DragAndDrop::CurrentPackage = LastPressedControl->DragAndDrop_GetPackage( LastPressedPos.x, LastPressedPos.y );
+	Gwen::DragAndDrop::CurrentPackage = LastPressedControl->DragAndDrop_GetPackage( LastPressedPos );
 
 	// We didn't create a package!
 	if ( !Gwen::DragAndDrop::CurrentPackage )

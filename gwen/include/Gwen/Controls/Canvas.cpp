@@ -172,9 +172,9 @@ void Gwen::Controls::Canvas::ReleaseChildren()
 
 	while ( iter != Children.end() )
 	{
-		Base* pChild = *iter;
+		auto pChild = *iter;
 		iter = Children.erase( iter );
-		delete pChild;
+		//delete pChild;
 	}
 }
 

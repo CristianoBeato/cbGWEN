@@ -113,7 +113,7 @@ static void UpdateHoveredControl( Gwen::Controls::Base::Pointer pInCanvas )
 		if ( Gwen::HoveredControl )
 		{
 			Gwen::AutoPointer<Gwen::Controls::Base> OldHover = Gwen::HoveredControl;
-			Gwen::HoveredControl = NULL;
+			Gwen::HoveredControl = Gwen::Controls::Base::Pointer();
 			OldHover->Redraw();
 		}
 
