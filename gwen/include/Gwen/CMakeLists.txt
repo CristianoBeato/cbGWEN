@@ -33,6 +33,8 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ControlList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ControlList.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Debug.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Debug.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DragAndDrop.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DragAndDrop.h
     ${CMAKE_CURRENT_SOURCE_DIR}/events.cpp
@@ -84,6 +86,12 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.hpp
+    
+    ## TODO: Update 
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.cpp
@@ -119,8 +127,6 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/HSVColorPicker.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/LabelClickable.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/LabelClickable.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ListBox.cpp
@@ -175,8 +181,6 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TabStrip.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TabStrip.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TabTitleBar.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TextBox.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TextBox.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/TextBoxNumeric.cpp
@@ -245,6 +249,7 @@ target_precompile_headers( cbGwen
         "$<$<COMPILE_LANGUAGE:CXX>:Structures.h>"
         "$<$<COMPILE_LANGUAGE:CXX>:AutoPointer.h>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Utility.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Debug.hpp>" 
         "$<$<COMPILE_LANGUAGE:CXX>:TextObject.hpp>"
         "$<$<COMPILE_LANGUAGE:CXX>:Font.h>"
         "$<$<COMPILE_LANGUAGE:CXX>:Texture.hpp>"
