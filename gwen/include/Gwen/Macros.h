@@ -52,7 +52,7 @@ namespace Gwen
 	{
 		return a > b ? a : b;
 	}
-
+	
 	template <typename T>
 	inline T Clamp( T current, T vmin, T vmax )
 	{

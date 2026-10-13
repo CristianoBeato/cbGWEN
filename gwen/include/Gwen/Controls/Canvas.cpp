@@ -28,6 +28,7 @@
 */
 
 #include "Gwen/Controls/Canvas.hpp"
+#include "Gwen/Controls/Base.hpp"
 
 #ifndef GWEN_NO_ANIMATION
 #	include "Gwen/Anim.h"
