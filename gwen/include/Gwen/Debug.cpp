@@ -27,8 +27,7 @@
 ============================================================================================
 */
 
-#include "Precompiled.hpp"
-#include "Gwen/Debug.h"
+#include "Gwen/Debug.hpp"
 
 namespace Gwen
 {

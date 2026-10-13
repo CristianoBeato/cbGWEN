@@ -27,8 +27,7 @@
 ============================================================================================
 */
 
-#ifndef __GWEN_DEBUG_H__
-#define __GWEN_DEBUG_H__
+#pragma once
 
 namespace Gwen
 {
@@ -39,5 +38,3 @@ namespace Gwen
 		void GWEN_EXPORT AssertCheck( bool b, const char* strMsg );
 	}
 };
-
-#endif //!__GWEN_DEBUG_H__
