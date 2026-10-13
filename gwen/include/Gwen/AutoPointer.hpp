@@ -250,7 +250,7 @@ namespace Gwen
             m_pointer = nullptr;
         }
 
-        m_pointer = dynamic_cast<_t>( in_ref.m_pointer );
+        m_pointer = dynamic_cast<_t>( in_ref.GetPointer() );
 
         if( m_pointer )
             Object::IncRef( m_pointer );
