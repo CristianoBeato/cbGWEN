@@ -41,7 +41,7 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Inputhandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Hook.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Hook.h
