@@ -59,7 +59,9 @@ namespace Gwen
 
 			void Add( TYPE pControl )
 			{
-				if ( Contains( pControl ) ) { return; }
+				/// Already in the list 
+				if ( Contains( pControl ) ) 
+					return;
 
 				list.push_back( pControl );
 			}
