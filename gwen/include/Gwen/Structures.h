@@ -31,6 +31,7 @@
 
 #include "Gwen/Exports.h"
 #include <string>
+#include <cstdint>
 
 namespace Gwen
 {
