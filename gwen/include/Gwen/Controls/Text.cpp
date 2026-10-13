@@ -1,34 +1,67 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025-2026 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
+#include "Gwen/Controls/Text.hpp"
 
-#include "Gwen/Gwen.h"
-#include "Gwen/Controls/Text.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Utility.h"
-
-using namespace Gwen;
-using namespace Gwen::ControlsInternal;
-
-GWEN_CONTROL_CONSTRUCTOR( Text )
+#if 1
+namespace Gwen
 {
-	m_Font = NULL;
+	namespace ControlsInternal
+	{
+		GWEN_CONTROL_CONSTRUCTOR( Text )
+		{
+			m_Font = Font::Pointer();
+			m_ColorOverride = Color( 255, 255, 255, 0 );
+			m_Color = GetSkin()->Colors.Label.Default;
+			SetMouseInputEnabled( false );
+			SetWrap( false );
+		}
+	}
+}
+#else
+Gwen::ControlsInternal::Text::Text( Controls::Base::Pointer in_parent, const Gwen::String &in_name ) : BaseClass( in_parent, in_name )
+{
+	m_Font = Font::Pointer();
 	m_ColorOverride = Color( 255, 255, 255, 0 );
 	m_Color = GetSkin()->Colors.Label.Default;
 	SetMouseInputEnabled( false );
 	SetWrap( false );
 }
+#endif 
 
-Text::~Text()
+Gwen::ControlsInternal::Text::~Text( void )
 {
 	// NOTE: This font doesn't need to be released
 	// Because it's a pointer to another font somewhere.
 }
 
-void Text::Layout( Skin::Base* skin )
+void Gwen::ControlsInternal::Text::Layout( Skin::Base::Pointer skin )
 {
 	if ( m_bTextChanged )
 	{
@@ -37,14 +70,15 @@ void Text::Layout( Skin::Base* skin )
 	}
 }
 
-Gwen::Font* Text::GetFont()
+Gwen::Font::Pointer Gwen::ControlsInternal::Text::GetFont( void )
 {
 	return m_Font;
 }
 
-void Text::SetFont( Gwen::Font* pFont )
+void Gwen::ControlsInternal::Text::SetFont( Gwen::Font::Pointer pFont )
 {
-	if ( m_Font == pFont ) { return; }
+	if ( m_Font == pFont )
+		return;
 
 	m_Font = pFont;
 	m_bTextChanged = true;
@@ -55,37 +89,41 @@ void Text::SetFont( Gwen::Font* pFont )
 
 		while ( it != itEnd )
 		{
-			( *it )->SetFont( m_Font );
+			auto line = *it;
+			line->SetFont( m_Font );
 			++it;
 		}
 	}
 	Invalidate();
 }
 
-void Text::SetString( const TextObject & str )
+void Gwen::ControlsInternal::Text::SetString( const TextObject & str )
 {
-	if ( m_String == str ) { return; }
+	if ( m_String == str )
+		return;
 
 	m_String = str.GetUnicode();
 	m_bTextChanged = true;
 	Invalidate();
 }
 
-void Text::Render( Skin::Base* skin )
+void Gwen::ControlsInternal::Text::Render( Skin::Base::Pointer skin )
 {
-	if ( m_bWrap ) { return; }
+	if ( m_bWrap )
+		return;
 
-	if ( Length() == 0 || !GetFont() ) { return; }
+	if ( Length() == 0 || !GetFont() )
+		return;
 
 	if ( m_ColorOverride.a == 0 )
-	{ skin->GetRender()->SetDrawColor( m_Color ); }
+		skin->GetRender()->SetDrawColor( m_Color );
 	else
-	{ skin->GetRender()->SetDrawColor( m_ColorOverride ); }
+		skin->GetRender()->SetDrawColor( m_ColorOverride );
 
 	skin->GetRender()->RenderText( GetFont(), Gwen::Point( GetPadding().left, GetPadding().top ), m_String.GetUnicode() );
 }
 
-Gwen::Rect Text::GetCharacterPosition( int iChar )
+Gwen::Rect Gwen::ControlsInternal::Text::GetCharacterPosition( int iChar )
 {
 	if ( !m_Lines.empty() )
 	{
@@ -93,14 +131,15 @@ Gwen::Rect Text::GetCharacterPosition( int iChar )
 		TextLines::iterator itEnd = m_Lines.end();
 		int iChars = 0;
 
-		Text* pLine;
+		Text::Pointer pLine;
 		while ( it != itEnd )
 		{
 			pLine = *it;
 			++it;
 			iChars += pLine->Length();
 
-			if ( iChars <= iChar ) { continue; }
+			if ( iChars <= iChar )
+				continue; 
 
 			iChars -= pLine->Length();
 			Gwen::Rect rect = pLine->GetCharacterPosition( iChar - iChars );
@@ -108,6 +147,7 @@ Gwen::Rect Text::GetCharacterPosition( int iChar )
 			rect.y += pLine->Y();
 			return rect;
 		}
+
 		//manage special case of the last character
 		Gwen::Rect rect = pLine->GetCharacterPosition( pLine->Length() );
 		rect.x += pLine->X();
@@ -126,9 +166,9 @@ Gwen::Rect Text::GetCharacterPosition( int iChar )
 	return Rect( p.x, 0, 0, p.y );
 }
 
-Gwen::Rect Text::GetLineBox( int i )
+Gwen::Rect Gwen::ControlsInternal::Text::GetLineBox( int i )
 {
-	Text* line = GetLine(i);
+	Text::Pointer line = GetLine(i);
 	if(line != NULL)
 	{
 		Gwen::Point p = GetSkin()->GetRender()->MeasureText( GetFont(), line->m_String.GetUnicode());
@@ -142,7 +182,7 @@ Gwen::Rect Text::GetLineBox( int i )
 }
  
 
-int Text::GetClosestCharacter( Gwen::Point p )
+int Gwen::ControlsInternal::Text::GetClosestCharacter( Gwen::Point p )
 {
 	if ( !m_Lines.empty() )
 	{
@@ -150,7 +190,7 @@ int Text::GetClosestCharacter( Gwen::Point p )
 		TextLines::iterator itEnd = m_Lines.end();
 		int iChars = 0;
 
-		Text* pLine;
+		Text::Pointer pLine;
 		while ( it != itEnd )
 		{
 			pLine = *it;
@@ -185,12 +225,12 @@ int Text::GetClosestCharacter( Gwen::Point p )
 	return iChar;
 }
 
-void Text::OnScaleChanged()
+void Gwen::ControlsInternal::Text::OnScaleChanged()
 {
 	Invalidate();
 }
 
-void Text::RefreshSize()
+void Gwen::ControlsInternal::Text::RefreshSize()
 {
 	if ( m_bWrap )
 	{
@@ -223,12 +263,12 @@ void Text::RefreshSize()
 	Invalidate();
 }
 
-void Text::SplitWords(const Gwen::UnicodeString &s, std::vector<Gwen::UnicodeString> & elems )
+void Gwen::ControlsInternal::Text::SplitWords(const Gwen::UnicodeString &s, std::vector<Gwen::UnicodeString> & elems )
 {
 	Gwen::UnicodeString str;
 
 	int w = GetParent()->Width() - GetParent()->GetPadding().left-GetParent()->GetPadding().right;
-	for ( int i=0; i<(int)s.length(); i++ ) 
+	for ( size_t i=0; i< s.length(); i++ ) 
 	{
 		if ( s[i] == L'\n' )
 		{
@@ -266,14 +306,17 @@ void Text::SplitWords(const Gwen::UnicodeString &s, std::vector<Gwen::UnicodeStr
 	if ( !str.empty() ) { elems.push_back( str ); }
 }
 
-void Text::RefreshSizeWrap()
+void Gwen::ControlsInternal::Text::RefreshSizeWrap()
 {
 	RemoveAllChildren();
 
+#if 0
 	for ( TextLines::iterator it = m_Lines.begin(); it != m_Lines.end(); ++it )
 	{
-		delete *it;
+		//delete *it;
+		*it = nullptr; //TODO: Fix this
 	}
+#endif 
 
 	m_Lines.clear();
 	std::vector<Gwen::UnicodeString> words;
@@ -317,7 +360,7 @@ void Text::RefreshSizeWrap()
 
 		if ( bFinishLine )
 		{
-			Text* t = new Text( this );
+			Text::Pointer t = new Text( this );
 			t->SetFont( GetFont() );
 			if(bWrapped)
 			{
@@ -354,12 +397,12 @@ void Text::RefreshSizeWrap()
 	Invalidate();
 }
 
-int Text::NumLines()
+int Gwen::ControlsInternal::Text::NumLines()
 {
 	return m_Lines.size();
 }
 
-Text* Text::GetLine( int i )
+Gwen::ControlsInternal::Text::Pointer Gwen::ControlsInternal::Text::GetLine( int i )
 {
 	TextLines::iterator it = m_Lines.begin();
 	TextLines::iterator itEnd = m_Lines.end();
@@ -372,10 +415,10 @@ Text* Text::GetLine( int i )
 		i--;
 	}
 
-	return NULL;
+	return Text::Pointer();
 }
 
-int Text::GetLineFromChar( int i )
+int Gwen::ControlsInternal::Text::GetLineFromChar( int i )
 {
 	TextLines::iterator it = m_Lines.begin();
 	TextLines::iterator itEnd = m_Lines.end();
@@ -384,7 +427,7 @@ int Text::GetLineFromChar( int i )
 
 	while ( it != itEnd )
 	{
-		Text* pLine = *it;
+		Text::Pointer pLine = *it;
 		++it;
 		iChars += pLine->Length();
 
@@ -397,43 +440,44 @@ int Text::GetLineFromChar( int i )
 	return iLine;
 }
 
-int Text::GetStartCharFromLine( int i )
+int Gwen::ControlsInternal::Text::GetStartCharFromLine( int i )
 {
 	TextLines::iterator it = m_Lines.begin();
 	TextLines::iterator itEnd = m_Lines.end();
-	int iChars = 0;
+	size_t iChars = 0;
 
 	while ( it != itEnd )
 	{
-		Text* pLine = *it;
+		Text::Pointer pLine = *it;
 		++it;
 
-		if ( i == 0 ) { return Gwen::Clamp( iChars, 0, Length() ); }
+		if ( i == 0 ) 
+			return Gwen::Clamp( iChars, (size_t)0, Length() ); 
 
 		iChars += pLine->Length();
 		i--;
 	}
 
-	return Gwen::Clamp( iChars, 0, Length() );
+	return Gwen::Clamp( iChars, (size_t)0, Length() );
 }
 
-int Text::GetEndCharFromLine( int i )
+int Gwen::ControlsInternal::Text::GetEndCharFromLine( int i )
 {
-	int iStart = GetStartCharFromLine( i );
-	Text* iLine = GetLine( i );
+	size_t iStart = GetStartCharFromLine( i );
+	auto iLine = GetLine( i );
 
 	if ( iLine )
 	{
 		iStart += iLine->Length();
 	}
 
-	return Gwen::Clamp( iStart, 0, Length() );
+	return Gwen::Clamp( iStart, (size_t)0, Length() );
 }
 
-int Text::GetCharPosOnLine( int i )
+int Gwen::ControlsInternal::Text::GetCharPosOnLine( int i )
 {
 	int iLine = GetLineFromChar( i );
-	Text* line = GetLine( iLine );
+	auto line = GetLine( iLine );
 
 	if ( !line ) { return 0; }
 

@@ -61,12 +61,15 @@ namespace Gwen
 				// @remark this function is necessary to implement multiline selection
 				virtual Gwen::Rect GetLineBox( int i ); 
 
-				int Length() const { return ( int ) m_String.GetUnicode().size(); }
+				size_t Length( void ) const 
+				{ 
+					return m_String.GetUnicode().size(); 
+				}
 
 				virtual void SetTextColor( const Gwen::Color & col ) { m_Color = col; }
 				virtual void SetTextColorOverride( const Gwen::Color & col ) { m_ColorOverride = col; }
 
-				virtual void OnScaleChanged();
+				virtual void OnScaleChanged( void );
 
 				inline const Gwen::Color & TextColor() const { return m_Color; }
 
@@ -74,7 +77,7 @@ namespace Gwen
 				virtual bool Wrap() { return m_bWrap; }
 				virtual void SetWrap( bool b ) { if ( m_bWrap == b ) { return; } m_bWrap = b; m_bTextChanged = true; Invalidate(); }
 
-				virtual Text* GetLine( int i );
+				virtual Text::Pointer GetLine( int i );
 				virtual int GetLineFromChar( int i );
 				virtual int GetStartCharFromLine( int i );
 				virtual int GetEndCharFromLine( int i );
@@ -87,19 +90,19 @@ namespace Gwen
 				virtual void SplitWords(const Gwen::UnicodeString &s, std::vector<Gwen::UnicodeString> &elems);
 			
 			private: 
+				typedef std::list<ControlsInternal::Text::Pointer> TextLines;
 
-				virtual void RefreshSizeWrap();
+				virtual void RefreshSizeWrap( void );
 
 				Gwen::TextObject	m_String;
-				Gwen::Font*			m_Font;
+				Gwen::Font::Pointer	m_Font;
 				Gwen::Color			m_Color;
 				Gwen::Color			m_ColorOverride;
 
 				bool				m_bWrap;
 				bool				m_bTextChanged;
 
-				typedef std::list<Gwen::Text> TextLines;
-				TextLines		m_Lines;
+				TextLines										m_Lines;
 		};
 	}
 
