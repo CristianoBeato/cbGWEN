@@ -46,7 +46,7 @@
 #include "Gwen/Config.h"
 #include "Gwen/Exports.h"
 #include "Gwen/Structures.h"
-#include "Gwen/AutoPointer.h"
+#include "Gwen/AutoPointer.hpp"
 #include "Gwen/Platform/Platform.hpp"
 #include "Gwen/TextObject.hpp"
 #include "Gwen/Font.h"

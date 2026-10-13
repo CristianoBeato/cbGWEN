@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "AutoPointer.h"
+#include "AutoPointer.hpp"
 #include "ControlList.h"
 
 namespace Gwen

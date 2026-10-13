@@ -29,6 +29,7 @@
 set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Anim.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Anim.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/AutoPointer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Config.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ControlList.cpp
@@ -247,7 +248,7 @@ target_precompile_headers( cbGwen
         "$<$<COMPILE_LANGUAGE:CXX>:Exports.h>"
         "$<$<COMPILE_LANGUAGE:CXX>:Platform/Platform.hpp>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Structures.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:AutoPointer.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:AutoPointer.hpp>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Utility.h>" 
         "$<$<COMPILE_LANGUAGE:CXX>:Debug.hpp>" 
         "$<$<COMPILE_LANGUAGE:CXX>:TextObject.hpp>"

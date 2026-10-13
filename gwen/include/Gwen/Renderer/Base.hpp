@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Gwen/Structures.h"
-#include "Gwen/AutoPointer.h"
+#include "Gwen/AutoPointer.hpp"
 
 namespace Gwen
 {
