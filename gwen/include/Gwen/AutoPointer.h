@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include <atomic>
+
 namespace Gwen
 {
     //  base object counter class
@@ -101,7 +103,12 @@ namespace Gwen
         AutoPointer( const AutoPointer<_t> & in_ref );
         AutoPointer( const_pointer &in_ref );
         AutoPointer( const_pointer in_const_ );
+        template<class _u>
+        AutoPointer( const AutoPointer<_u> & in_ref );
+        
         ~AutoPointer( void );
+
+        pointer GetPointer( void ) const { return m_pointer; }
 
         // dynamic casting 
         template< class _u >
@@ -120,21 +127,25 @@ namespace Gwen
         inline bool operator == ( const const_pointer &ptr ) const;
         inline bool operator == ( const AutoPointer<_t> &in_ref );
 
+    #if 0
         template< class _u>
         inline bool operator == ( const AutoPointer<_u> &in_ref ) const
         {
             return ( m_pointer == &in_ref );
         }
+    #endif
 
         inline bool operator != ( const_pointer &ptr );
         inline bool operator != ( const_pointer &ptr ) const;
         inline bool operator != ( const AutoPointer<_t> &in_ref );
 
+#if 0
         template< class _u>
         inline bool operator != ( const AutoPointer<_u> &in_ref ) const
         {
             return ( m_pointer != &in_ref );
         }
+#endif
 
 	    inline explicit operator bool( void ) const noexcept;
 
@@ -173,6 +184,17 @@ namespace Gwen
             Object::IncRef( dynamic_cast<Object*>( m_pointer ) );   
     }
 
+    template<class _t>
+    template<class _u>
+    inline AutoPointer<_t>::AutoPointer( const AutoPointer<_u> & in_ref )
+    {
+        if( in_ref )
+        {
+            m_pointer = dynamic_cast<pointer>( in_ref.GetPointer() );
+            Object::IncRef( dynamic_cast<Object*>( m_pointer ) );
+        }
+    }
+
     template <class _t>
     inline AutoPointer<_t>::~AutoPointer(void)
     {
@@ -193,7 +215,7 @@ namespace Gwen
             m_pointer = nullptr;
         }
 
-        m_pointer = dynamic_cast<_t>( in_ref.m_pointer );
+        m_pointer = const_cast<pointer>( in_ref );
 
         if( m_pointer )
             Object::IncRef( m_pointer );
