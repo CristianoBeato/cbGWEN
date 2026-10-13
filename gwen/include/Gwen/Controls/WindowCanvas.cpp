@@ -96,7 +96,7 @@ WindowCanvas::~WindowCanvas()
 	DestroyWindow();
 }
 
-void* WindowCanvas::GetWindow()
+void* WindowCanvas::GetWindow( void )
 {
 	return m_pOSWindow;
 }

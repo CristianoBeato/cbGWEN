@@ -48,8 +48,8 @@ namespace Gwen
 			/// Just store the properties of the window
 			virtual bool	Create( const Gwen::Rect &in_rect, const Gwen::String & in_title ) override;
 			virtual void	Destroy( void ) override;
-			virtual void 	SetBounds( const Gwen::Rect &in_rect );
-			virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget );	
+			virtual void 	SetBounds( const Gwen::Rect &in_rect ) override;
+			virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget ) override;
 			virtual bool	HasFocus( void ) const;	
 			virtual void	SetMaximized( const bool bMaximized, Gwen::Rect &out_rect );				
 			virtual void	SetMinimized( const bool bMinimized ) const;
@@ -101,23 +101,23 @@ namespace Gwen
 
 				/// @brief aquire the clipboard string content  
 				/// @return the clipboard content 
-				virtual UnicodeString GetClipboardText( void );
+				virtual UnicodeString GetClipboardText( void ) override;
 
 				/// @brief Set the clipboard text 
 				/// @param str 
 				/// @return 
-				virtual bool SetClipboardText( const UnicodeString & str );
+				virtual bool SetClipboardText( const UnicodeString & str ) override;
 
 				/// @brief Needed for things like double click
 				/// @return 
-				virtual float GetTimeInSeconds( void );
+				virtual float GetTimeInSeconds( void ) override;
 
 				//
 				// System Dialogs ( Can return false if unhandled )
 				//
-				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
-				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
-				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
+				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) override;
+				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) override;
+				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) override;
 		};
 	}
 }

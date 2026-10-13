@@ -34,7 +34,7 @@
 
 bool Gwen::Renderer::SDLOpenGL::InitializeContext(Gwen::WindowProvider *pWindow)
 {
-	Platform::SDL3WindowHandle* window = pWindow->GetWindow();
+	AutoPointer<Platform::SDL3WindowHandle> window = pWindow->GetWindow();
 	if( !window )
 		return false; /// no window created
 
@@ -63,7 +63,11 @@ bool Gwen::Renderer::SDLOpenGL::InitializeContext(Gwen::WindowProvider *pWindow)
 
 bool Gwen::Renderer::SDLOpenGL::ShutdownContext( Gwen::WindowProvider* pWindow )
 {
-	if( !pWindow || !pWindow->GetHandle() )
+	if( !pWindow )
+		return false;
+
+	AutoPointer<Platform::SDL3WindowHandle> window = pWindow->GetWindow();
+	if( !window )
 		return false;
 
 	// Release OpenGL Objects
@@ -84,10 +88,13 @@ bool Gwen::Renderer::SDLOpenGL::ShutdownContext( Gwen::WindowProvider* pWindow )
 
 bool Gwen::Renderer::SDLOpenGL::PresentContext( Gwen::WindowProvider *pWindow )
 {
+	if( !pWindow )
+		return false;
+
 	/// Retrieve window handler 
-	Platform::SDL3WindowHandle* window = static_cast<Platform::SDL3WindowHandle*>( pWindow->GetWindow() );
-	if( !window || !window->GetHandle() )
-		return false; /// no window created
+	AutoPointer<Platform::SDL3WindowHandle> window = pWindow->GetWindow();
+	if( !window )
+		return false;
 
 	// Swap window buffers
 	SDL_GL_SwapWindow( window->GetHandle() );

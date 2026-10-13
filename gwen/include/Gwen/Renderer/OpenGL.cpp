@@ -64,7 +64,7 @@ public:
 	/// @brief Create a buffer object 
 	glBuffer( const GLenum in_target, const GLsizeiptr in_size ) : m_handle( 0 ), m_size( 0 )
 	{
-		m_taget = m_taget;
+		m_taget = in_target;
 		m_size = in_size;
 
 		// create buffer handle
@@ -266,7 +266,7 @@ void Gwen::Renderer::OpenGL::RenderText( Gwen::Font* pFont, Gwen::Point pos, con
 	for ( int i = 0; i < text.length(); i++ )
 	{
 		char ch = converted_string[i];
-		float curSpacing = sGwenDebugFontSpacing[ch] * m_fLetterSpacing * fSize * m_fFontScale[0];
+		float curSpacing = 0.0f; //sGwenDebugFontSpacing[ch] * m_fLetterSpacing * fSize * m_fFontScale[0];
 		Gwen::Rect r( pos.x + yOffset, pos.y - fSize * 0.5, ( fSize * m_fFontScale[0] ), fSize * m_fFontScale[1] );
 
 		if ( m_pFontTexture )
@@ -304,7 +304,7 @@ Gwen::Point Gwen::Renderer::OpenGL::MeasureText( Gwen::Font* pFont, const Gwen::
 	for ( int i = 0; i < text.length(); i++ )
 	{
 		char ch = converted_string[i];
-		spacing += sGwenDebugFontSpacing[ch];
+		// TODO: spacing += sGwenDebugFontSpacing[ch];
 	}
 
 	p.x = spacing * m_fLetterSpacing * fSize * m_fFontScale[0];
