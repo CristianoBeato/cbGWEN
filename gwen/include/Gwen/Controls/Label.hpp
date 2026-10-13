@@ -47,39 +47,37 @@ namespace Gwen
 
 				virtual void SetText( const TextObject & str, bool bDoEvents = true );
 
-				virtual const TextObject & GetText() const { return m_Text->GetText(); }
+				virtual const TextObject & GetText( void ) const;
 
-				virtual void Render( Skin::Base* /*skin*/ ) {}
+				virtual void Render( Skin::Base::Pointer /*skin*/ ) {}
 
-				virtual void PostLayout( Skin::Base* skin );
+				virtual void PostLayout( Skin::Base::Pointer skin );
 
-				virtual void SizeToContents();
+				virtual void SizeToContents( void );
 
 				virtual void SetAlignment( int iAlign );
-				virtual int GetAlignment();
-
+				virtual int GetAlignment( void );
 
 				virtual void SetFont( Gwen::UnicodeString strFacename, int iSize, bool bBold );
+				virtual void SetFont( Gwen::Font::Pointer pFont );
+				virtual Gwen::Font::Pointer GetFont( void );
+				virtual void SetTextColor( const Gwen::Color & col );
+				virtual void SetTextColorOverride( const Gwen::Color & col );
+				const Gwen::Color & TextColor( void ) const;
 
-				virtual void SetFont( Gwen::Font::Pointer pFont ) { m_Text->SetFont( pFont ); }
-				virtual Gwen::Font* GetFont() { return m_Text->GetFont(); }
-				virtual void SetTextColor( const Gwen::Color & col ) { m_Text->SetTextColor( col ); }
-				virtual void SetTextColorOverride( const Gwen::Color & col ) { m_Text->SetTextColorOverride( col ); }
-				inline const Gwen::Color & TextColor() const { return m_Text->TextColor(); }
-
-				virtual int TextWidth() { return m_Text->Width(); }
-				virtual int TextRight() { return m_Text->Right(); }
-				virtual int TextHeight() { return m_Text->Height(); }
-				virtual int TextX() { return m_Text->X(); }
-				virtual int TextY() { return m_Text->Y(); }
-				virtual int TextLength() { return m_Text->Length(); }
+				virtual int TextWidth( void );
+				virtual int TextRight( void );
+				virtual int TextHeight( void );
+				virtual int TextX( void );
+				virtual int TextY( void );
+				virtual int TextLength( void );
 
 				Gwen::Rect GetCharacterPosition( int iChar );
 
-				virtual void SetTextPadding( const Padding & padding ) { m_Text->SetPadding( padding ); Invalidate(); InvalidateParent(); }
-				virtual const Padding & GetTextPadding() { return m_Text->GetPadding(); }
+				virtual void SetTextPadding( const Padding & padding ); 
+				virtual const Padding & GetTextPadding( void );
 
-				inline int Alignment() const { return m_iAlign; }
+				inline int Alignment( void ) const { return m_iAlign; }
 
 				virtual void MakeColorNormal() { SetTextColor( GetSkin()->Colors.Label.Default ); }
 				virtual void MakeColorBright() { SetTextColor( GetSkin()->Colors.Label.Bright ); }
@@ -89,17 +87,17 @@ namespace Gwen
 				virtual TextObject GetValue() { return GetText(); }
 				virtual void SetValue( const TextObject & strValue ) { return SetText( strValue ); }
 
-				virtual bool Wrap() { return m_Text->Wrap(); }
-				virtual void SetWrap( bool b ) { m_Text->SetWrap( b ); }
+				virtual bool Wrap( void );
+				virtual void SetWrap( bool b );
 
 				virtual void OnBoundsChanged( Gwen::Rect oldChildBounds );
 
 			protected:
 
-				virtual void OnTextChanged() {};
+				virtual void OnTextChanged( void ) {};
 
-				Gwen::Font::Pointer			m_CreatedFont;
-				ControlsInternal::Text		m_Text;
+				Gwen::Font::Pointer							m_CreatedFont;
+				Gwen::AutoPointer<ControlsInternal::Text>	m_Text;
 				int m_iAlign;
 		};
 	}
