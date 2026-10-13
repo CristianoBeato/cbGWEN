@@ -43,7 +43,7 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Exports.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Gwen.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InputHandler.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Hook.cpp
@@ -262,5 +262,5 @@ target_precompile_headers( cbGwen
         "$<$<COMPILE_LANGUAGE:CXX>:UserData.h>"
         "$<$<COMPILE_LANGUAGE:CXX>:Controls/Base.hpp>"
         "$<$<COMPILE_LANGUAGE:CXX>:ToolTip.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Gwen.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen.hpp>" 
     )
