@@ -1,15 +1,33 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025-2026 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
 #pragma once
-#ifndef GWEN_CONTROLS_TEXT_H
-#define GWEN_CONTROLS_TEXT_H
-
-#include "Gwen/BaseRender.h"
-#include "Gwen/Controls/Base.h"
 
 namespace Gwen
 {
@@ -18,22 +36,23 @@ namespace Gwen
 		class GWEN_EXPORT Text : public Controls::Base
 		{
 			public:
+				typedef AutoPointer<Text>	Pointer;;
 
 				GWEN_CONTROL( Text, Controls::Base );
 
-				virtual ~Text();
-				Gwen::Font* GetFont();
+				virtual 			~Text( void );
+				Gwen::Font::Pointer GetFont( void );
 
 				void SetString( const TextObject & str );
 
-				void Render( Skin::Base* skin );
-				void Layout( Skin::Base* skin );
+				void Render( Skin::Base::Pointer skin );
+				void Layout( Skin::Base::Pointer skin );
 
-				void RefreshSize();
+				void RefreshSize( void );
 
-				void SetFont( Gwen::Font* pFont );
+				void SetFont( Gwen::Font::Pointer pFont );
 
-				const TextObject & GetText() const { return m_String; }
+				const TextObject & GetText( void ) const { return m_String; }
 
 				Gwen::Rect GetCharacterPosition( int iChar );
 				int GetClosestCharacter( Gwen::Point p );
@@ -79,10 +98,9 @@ namespace Gwen
 				bool				m_bWrap;
 				bool				m_bTextChanged;
 
-				typedef std::list<Text*> TextLines;
+				typedef std::list<Gwen::Text> TextLines;
 				TextLines		m_Lines;
 		};
 	}
 
 }
-#endif

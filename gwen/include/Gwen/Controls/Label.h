@@ -61,7 +61,7 @@ namespace Gwen
 
 				virtual void SetFont( Gwen::UnicodeString strFacename, int iSize, bool bBold );
 
-				virtual void SetFont( Gwen::Font* pFont ) { m_Text->SetFont( pFont ); }
+				virtual void SetFont( Gwen::Font::Pointer pFont ) { m_Text->SetFont( pFont ); }
 				virtual Gwen::Font* GetFont() { return m_Text->GetFont(); }
 				virtual void SetTextColor( const Gwen::Color & col ) { m_Text->SetTextColor( col ); }
 				virtual void SetTextColorOverride( const Gwen::Color & col ) { m_Text->SetTextColorOverride( col ); }
@@ -98,12 +98,9 @@ namespace Gwen
 
 				virtual void OnTextChanged() {};
 
-				Gwen::Font*					m_CreatedFont;
-				ControlsInternal::Text*		m_Text;
+				Gwen::Font::Pointer			m_CreatedFont;
+				ControlsInternal::Text		m_Text;
 				int m_iAlign;
-
-
 		};
 	}
 }
-#endif
