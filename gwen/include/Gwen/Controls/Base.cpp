@@ -28,8 +28,7 @@
 */
 
 #include "Base.hpp"
-#include "Gwen/Debug.h"
-#include "Gwen/Controls/Label.h"
+#include "Gwen/Controls/Label.hpp"
 
 Gwen::Controls::Base::Base( Controls::Base::Pointer pParent, const Gwen::String & Name ) :
 	m_Parent(),
@@ -108,7 +107,7 @@ Gwen::Controls::Base::~Base( void )
 		delete m_DragAndDrop_Package;
 		m_DragAndDrop_Package = NULL;
 #else
-		m_DragAndDrop_Package = AutoPointer<Controls::Base>();
+		m_DragAndDrop_Package = DragAndDrop::Package::Pointer();
 #endif 
 	}
 }
@@ -243,7 +242,8 @@ void Gwen::Controls::Base::SendToBack()
 
 void Gwen::Controls::Base::BringToFront()
 {
-	if ( !m_ActualParent ) { return; }
+	if ( !m_ActualParent )
+		return;
 
 	if ( m_ActualParent->Children.back() == this ) { return; }
 
@@ -463,7 +463,7 @@ void Gwen::Controls::Base::OnScaleChanged()
 	}
 }
 
-void Gwen::Controls::Base::OnChildBoundsChanged( Gwen::Rect oldChildBounds, Controsl::Base::Pointer pChild )
+void Gwen::Controls::Base::OnChildBoundsChanged( Gwen::Rect oldChildBounds, Controls::Base::Pointer pChild )
 {
 }
 
@@ -1176,7 +1176,7 @@ void Gwen::Controls::Base::SetToolTip( const TextObject & strText )
 	SetToolTip( tooltip );
 }
 
-TextObject Gwen::Controls::Base::GetChildValue( const Gwen::String & strName )
+Gwen::TextObject Gwen::Controls::Base::GetChildValue( const Gwen::String & strName )
 {
 	auto pChild = FindChildByName( strName, true );
 
@@ -1202,7 +1202,7 @@ int Gwen::Controls::Base::GetNamedChildren( Gwen::ControlList & list, const Gwen
 
 	for ( iter = Children.begin(); iter != Children.end(); ++iter )
 	{
-		Base* pChild = *iter;
+		Controls::Base::Pointer pChild = *iter;
 
 		if ( !pChild->GetName().empty() && pChild->GetName() == strName )
 		{

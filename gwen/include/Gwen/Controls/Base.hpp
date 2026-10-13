@@ -607,7 +607,7 @@ T* Gwen::Controls::Base::FindChild( const Gwen::String & name, const bool bRecur
 	GWEN_DYNAMIC( ThisName, BaseName )\
 	virtual const char* GetTypeName(){ return #ThisName; }\
 	virtual const char* GetBaseTypeName(){ return BaseClass::GetTypeName(); }\
-	ThisName( Gwen::Controls::Base* pParent, const Gwen::String& pName = "" )
+	ThisName( Gwen::Controls::Base::Pointer pParent, const Gwen::String& pName = "" )
 
 #define GWEN_CONTROL_INLINE( ThisName, BaseName )\
 	GWEN_CONTROL( ThisName, BaseName ) : BaseClass( pParent, pName )
