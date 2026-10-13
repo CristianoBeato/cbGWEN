@@ -122,30 +122,14 @@ namespace Gwen
 	    inline const_pointer    operator & ( void ) const;
 	    inline reference        operator *(void);
 	    inline const_reference  operator *( void ) const;
-        
         inline bool operator == ( const const_pointer &ptr );
         inline bool operator == ( const const_pointer &ptr ) const;
         inline bool operator == ( const AutoPointer<_t> &in_ref );
-
-    #if 0
-        template< class _u>
-        inline bool operator == ( const AutoPointer<_u> &in_ref ) const
-        {
-            return ( m_pointer == &in_ref );
-        }
-    #endif
-
+        inline bool operator == ( const AutoPointer<_t> &in_ref ) const;
         inline bool operator != ( const_pointer &ptr );
         inline bool operator != ( const_pointer &ptr ) const;
         inline bool operator != ( const AutoPointer<_t> &in_ref );
-
-#if 0
-        template< class _u>
-        inline bool operator != ( const AutoPointer<_u> &in_ref ) const
-        {
-            return ( m_pointer != &in_ref );
-        }
-#endif
+        inline bool operator <  ( const AutoPointer& in_ref ) const; // required by std::set 
 
 	    inline explicit operator bool( void ) const noexcept;
 
@@ -298,5 +282,17 @@ namespace Gwen
     inline bool AutoPointer<_t>::operator==(const AutoPointer<_t> &in_ref)
     {
         return ( m_pointer == in_ref.m_pointer );
+    }
+
+    template <class _t>
+    inline bool AutoPointer<_t>::operator==(const AutoPointer<_t> &in_ref) const
+    {
+        return ( m_pointer == in_ref.m_pointer );
+    }
+
+    template <class _t>
+    inline bool Gwen::AutoPointer<_t>::operator<( const AutoPointer &in_ref ) const
+    {
+        return reinterpret_cast<uintptr_t>( m_pointer ) < reinterpret_cast<uintptr_t>( in_ref.GetPointer() );
     }
 };
