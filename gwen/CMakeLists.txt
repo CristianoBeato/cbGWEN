@@ -38,7 +38,10 @@ else()
 	#message(FATAL_ERROR "Unsupported compiler")
 endif()
 
+find_package( SDL3 REQUIRED )
+
 ## main include dir 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
 add_subdirectory( include/Gwen )
 add_subdirectory( UnitTest )
+add_subdirectory( test )
