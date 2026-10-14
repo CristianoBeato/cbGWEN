@@ -81,6 +81,8 @@ namespace Gwen
             uint32_t old_count = in_ptr->DecrementReference();
             if( old_count == 1 )
                 delete in_ptr;
+
+            return old_count;
         }
 
     private:
@@ -225,6 +227,23 @@ namespace Gwen
     }
 
     template <class _t>
+    inline AutoPointer<_t> AutoPointer<_t>::operator=(const AutoPointer<_t> &in_ref)
+    {
+        if( m_pointer )
+        {
+            Object::DecRef( m_pointer );
+            m_pointer = nullptr;
+        }
+
+        m_pointer = in_ref.GetPointer();
+
+        if( m_pointer )
+            Object::IncRef( m_pointer );
+
+        return *this;
+    }
+
+    template <class _t>
     template <class _u>
     inline AutoPointer<_t> &AutoPointer<_t>::operator=(const AutoPointer<_u> &in_ref)
     {
@@ -294,5 +313,11 @@ namespace Gwen
     inline bool Gwen::AutoPointer<_t>::operator<( const AutoPointer &in_ref ) const
     {
         return reinterpret_cast<uintptr_t>( m_pointer ) < reinterpret_cast<uintptr_t>( in_ref.GetPointer() );
+    }
+
+    template <class _t>
+    inline AutoPointer<_t>::operator bool(void) const noexcept
+    {
+        return m_pointer != nullptr;
     }
 };
