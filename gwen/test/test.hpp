@@ -39,4 +39,5 @@ private:
     Gwen::Platform::Base*           m_platform;
     Gwen::Renderer::Base::Pointer   m_renderer;
     Gwen::Skin::Base::Pointer       m_skin;
+    Gwen::Controls::Canvas::Pointer m_canvas;
 };

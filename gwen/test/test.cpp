@@ -18,6 +18,8 @@ crSDLApp::crSDLApp( void )
     m_platform = new Gwen::Platform::SDL3();
     m_renderer = new Gwen::Renderer::SDLOpenGL();
     m_skin = new Gwen::Skin::Simple();
+
+    m_canvas = new Gwen::Controls::WindowCanvas( 0, 0, 800, 600, m_platform, m_skin, "SDL3Teste" );
 }
 
 crSDLApp::~crSDLApp( void )
@@ -27,6 +29,14 @@ crSDLApp::~crSDLApp( void )
 
 void crSDLApp::Run(void)
 {
+    if( !m_canvas )
+        return;
+    
+    while ( !m_canvas->InputQuit() )
+    {
+        /* code */
+    }
+    
 }
 
 int main( int argc, char* argv[] )
