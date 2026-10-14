@@ -78,7 +78,7 @@ set( GWEN_SOURCES
     # Skins
     ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Base.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Base.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Simple.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Simple.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Skins/TexturedBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Skins/Texturing.h
     
