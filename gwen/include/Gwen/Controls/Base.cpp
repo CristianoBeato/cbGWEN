@@ -1081,51 +1081,51 @@ bool Gwen::Controls::Base::OnKeyPress( int iKey, bool bPress )
 
 	switch ( iKey )
 	{
-		case Key::Tab:
+		case Key::TAB:
 			bHandled = OnKeyTab( bPress );
 			break;
 
-		case Key::Space:
+		case Key::SPACE:
 			bHandled = OnKeySpace( bPress );
 			break;
 
-		case Key::Home:
+		case Key::HOME:
 			bHandled = OnKeyHome( bPress );
 			break;
 
-		case Key::End:
+		case Key::END:
 			bHandled = OnKeyEnd( bPress );
 			break;
 
-		case Key::Return:
+		case Key::RETURN:
 			bHandled = OnKeyReturn( bPress );
 			break;
 
-		case Key::Backspace:
+		case Key::BACKSPACE:
 			bHandled = OnKeyBackspace( bPress );
 			break;
 
-		case Key::Delete:
+		case Key::DELETE:
 			bHandled = OnKeyDelete( bPress );
 			break;
 
-		case Key::Right:
+		case Key::RIGHT:
 			bHandled = OnKeyRight( bPress );
 			break;
 
-		case Key::Left:
+		case Key::LEFT:
 			bHandled = OnKeyLeft( bPress );
 			break;
 
-		case Key::Up:
+		case Key::UP:
 			bHandled = OnKeyUp( bPress );
 			break;
 
-		case Key::Down:
+		case Key::DOWN:
 			bHandled = OnKeyDown( bPress );
 			break;
 
-		case Key::Escape:
+		case Key::ESCAPE:
 			bHandled = OnKeyEscape( bPress );
 			break;
 

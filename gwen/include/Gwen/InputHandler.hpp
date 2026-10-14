@@ -29,6 +29,10 @@
 
 #pragma once
 
+#ifdef DELETE // Fuck you microsoft 
+#undef DELETE
+#endif //DELETE
+
 namespace Gwen
 {
 	namespace Controls
@@ -42,46 +46,42 @@ namespace Gwen
 
 	namespace Key
 	{
-		const unsigned char Invalid = 0;
-		const unsigned char Return = 1;
-		const unsigned char Backspace = 2;
-		const unsigned char Delete = 3;
-		const unsigned char Left = 4;
-		const unsigned char Right = 5;
-		const unsigned char Shift = 6;
-		const unsigned char Tab = 7;
-		const unsigned char Space = 8;
-		const unsigned char Home = 9;
-		const unsigned char End = 10;
-		const unsigned char Control = 11;
-		const unsigned char Up = 12;
-		const unsigned char Down = 13;
-		const unsigned char Escape = 14;
-		const unsigned char Alt = 15;
-
-		const unsigned char Count = 16;
+		enum : uint8_t
+		{
+			INVALID,
+			RETURN,
+			BACKSPACE,
+			DELETE,
+			LEFT,
+			RIGHT,
+			SHIFT,
+			TAB,
+			SPACE,
+			HOME,
+			END,
+			CONTROL,
+			UP,
+			DOWN,
+			ESCAPE,
+			ALT,
+			COUNT,
+		};
 	}
 
 	namespace Input
 	{
 		namespace Message
 		{
-			enum
+			enum : uint8_t
 			{
-				Copy,
-				Paste,
-				Cut,
-				Undo,
-				Redo,
-				SelectAll
+				COPY,
+				PASTE,
+				CUT,
+				UNDO,
+				REDO,
+				SELECTALL
 			};
 		};
-
-		inline void Blur( void )
-		{
-			if ( KeyboardFocus )
-				KeyboardFocus->Blur();
-		}
 
 		// For use in panels
 		bool GWEN_EXPORT IsKeyDown( int iKey );
@@ -89,8 +89,8 @@ namespace Gwen
 		bool GWEN_EXPORT IsRightMouseDown();
 		Gwen::Point GWEN_EXPORT GetMousePosition();
 
-		inline bool IsShiftDown() { return IsKeyDown( Gwen::Key::Shift ); }
-		inline bool IsControlDown() { return IsKeyDown( Gwen::Key::Control ); }
+		inline bool IsShiftDown() { return IsKeyDown( Gwen::Key::SHIFT ); }
+		inline bool IsControlDown() { return IsKeyDown( Gwen::Key::CONTROL ); }
 
 		// Does copy, paste etc
 		bool GWEN_EXPORT DoSpecialKeys( AutoPointer<Controls::Base> pCanvas, Gwen::UnicodeChar chr );

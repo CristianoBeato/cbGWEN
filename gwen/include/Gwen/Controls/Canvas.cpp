@@ -217,9 +217,9 @@ bool Gwen::Controls::Canvas::InputKey( int iKey, bool bDown )
 {
 	if ( Hidden() ) { return false; }
 
-	if ( iKey <= Gwen::Key::Invalid ) { return false; }
+	if ( iKey <= Gwen::Key::INVALID ) { return false; }
 
-	if ( iKey >= Gwen::Key::Count ) { return false; }
+	if ( iKey >= Gwen::Key::COUNT ) { return false; }
 
 	return Gwen::Input::OnKeyEvent( this, iKey, bDown );
 }

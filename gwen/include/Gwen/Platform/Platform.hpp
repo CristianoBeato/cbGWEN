@@ -56,7 +56,7 @@ namespace Gwen
 				virtual void 	SetBounds( const Gwen::Rect &in_rect ) = 0;
 
 				///
-				virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget ) = 0;
+				virtual void 	MessagePump( AutoPointer<Controls::Canvas> &pTarget ) = 0;
 				
 				virtual bool	HasFocusPlatformWindow( void ) const = 0;
 				
@@ -70,28 +70,30 @@ namespace Gwen
 			public:
 				AutoPointer<Platform::Base>	Pointer;
 				
+				virtual ~Base( void ) {}
+
 				/// @brief Do nothing for this many milliseconds
 				/// @param in_ms to wait 
-				virtual void Sleep( const uint32_t in_ms ) = 0;
+				virtual void Sleep( const uint32_t in_ms ) {};
 
 				/// @brief Set the system cursor to iCursor
 				/// Cursors are defined in Structures.h
 				/// @param in_cursorID cursor indetity
-				virtual void SetCursor( const uint8_t in_cursorID ) = 0;
+				virtual void SetCursor( const uint8_t in_cursorID ) {};
 
 				/// @brief 
 				/// @param  
 				/// @return 
-				virtual float GetTimeInSeconds( void ) = 0;
+				virtual float GetTimeInSeconds( void ) { return 0.0f; };
 
 				/// @brief Get the relative cursor position
 				/// @param p position of the cursos
-				virtual void GetCursorPos( Gwen::Point & p ) = 0;
+				virtual void GetCursorPos( Gwen::Point & p ) {};
 				
 				/// @brief get the size of the current desktop composition 
 				/// @param w desktop Width 
 				/// @param h desktop height
-				virtual void GetDesktopSize( int & w, int & h ) = 0;
+				virtual void GetDesktopSize( Gwen::Point &p ) {};
 
 				//
 				// Used by copy/paste
@@ -99,19 +101,19 @@ namespace Gwen
 
 				/// @brief aquire the clipboard string content  
 				/// @return the clipboard content 
-				virtual UnicodeString GetClipboardText( void ) = 0;
+				virtual UnicodeString GetClipboardText( void ) { return UnicodeString(); };
 
 				/// @brief Set the clipboard text 
 				/// @param str 
 				/// @return 
-				virtual bool SetClipboardText( const UnicodeString & str ) = 0;
+				virtual bool SetClipboardText( const UnicodeString & str ) { return false; };
 
 				//
 				// System Dialogs ( Can return false if unhandled )
 				//
-				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
-				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
-				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback );
+				virtual bool FileOpen( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false; };
+				virtual bool FileSave( const String & Name, const String & StartPath, const String & Extension, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false; };
+				virtual bool FolderOpen( const String & Name, const String & StartPath, Gwen::Event::Handler* pHandler, Event::Handler::FunctionWithInformation fnCallback ) { return false; };
 		};
 	}
 }

@@ -53,7 +53,7 @@ struct t_KeyData
 {
 	t_KeyData()
 	{
-		for ( int i = 0; i < Gwen::Key::Count; i++ )
+		for ( int i = 0; i < Gwen::Key::COUNT; i++ )
 		{
 			KeyState[i] = false;
 			NextRepeat[i] = 0;
@@ -66,8 +66,8 @@ struct t_KeyData
 
 	bool LeftMouseDown;
 	bool RightMouseDown;
-	bool KeyState[ Gwen::Key::Count ];
-	float NextRepeat[ Gwen::Key::Count ];
+	bool KeyState[ Gwen::Key::COUNT ];
+	float NextRepeat[ Gwen::Key::COUNT ];
 	Gwen::AutoPointer<Gwen::Controls::Base> Target;
 
 } KeyData;
@@ -169,7 +169,7 @@ void Gwen::Input::OnCanvasThink( Gwen::AutoPointer<Gwen::Controls::Base> pContro
 	//
 	// Simulate Key-Repeats
 	//
-	for ( int i = 0; i < Gwen::Key::Count; i++ )
+	for ( int i = 0; i < Gwen::Key::COUNT; i++ )
 	{
 		if ( KeyData.KeyState[i] && KeyData.Target != KeyboardFocus )
 		{

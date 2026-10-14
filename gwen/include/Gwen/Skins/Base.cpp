@@ -45,7 +45,7 @@ Gwen::Skin::Base::Base( Renderer::Base::Pointer renderer )
 
 Gwen::Skin::Base::~Base( void )
 {
-	ReleaseFont( &m_DefaultFont );
+	ReleaseFont( m_DefaultFont );
 }
 
 void Gwen::Skin::Base::ReleaseFont( Gwen::Font::Pointer fnt )
@@ -164,7 +164,7 @@ void Gwen::Skin::Base::DrawPropertyRow( AutoPointer<Controls::Base> control, int
 
 Gwen::Font::Pointer Gwen::Skin::Base::GetDefaultFont( void )
 {
-	return &m_DefaultFont;
+	return m_DefaultFont;
 }
 
 void Gwen::Skin::Base::SetDefaultFont( const Gwen::UnicodeString & strFacename, const float fSize )
