@@ -28,10 +28,16 @@
 */
 
 #include "Gwen/Platform/SDL3Platform.hpp"
+#include "Gwen/Controls/Canvas.hpp"
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_clipboard.h>
 #include <SDL3/SDL_video.h>
+#include <SDL3/SDL_events.h>
+
+#ifndef DELETE
+#undef DELETE
+#endif // DELETE
 
 Gwen::Platform::SDL3WindowHandle::SDL3WindowHandle( void ) : 
 	m_ID( 0 ),
@@ -74,6 +80,199 @@ void Gwen::Platform::SDL3WindowHandle::SetBounds(const Gwen::Rect &in_rect )
 	m_bounds = in_rect;
 	SDL_SetWindowPosition( m_handle, m_bounds.x, m_bounds.y );
 	SDL_SetWindowSize( m_handle, m_bounds.w, m_bounds.h );
+}
+
+constexpr int MAX_EVENTS = 32;
+constexpr uint32_t SDL_EVENT_MOUSE_FIRST = 0;
+constexpr uint32_t SDL_EVENT_MOUSE_LAST = 0;
+constexpr uint32_t SDL_EVENT_KEY_FIRST = 0;
+constexpr uint32_t SDL_EVENT_KEY_LAST = 0;
+constexpr uint32_t SDL_EVENT_TEXT_FIRST = 0;
+constexpr uint32_t SDL_EVENT_TEXT_LAST = 0;
+
+void Gwen::Platform::SDL3WindowHandle::MessagePump( AutoPointer<Controls::Canvas> &pTarget )
+{
+    SDL_Event loteEventos[MAX_EVENTS];
+
+	SDL_PumpEvents();
+
+	int eventosRetornados = 0;
+	while ((eventosRetornados = SDL_PeepEvents(loteEventos, MAX_EVENTS, SDL_GETEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST)) > 0) 
+    {
+		for (int i = 0; i < eventosRetornados; ++i) 
+        {
+            SDL_Event& ev = loteEventos[i];
+            Uint32 eventoWindowID = 0;
+
+            // Extrai o windowID baseado no tipo de evento
+            if (ev.type >= SDL_EVENT_WINDOW_FIRST && ev.type <= SDL_EVENT_WINDOW_LAST) 
+                eventoWindowID = ev.window.windowID;
+			else if (ev.type >= SDL_EVENT_MOUSE_FIRST && ev.type <= SDL_EVENT_MOUSE_LAST) 
+                eventoWindowID = ev.motion.windowID; // Funciona para motion, button, wheel
+			else if (ev.type >= SDL_EVENT_KEY_FIRST && ev.type <= SDL_EVENT_KEY_LAST) 
+                eventoWindowID = ev.key.windowID;
+			else if (ev.type >= SDL_EVENT_TEXT_FIRST && ev.type <= SDL_EVENT_TEXT_LAST) 
+                eventoWindowID = ev.text.windowID;
+
+            // SE O EVENTO PERTENCE A ESTA JANELA: Processa e envia para o Canvas da Gwen
+            if ( eventoWindowID == m_ID ) 
+            {
+				switch (ev.type)
+				{
+				    // ---------------------------------------------------------------------	
+					// Mouse Motion Event
+					// ---------------------------------------------------------------------
+					case SDL_EVENT_MOUSE_MOTION:
+					{
+						Gwen::Point pos{};
+						Gwen::Point rel{};
+						pos.x = static_cast<int32_t>( ev.motion.x );
+            			pos.y = static_cast<int32_t>( ev.motion.y );
+            			rel.x = static_cast<int32_t>( ev.motion.xrel );
+            			rel.y = static_cast<int32_t>( ev.motion.yrel );
+						pTarget->InputMouseMoved( pos, rel );
+					} break;
+
+					// ---------------------------------------------------------------------	
+					// Mouse Button event
+					// ---------------------------------------------------------------------
+					case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        			case SDL_EVENT_MOUSE_BUTTON_UP:
+					{
+						int32_t x = static_cast<int32_t>(ev.button.x);
+						int32_t y = static_cast<int32_t>(ev.button.y);
+						int botaoID = -1;
+
+						// Mapeia o botão do SDL para o índice que a Gwen espera
+						// Geralmente: 0 = Esquerdo, 1 = Direito, 2 = Meio
+						if (ev.button.button == SDL_BUTTON_LEFT)   botaoID = 0;
+						if (ev.button.button == SDL_BUTTON_RIGHT)  botaoID = 1;
+						if (ev.button.button == SDL_BUTTON_MIDDLE) botaoID = 2;
+						if (botaoID != -1)
+						{
+							bool isDown = (ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
+							pTarget->InputMouseButton( botaoID, isDown );
+						}
+					} break;
+
+					// ---------------------------------------------------------------------
+					// MOUSE SCROLL EVENT
+					// ---------------------------------------------------------------------
+					case SDL_EVENT_MOUSE_WHEEL:
+					{
+						// SDL3 usa float para wheel.x (horizontal) e wheel.y (vertical)
+						// Multiplicamos por um fator caso queira acelerar o scroll na UI
+						int32_t scrollX = static_cast<int32_t>(ev.wheel.x * 60); 
+						int32_t scrollY = static_cast<int32_t>(ev.wheel.y * 60);
+
+						// Se o scroll estiver invertido pelo SO (ex: "Natural Scrolling" no macOS)
+						if (ev.wheel.direction == SDL_MOUSEWHEEL_FLIPPED)
+						{
+							scrollX *= -1;
+							scrollY *= -1;
+						}
+
+						pTarget->InputMouseWheel( scrollY ); // Gwen nativamente foca mais no eixo vertical
+						
+					} break;
+
+					// ---------------------------------------------------------------------
+					// KEYBOARD EVENT
+					// ---------------------------------------------------------------------
+					case SDL_EVENT_KEY_DOWN:
+					case SDL_EVENT_KEY_UP:
+					{
+						uint8_t k = Gwen::Key::INVALID;
+						bool isDown = (ev.type == SDL_EVENT_KEY_DOWN);
+						SDL_Keycode key = ev.key.key;
+
+						switch ( key )
+						{
+							case SDLK_RETURN:
+							case SDLK_KP_ENTER:
+								k = Gwen::Key::RETURN;
+								break;
+							case SDLK_BACKSPACE:
+								k = Gwen::Key::BACKSPACE;
+								break;
+							case SDLK_DELETE:
+								k = Gwen::Key::DELETE;
+								break;
+							case SDLK_LEFT:
+								k = Gwen::Key::LEFT;
+								break;
+							case SDLK_RIGHT:
+								k = Gwen::Key::RIGHT;
+								break;
+							case SDLK_UP:
+								k = Gwen::Key::UP;
+								break;
+							case SDLK_DOWN:
+								k = Gwen::Key::DOWN;
+								break;
+							case SDLK_HOME:
+								k = Gwen::Key::HOME;
+								break;
+							case SDLK_END:
+								k = Gwen::Key::END;
+								break;
+							case SDLK_TAB:
+								k = Gwen::Key::TAB;
+								break;
+							case SDLK_ESCAPE:
+								k = Gwen::Key::ESCAPE;
+								break;
+						default:
+							break;
+						}	
+					} break;
+
+					// ---------------------------------------------------------------------
+					// Text input 
+					// ---------------------------------------------------------------------
+					case SDL_EVENT_TEXT_INPUT:
+					{
+						const char* textoUtf8 = ev.text.text;
+            			size_t comprimento = SDL_strlen( textoUtf8 );
+
+						// Armazena temporariamente o ponteiro para o SDL percorrer a string
+            			const char* ponteiroLeitura = textoUtf8;
+						while (ponteiroLeitura < (textoUtf8 + comprimento))
+						{
+							// SDL_StepUTF8 decodifica o caractere UTF-8 atual para Unicode (Uint32)
+							// e avança o ponteiroLeitura automaticamente para o próximo caractere.
+							Uint32 unicodeCodepoint = SDL_StepUTF8( &ponteiroLeitura, nullptr );
+
+							// Evita caracteres nulos ou inválidos
+							if (unicodeCodepoint != 0)
+							{
+								// Envia o caractere Unicode convertido diretamente para a Gwen
+								pTarget->InputCharacter(static_cast<Gwen::UnicodeChar>(unicodeCodepoint));
+							}
+						}
+						
+					} break;
+				};
+            } 
+            else if (eventoWindowID != 0) 
+            {
+                // SE O EVENTO É DE OUTRA JANELA: Devolvemos ele para a fila do SDL 
+                // para que o MessagePump da outra janela possa capturá-lo!
+                SDL_PeepEvents(&ev, 1, SDL_ADDEVENT, 0, 0);
+            }
+            else 
+            {
+                // Eventos globais do sistema (ex: SDL_EVENT_QUIT ou eventos de Gamepad)
+                // Você decide se trata aqui ou se devolve para a fila principal do motor.
+                SDL_PeepEvents(&ev, 1, SDL_ADDEVENT, 0, 0);
+            }
+        }
+        
+        // Proteção simples para evitar loops infinitos se você reinjetar eventos idênticos
+        // no mesmo frame (geralmente quebrado se o lote processar menos do que o disponível)
+        if (eventosRetornados < MAX_EVENTS )
+            break; 
+	}
 }
 
 bool Gwen::Platform::SDL3WindowHandle::HasFocus( void ) const
@@ -225,10 +424,33 @@ void Gwen::Platform::SDL3::SetCursor( const uint8_t in_cursorID )
 		SDL_DestroyCursor( old );
 }
 
-//TODO: 
-void Gwen::Platform::SDL3::GetDesktopSize( int & w, int & h )
+void Gwen::Platform::SDL3::GetCursorPos(Gwen::Point &p)
 {
+	float globalX = 0.0f;
+    float globalY = 0.0f;
 
+	/// Retrieve current global mouse state, but we only need the position, ignore buttons 
+	SDL_GetGlobalMouseState(&globalX, &globalY);
+
+	p.x = static_cast<int>( globalX );
+	p.y = static_cast<int>( globalY );
+}
+
+//TODO: 
+void Gwen::Platform::SDL3::GetDesktopSize( Gwen::Point &p )
+{
+    /// Retrieve the main monitor 
+	SDL_DisplayID primaryDisplay = SDL_GetPrimaryDisplay();
+    if ( primaryDisplay != 0 )
+	{
+        // Retrieve actual display mode 
+        const SDL_DisplayMode* mode = SDL_GetDesktopDisplayMode( primaryDisplay );
+        if (mode) 
+		{
+            p.x = mode->w;
+            p.y = mode->h;
+        }
+    }
 }
 
 Gwen::UnicodeString Gwen::Platform::SDL3::GetClipboardText( void )

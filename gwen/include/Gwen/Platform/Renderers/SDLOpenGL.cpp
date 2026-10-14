@@ -31,6 +31,14 @@
 #include "Gwen/WindowProvider.h"
 #include "Gwen/Platform/SDL3Platform.hpp"
 
+Gwen::Renderer::SDLOpenGL::SDLOpenGL( void ) 
+{
+}
+
+Gwen::Renderer::SDLOpenGL::~SDLOpenGL( void )
+{
+
+}
 
 bool Gwen::Renderer::SDLOpenGL::InitializeContext(Gwen::WindowProvider *pWindow)
 {
@@ -99,4 +107,19 @@ bool Gwen::Renderer::SDLOpenGL::PresentContext( Gwen::WindowProvider *pWindow )
 	// Swap window buffers
 	SDL_GL_SwapWindow( window->GetHandle() );
     return OpenGL::PresentContext( pWindow );
+}
+
+bool Gwen::Renderer::SDLOpenGL::ResizedContext( Gwen::WindowProvider* pWindow, int w, int h )
+{
+	OpenGL::ResizedContext( pWindow, w, h );
+}
+
+bool Gwen::Renderer::SDLOpenGL::BeginContext( Gwen::WindowProvider* pWindow )
+{
+	return OpenGL::BeginContext( pWindow );
+}
+
+bool Gwen::Renderer::SDLOpenGL::EndContext( Gwen::WindowProvider* pWindow )
+{
+	return OpenGL::EndContext( pWindow );
 }

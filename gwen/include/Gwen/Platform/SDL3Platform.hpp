@@ -38,7 +38,7 @@
 namespace Gwen
 {
 	namespace Platform
-	{
+	{		
 		class SDL3WindowHandle : public WindowHandle
 		{
 		public:
@@ -49,7 +49,7 @@ namespace Gwen
 			virtual bool	Create( const Gwen::Rect &in_rect, const Gwen::String & in_title ) override;
 			virtual void	Destroy( void ) override;
 			virtual void 	SetBounds( const Gwen::Rect &in_rect ) override;
-			virtual void 	MessagePump( const Gwen::Controls::Canvas* ptarget ) override;
+			virtual void 	MessagePump( AutoPointer<Controls::Canvas> &pTarget ) override;
 			virtual bool	HasFocus( void ) const;	
 			virtual void	SetMaximized( const bool bMaximized, Gwen::Rect &out_rect );				
 			virtual void	SetMinimized( const bool bMinimized ) const;
@@ -93,7 +93,7 @@ namespace Gwen
 				/// @brief get the size of the current desktop composition 
 				/// @param w desktop Width 
 				/// @param h desktop height
-				virtual void GetDesktopSize( int & w, int & h ) override;
+				virtual void GetDesktopSize( Gwen::Point &p ) override;
 
 				//
 				// Used by copy/paste

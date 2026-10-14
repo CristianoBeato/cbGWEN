@@ -406,6 +406,27 @@ void Gwen::Renderer::OpenGL::CreateBuffers(void)
 {
 }
 
+void Gwen::Renderer::OpenGL::CreateShaders(void)
+{
+}
+
+void Gwen::Renderer::OpenGL::CreateDebugFont(void)
+{
+}
+
+
+void Gwen::Renderer::OpenGL::DestroyDebugFont( void )
+{
+}
+
+void Gwen::Renderer::OpenGL::DestoryShaders( void )
+{
+}
+
+void Gwen::Renderer::OpenGL::DestroyBuffers( void )
+{
+}
+
 bool Gwen::Renderer::OpenGL::InitializeContext(Gwen::WindowProvider *pWindow)
 {
 	CreateDebugFont();
