@@ -195,10 +195,10 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowButtons.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.hpp
 
     # Layouts
     #${CMAKE_SOURCE_DIR}/include/Gwen/Controls/Layout/Position.h  

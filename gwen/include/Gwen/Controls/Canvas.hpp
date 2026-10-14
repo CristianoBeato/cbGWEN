@@ -96,7 +96,7 @@ namespace Gwen
 				virtual bool InputKey( int iKey, bool bDown );
 				virtual bool InputCharacter( Gwen::UnicodeChar chr );
 				virtual bool InputMouseWheel( int val );
-				virtual bool InputQuit() { return true; };
+				virtual bool InputQuit( void ) { return true; };
 
 				// Background
 				virtual void SetBackgroundColor( const Gwen::Color & color ) { m_BackgroundColor = color; }
