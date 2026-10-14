@@ -6,7 +6,6 @@
 
 
 #include "Gwen/ToolTip.h"
-#include "Gwen/Utility.h"
 
 Gwen::AutoPointer<Gwen::Controls::Base> g_ToolTip = Gwen::AutoPointer<Gwen::Controls::Base>();
 	

@@ -58,7 +58,7 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/ToolTip.h
     ${CMAKE_CURRENT_SOURCE_DIR}/UserData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Utility.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Utility.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utility.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/WindowProvider.h
 
     # Platform
@@ -226,7 +226,7 @@ set( GWEN_SOURCES
     )
 
 add_library( cbGwen STATIC ${GWEN_SOURCES} )
-target_include_directories( cbGwen PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} )
+target_include_directories( cbGwen PRIVATE ${CMAKE_SOURCE_DIR}/include )
 target_compile_definitions( cbGwen PRIVATE "-DGWEN_NO_ANIMATION" )
 target_precompile_headers( cbGwen 
     PRIVATE 
@@ -242,25 +242,25 @@ target_precompile_headers( cbGwen
         <algorithm>
         <atomic>
         <memory.h>
-    PUBLIC 
-        "$<$<COMPILE_LANGUAGE:CXX>:Macros.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Config.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Exports.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Platform/Platform.hpp>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Structures.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:AutoPointer.hpp>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Utility.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Debug.hpp>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:TextObject.hpp>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Font.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Texture.hpp>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Renderer/Base.hpp>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Skins/Base.hpp>"
-        "$<$<COMPILE_LANGUAGE:CXX>:ControlList.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Events.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:DragAndDrop.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:UserData.h>"
-        "$<$<COMPILE_LANGUAGE:CXX>:Controls/Base.hpp>"
-        "$<$<COMPILE_LANGUAGE:CXX>:ToolTip.h>" 
-        "$<$<COMPILE_LANGUAGE:CXX>:Gwen.hpp>" 
+    #PUBLIC // we don't leak to test app  
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Macros.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Config.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Exports.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Structures.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Platform/Platform.hpp>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/AutoPointer.hpp>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Utility.hpp>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Debug.hpp>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/TextObject.hpp>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Font.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Texture.hpp>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Renderer/Base.hpp>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Skins/Base.hpp>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/ControlList.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Events.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/DragAndDrop.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/UserData.h>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Controls/Base.hpp>"
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/ToolTip.h>" 
+        "$<$<COMPILE_LANGUAGE:CXX>:Gwen/Gwen.hpp>" 
     )

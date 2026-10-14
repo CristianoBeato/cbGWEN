@@ -58,13 +58,22 @@
 #include "Gwen/Events.h"
 #include "Gwen/DragAndDrop.h"
 #include "Gwen/UserData.h"
+#include "Gwen/Utility.hpp"
 #include "Gwen/Controls.h"
 
 #ifndef GWEN_NO_ANIMATION
 #include "Gwen/Anim.h"
 #endif
 
+/// @TODO FIX THAT, move for other place 
 namespace Gwen
 {
-
-} //namespace Gwen
+	namespace Input
+	{
+		inline void Blur( void )
+		{
+			if ( KeyboardFocus )
+				KeyboardFocus->Blur();
+		}
+	}; // Input
+}; // Gwen

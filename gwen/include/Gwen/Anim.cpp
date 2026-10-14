@@ -28,7 +28,6 @@
 */
 
 #include "Gwen/Anim.h"
-#include "Gwen/Utility.h"
 #include <math.h>
 
 using namespace Gwen;
