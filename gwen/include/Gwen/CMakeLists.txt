@@ -87,14 +87,16 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.hpp
     
     ## TODO: Update 
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CollapsibleCategory.cpp
@@ -126,8 +128,6 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/HorizontalSlider.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/HSVColorPicker.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/HSVColorPicker.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/LabelClickable.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/LabelClickable.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/ListBox.cpp
@@ -194,7 +194,7 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalScrollBar.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowButtons.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowButtons.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.cpp

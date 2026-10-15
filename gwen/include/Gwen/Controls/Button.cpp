@@ -1,35 +1,56 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
+#include "Gwen/Controls/Button.hpp"
 
-#include "Gwen/Gwen.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Controls/Button.h"
-#include "Gwen/Controls/ImagePanel.h"
-
-using namespace Gwen;
-using namespace Gwen::Controls;
-
-
-GWEN_CONTROL_CONSTRUCTOR( Button )
+namespace Gwen
 {
-	m_Image = NULL;
-	m_bDepressed = false;
-	m_bCenterImage = false;
-	SetSize( 100, 20 );
-	SetMouseInputEnabled( true );
-	SetIsToggle( false );
-	SetAlignment( Gwen::Pos::Center );
-	SetTextPadding( Padding( 3, 0, 3, 0 ) );
-	m_bToggleStatus = false;
-	SetKeyboardInputEnabled( false );
-	SetTabable( false );
-}
+	namespace Control
+	{
+		GWEN_CONTROL_CONSTRUCTOR( Button )
+		{
+			m_Image = NULL;
+			m_bDepressed = false;
+			m_bCenterImage = false;
+			SetSize( 100, 20 );
+			SetMouseInputEnabled( true );
+			SetIsToggle( false );
+			SetAlignment( Gwen::Pos::Center );
+			SetTextPadding( Padding( 3, 0, 3, 0 ) );
+			m_bToggleStatus = false;
+			SetKeyboardInputEnabled( false );
+			SetTabable( false );
+		}
+	};
+};
 
-void Button::Render( Skin::Base* skin )
+void Gwen::Controls::Button::Render( Skin::Base::Pointer skin )
 {
 	if ( !ShouldDrawBackground() ) { return; }
 
@@ -41,9 +62,10 @@ void Button::Render( Skin::Base* skin )
 	skin->DrawButton( this, bDrawDepressed, bDrawHovered, IsDisabled() );
 }
 
-void Button::OnMouseClickLeft( int /*x*/, int /*y*/, bool bDown )
+void Gwen::Controls::Button::OnMouseClickLeft( const Point &in_pos, bool bDown )
 {
-	if ( IsDisabled() ) { return; }
+	if ( IsDisabled() ) 
+		return;
 
 	if ( bDown )
 	{
@@ -54,9 +76,7 @@ void Button::OnMouseClickLeft( int /*x*/, int /*y*/, bool bDown )
 	else
 	{
 		if ( IsHovered() && m_bDepressed )
-		{
 			OnPress();
-		}
 
 		SetDepressed( false );
 		Gwen::MouseFocus = NULL;
@@ -64,7 +84,7 @@ void Button::OnMouseClickLeft( int /*x*/, int /*y*/, bool bDown )
 	}
 }
 
-void Button::OnMouseClickRight( int /*x*/, int /*y*/, bool bDown )
+void Gwen::Controls::Button::OnMouseClickRight( const Point &in_pos, bool bDown )
 {
 	if ( IsDisabled() ) { return; }
 
@@ -77,9 +97,7 @@ void Button::OnMouseClickRight( int /*x*/, int /*y*/, bool bDown )
 	else
 	{
 		if ( IsHovered() && m_bDepressed )
-		{
 			OnRightPress();
-		}
 
 		SetDepressed( false );
 		Gwen::MouseFocus = NULL;
@@ -88,7 +106,7 @@ void Button::OnMouseClickRight( int /*x*/, int /*y*/, bool bDown )
 }
 
 
-void Button::SetDepressed( bool b )
+void Gwen::Controls::Button::SetDepressed( bool b )
 {
 	if ( m_bDepressed == b ) { return; }
 
@@ -96,12 +114,12 @@ void Button::SetDepressed( bool b )
 	Redraw();
 }
 
-void Button::OnRightPress()
+void Gwen::Controls::Button::OnRightPress( void )
 {
 	onRightPress.Call( this );
 }
 
-void Button::OnPress()
+void Gwen::Controls::Button::OnPress()
 {
 	if ( IsToggle() )
 	{
@@ -112,23 +130,21 @@ void Button::OnPress()
 }
 
 
-void Button::SetImage( const TextObject & strName, bool bCenter )
+void Gwen::Controls::Button::SetImage( const TextObject & strName, bool bCenter )
 {
 	if ( strName.GetUnicode() == L"" )
 	{
 		if ( m_Image )
 		{
 			delete m_Image;
-			m_Image = NULL;
+			m_Image = nullptr;
 		}
 
 		return;
 	}
 
 	if ( !m_Image )
-	{
 		m_Image = new ImagePanel( this );
-	}
 
 	m_Image->SetImage( strName );
 	m_Image->SizeToContents();
@@ -140,7 +156,7 @@ void Button::SetImage( const TextObject & strName, bool bCenter )
 	SetTextPadding( padding );
 }
 
-void Button::SetToggleState( bool b )
+void Gwen::Controls::Button::SetToggleState( bool b )
 {
 	if ( m_bToggleStatus == b ) { return; }
 
@@ -159,7 +175,7 @@ void Button::SetToggleState( bool b )
 	Redraw();
 }
 
-void Button::SizeToContents()
+void Gwen::Controls::Button::SizeToContents()
 {
 	BaseClass::SizeToContents();
 
@@ -174,22 +190,20 @@ void Button::SizeToContents()
 	}
 }
 
-bool Button::OnKeySpace( bool bDown )
+bool Gwen::Controls::Button::OnKeySpace( bool bDown )
 {
 	if ( bDown )
-	{
 		OnPress();
-	}
 
 	return true;
 }
 
-void Button::AcceleratePressed()
+void Gwen::Controls::Button::AcceleratePressed()
 {
 	OnPress();
 }
 
-void Button::UpdateColours()
+void Gwen::Controls::Button::UpdateColours()
 {
 	if ( IsDisabled() )		{ return SetTextColor( GetSkin()->Colors.Button.Disabled ); }
 
@@ -200,7 +214,7 @@ void Button::UpdateColours()
 	SetTextColor( GetSkin()->Colors.Button.Normal );
 }
 
-void Button::PostLayout( Skin::Base* pSkin )
+void Gwen::Controls::Button::PostLayout( Skin::Base* pSkin )
 {
 	BaseClass::PostLayout( pSkin );
 
@@ -213,7 +227,7 @@ void Button::PostLayout( Skin::Base* pSkin )
 	}
 }
 
-void Button::OnMouseDoubleClickLeft( int x, int y )
+void Gwen::Controls::Button::OnMouseDoubleClickLeft( int x, int y )
 {
 	if ( IsDisabled() ) { return; }
 
@@ -221,14 +235,14 @@ void Button::OnMouseDoubleClickLeft( int x, int y )
 	onDoubleClick.Call( this );
 }
 
-void Button::SetImageAlpha( float f )
+void Gwen::Controls::Button::SetImageAlpha( float f )
 {
 	if ( !m_Image ) { return; }
 
 	m_Image->SetDrawColor( Gwen::Color( 255, 255, 255, 255.0f * f ) );
 }
 
-void Button::SetAction( Event::Handler* pObject, Handler::FunctionWithInformation pFunction, void* data )
+void Gwen::Controls::Button::SetAction( Event::Handler* pObject, Handler::FunctionWithInformation pFunction, void* data )
 {
 	onPress.Add( pObject, pFunction, data );
 }

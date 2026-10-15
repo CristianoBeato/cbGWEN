@@ -31,15 +31,16 @@
 
 #include "Gwen/Controls/Base.hpp"
 #include "Gwen/Controls/Canvas.hpp"
+#include "Gwen/Controls/ImagePanel.hpp"
+#include "Gwen/Controls/Label.hpp"
+#include "Gwen/Controls/Button.hpp"
 #include "Gwen/Controls/WindowCanvas.hpp"
 
-// #include "Gwen/Controls/Button.h"
 // #include "Gwen/Controls/DockBase.h"
 // #include "Gwen/Controls/FieldLabel.h"
 // #include "Gwen/Controls/FolderPicker.h"
 // #include "Gwen/Controls/FilePicker.h"
 // #include "Gwen/Controls/GroupBox.h"
-// #include "Gwen/Controls/ImagePanel.h"
 // #include "Gwen/Controls/ListBox.h"
 // #include "Gwen/Controls/PropertyTree.h"
 // #include "Gwen/Controls/Property/Checkbox.h"
