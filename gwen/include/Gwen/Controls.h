@@ -34,6 +34,7 @@
 #include "Gwen/Controls/ImagePanel.hpp"
 #include "Gwen/Controls/Label.hpp"
 #include "Gwen/Controls/Button.hpp"
+#include "Gwen/Controls/Dragger.hpp"
 #include "Gwen/Controls/WindowCanvas.hpp"
 
 // #include "Gwen/Controls/DockBase.h"

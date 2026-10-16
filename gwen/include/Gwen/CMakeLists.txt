@@ -95,7 +95,10 @@ set( GWEN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Button.hpp
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Dragger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Dragger.hpp
+
+
     ## TODO: Update 
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/CheckBox.h
@@ -114,8 +117,6 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/DockBase.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/DockedTabControl.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/DockedTabControl.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Dragger.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/Controls/Dragger.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/FieldLabel.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/FilePicker.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/FolderPicker.h
@@ -194,7 +195,6 @@ set( GWEN_SOURCES
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalScrollBar.h
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/Controls/VerticalSlider.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowButtons.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowCanvas.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/WindowControl.cpp
