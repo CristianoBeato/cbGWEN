@@ -29,6 +29,7 @@
 
 #include "Gwen/Controls/Button.hpp"
 
+#if 0
 namespace Gwen
 {
 	namespace Control
@@ -49,6 +50,22 @@ namespace Gwen
 		}
 	};
 };
+#else
+Gwen::Controls::Button::Button( Gwen::Controls::Base::Pointer pParent, const Gwen::String& pName ) : BaseClass( pParent, pName )
+{
+	m_Image = nullptr;
+	m_bDepressed = false;
+	m_bCenterImage = false;
+	SetSize( 100, 20 );
+	SetMouseInputEnabled( true );
+	SetIsToggle( false );
+	SetAlignment( Gwen::Pos::Center );
+	SetTextPadding( Padding( 3, 0, 3, 0 ) );
+	m_bToggleStatus = false;
+	SetKeyboardInputEnabled( false );
+	SetTabable( false );
+}
+#endif
 
 void Gwen::Controls::Button::Render( Skin::Base::Pointer skin )
 {
@@ -136,7 +153,7 @@ void Gwen::Controls::Button::SetImage( const TextObject & strName, bool bCenter 
 	{
 		if ( m_Image )
 		{
-			delete m_Image;
+			// delete m_Image;
 			m_Image = nullptr;
 		}
 
@@ -214,7 +231,7 @@ void Gwen::Controls::Button::UpdateColours()
 	SetTextColor( GetSkin()->Colors.Button.Normal );
 }
 
-void Gwen::Controls::Button::PostLayout( Skin::Base* pSkin )
+void Gwen::Controls::Button::PostLayout( Skin::Base::Pointer pSkin )
 {
 	BaseClass::PostLayout( pSkin );
 
@@ -227,17 +244,19 @@ void Gwen::Controls::Button::PostLayout( Skin::Base* pSkin )
 	}
 }
 
-void Gwen::Controls::Button::OnMouseDoubleClickLeft( int x, int y )
+void Gwen::Controls::Button::OnMouseDoubleClickLeft( const Point &in_pos )
 {
-	if ( IsDisabled() ) { return; }
+	if ( IsDisabled() )
+		return;
 
-	OnMouseClickLeft( x, y, true );
+	OnMouseClickLeft( in_pos, true );
 	onDoubleClick.Call( this );
 }
 
 void Gwen::Controls::Button::SetImageAlpha( float f )
 {
-	if ( !m_Image ) { return; }
+	if ( !m_Image )
+		return;
 
 	m_Image->SetDrawColor( Gwen::Color( 255, 255, 255, 255.0f * f ) );
 }

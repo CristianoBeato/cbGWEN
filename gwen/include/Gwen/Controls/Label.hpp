@@ -29,13 +29,10 @@
 
 #pragma once
 
+#include "Gwen/Controls/Text.hpp"
+
 namespace Gwen
 {
-	namespace ControlsInternal
-	{
-		class Text;
-	};
-
 	namespace Controls
 	{
 		class GWEN_EXPORT Label : public Controls::Base

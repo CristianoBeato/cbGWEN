@@ -383,6 +383,12 @@ void Gwen::Controls::Base::MoveBy( int x, int y )
 	MoveTo( X() + x, Y() + y );
 }
 
+
+void Gwen::Controls::Base::MoveBy( const Point in_p )
+{
+	MoveTo( X() + in_p.x, Y() + in_p.y );
+}
+
 void Gwen::Controls::Base::MoveTo( int x, int y )
 {
 	if ( m_bRestrictToParent && GetParent() )
@@ -399,6 +405,29 @@ void Gwen::Controls::Base::MoveTo( int x, int y )
 	}
 
 	SetBounds( x, y, Width(), Height() );
+}
+
+void Gwen::Controls::Base::MoveTo( const Point in_pos )
+{
+	Point p{ 0, 0 };
+	if ( m_bRestrictToParent && GetParent() )
+	{
+		auto pParent = GetParent();
+
+		if ( in_pos.x - GetPadding().left < pParent->GetMargin().left )	
+			p.x = pParent->GetMargin().left + GetPadding().left;
+
+		if ( in_pos.y - GetPadding().top < pParent->GetMargin().top ) 
+			p.y = pParent->GetMargin().top + GetPadding().top;
+
+		if ( in_pos.x + Width() + GetPadding().right > pParent->Width() - pParent->GetMargin().right ) 
+			p.x = pParent->Width() - pParent->GetMargin().right - Width() - GetPadding().right; 
+
+		if ( in_pos.y + Height() + GetPadding().bottom > pParent->Height() - pParent->GetMargin().bottom ) 
+			p.y = pParent->Height() - pParent->GetMargin().bottom - Height() - GetPadding().bottom;
+	}
+
+	SetBounds( in_pos.x, in_pos.y, Width(), Height() );
 }
 
 void Gwen::Controls::Base::SetPos( int x, int y )

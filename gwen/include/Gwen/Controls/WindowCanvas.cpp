@@ -1,40 +1,62 @@
 /*
+============================================================================================
 	GWEN
-	Copyright (c) 2010 Facepunch Studios
-	See license in Gwen.h
+
+	Copyright (c) 2010 Facepunch Studios.
+	Copyright (c) 2025-2026 Cristiano Beato.
+
+	MIT License
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+============================================================================================
 */
 
-
-#include "Gwen/Gwen.h"
-#include "Gwen/Controls/WindowCanvas.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Controls/Menu.h"
-#include "Gwen/DragAndDrop.h"
-#include "Gwen/ToolTip.h"
+#include "Gwen/Controls/WindowCanvas.hpp"
+#include "Gwen/Platform/Platform.hpp"
 
 #ifndef GWEN_NO_ANIMATION
 #include "Gwen/Anim.h"
 #endif
 
-using namespace Gwen;
-using namespace Gwen::Controls;
-
-WindowCanvas::WindowCanvas( int x, int y, int w, int h, Gwen::Skin::Base* pSkin, const Gwen::String & strWindowTitle ) : BaseClass( NULL )
+Gwen::Controls::WindowCanvas::WindowCanvas( AutoPointer<Platform::Base> &pPlatform, AutoPointer<Skin::Base>	 &pSkin, int x, int y, int w, int h, const Gwen::String & strWindowTitle ) : BaseClass( NULL )
 {
+	m_pOSPlatform = pPlatform;
 	m_bQuit = false;
-	m_bCanMaximize = true;
 	m_bIsMaximized = false;
+	m_bCanMaximize = true;
 	SetPadding( Padding( 1, 0, 1, 1 ) );
 	// Centering the window on the desktop
 	{
-		int dw, dh;
-		Gwen::Platform::GetDesktopSize( dw, dh );
+		Point wh;
+		m_pOSPlatform->GetDesktopSize( wh );
 
-		if ( x < 0 ) { x = ( dw - w ) * 0.5; }
+		if ( x < 0 )
+			x = ( wh.x - w ) * 0.5;
 
-		if ( y < 0 ) { y = ( dh - h ) * 0.5; }
+		if ( y < 0 )
+			y = ( wh.y - h ) * 0.5; 
 	}
-	m_pOSWindow = Gwen::Platform::CreatePlatformWindow( x, y, w, h, strWindowTitle );
+
+	m_pOSWindow = m_pOSPlatform->NewWindow();
+	if( m_pOSWindow->Create( { x, y, w, h }, strWindowTitle ) )
+		throw std::runtime_error( "Failed to create window" );
+	
 	m_WindowPos  = Gwen::Point( x, y );
 	pSkin->GetRender()->InitializeContext( this );
 	pSkin->GetRender()->Init();
@@ -91,31 +113,31 @@ WindowCanvas::WindowCanvas( int x, int y, int w, int h, Gwen::Skin::Base* pSkin,
 	}
 }
 
-WindowCanvas::~WindowCanvas()
+Gwen::Controls::WindowCanvas::WindowCanvas::~WindowCanvas( void )
 {
 	DestroyWindow();
 }
 
-void* WindowCanvas::GetWindow( void )
+void* Gwen::Controls::WindowCanvas::WindowCanvas::GetWindow( void )
 {
 	return m_pOSWindow;
 }
 
-void WindowCanvas::Layout( Skin::Base* skin )
+void Gwen::Controls::WindowCanvas::WindowCanvas::Layout( Skin::Base* skin )
 {
 	m_Sizer->BringToFront();
 	m_Sizer->Position( Pos::Right | Pos::Bottom );
 	BaseClass::Layout( skin );
 }
 
-void WindowCanvas::DoThink()
+void Gwen::Controls::WindowCanvas::WindowCanvas::DoThink( void )
 {
 	Platform::MessagePump( m_pOSWindow, this );
 	BaseClass::DoThink();
 	RenderCanvas();
 }
 
-void WindowCanvas::RenderCanvas()
+void Gwen::Controls::WindowCanvas::WindowCanvas::RenderCanvas( void )
 {
 	//
 	// If there isn't anything going on we sleep the thread for a few ms
@@ -155,7 +177,7 @@ void WindowCanvas::RenderCanvas()
 	render->PresentContext( this );
 }
 
-void WindowCanvas::Render( Skin::Base* skin )
+void Gwen::Controls::WindowCanvas::WindowCanvas::Render( Skin::Base* skin )
 {
 	bool bHasFocus = IsOnTop();
 
@@ -168,7 +190,7 @@ void WindowCanvas::Render( Skin::Base* skin )
 }
 
 
-void WindowCanvas::DestroyWindow()
+void Gwen::Controls::WindowCanvas::WindowCanvas::DestroyWindow( void )
 {
 	if ( m_pOSWindow )
 	{
@@ -178,13 +200,13 @@ void WindowCanvas::DestroyWindow()
 	}
 }
 
-bool WindowCanvas::InputQuit()
+bool Gwen::Controls::WindowCanvas::WindowCanvas::InputQuit( void )
 {
 	m_bQuit = true;
 	return true;
 }
 
-Skin::Base* WindowCanvas::GetSkin( void )
+Gwen::Skin::Base Gwen::Controls::WindowCanvas::WindowCanvas::GetSkin( void )
 {
 	if ( m_pSkinChange )
 	{
@@ -195,15 +217,14 @@ Skin::Base* WindowCanvas::GetSkin( void )
 	return BaseClass::GetSkin();
 }
 
-
-void WindowCanvas::Dragger_Start()
+void Gwen::Controls::WindowCanvas::WindowCanvas::Dragger_Start( void )
 {
 	Gwen::Platform::GetCursorPos( m_HoldPos );
 	m_HoldPos.x -= m_WindowPos.x;
 	m_HoldPos.y -= m_WindowPos.y;
 }
 
-void WindowCanvas::Dragger_Moved()
+void Gwen::Controls::WindowCanvas::WindowCanvas::Dragger_Moved( void )
 {
 	Gwen::Point p;
 	Gwen::Platform::GetCursorPos( p );
@@ -223,7 +244,7 @@ void WindowCanvas::Dragger_Moved()
 	SetPos( p.x - m_HoldPos.x, p.y - m_HoldPos.y );
 }
 
-void WindowCanvas::SetPos( int x, int y )
+void Gwen::Controls::WindowCanvas::WindowCanvas::SetPos( int x, int y )
 {
 	int w, h;
 	Gwen::Platform::GetDesktopSize( w, h );
@@ -233,18 +254,18 @@ void WindowCanvas::SetPos( int x, int y )
 	Gwen::Platform::SetBoundsPlatformWindow( m_pOSWindow, x, y, Width(), Height() );
 }
 
-void WindowCanvas::CloseButtonPressed()
+void Gwen::Controls::WindowCanvas::WindowCanvas::CloseButtonPressed( void )
 {
 	InputQuit();
 }
 
-bool WindowCanvas::IsOnTop()
+bool Gwen::Controls::WindowCanvas::WindowCanvas::IsOnTop( void )
 {
 	return Gwen::Platform::HasFocusPlatformWindow( m_pOSWindow );
 }
 
 
-void WindowCanvas::Sizer_Moved()
+void Gwen::Controls::WindowCanvas::WindowCanvas::Sizer_Moved( void )
 {
 	Gwen::Point p;
 	Gwen::Platform::GetCursorPos( p );
@@ -259,14 +280,14 @@ void WindowCanvas::Sizer_Moved()
 	RenderCanvas();
 }
 
-void WindowCanvas::OnTitleDoubleClicked()
+void Gwen::Controls::WindowCanvas::WindowCanvas::OnTitleDoubleClicked()
 {
 	if ( !CanMaximize() ) { return; }
 
 	SetMaximize( !m_bIsMaximized );
 }
 
-void WindowCanvas::SetMaximize( bool b )
+void Gwen::Controls::WindowCanvas::WindowCanvas::SetMaximize( bool b )
 {
 	m_bIsMaximized = b;
 	m_pMaximize->SetMaximized( m_bIsMaximized );
@@ -279,19 +300,19 @@ void WindowCanvas::SetMaximize( bool b )
 	RenderCanvas();
 }
 
-void WindowCanvas::MaximizeButtonPressed()
+void Gwen::Controls::WindowCanvas::WindowCanvas::MaximizeButtonPressed()
 {
 	if ( !CanMaximize() ) { return; }
 
 	SetMaximize( !m_bIsMaximized );
 }
 
-void WindowCanvas::MinimizeButtonPressed()
+void Gwen::Controls::WindowCanvas::WindowCanvas::MinimizeButtonPressed()
 {
 	Gwen::Platform::SetWindowMinimized( m_pOSWindow, true );
 }
 
-void WindowCanvas::SetCanMaximize( bool b )
+void Gwen::Controls::WindowCanvas::WindowCanvas::SetCanMaximize( bool b )
 {
 	if ( m_bCanMaximize == b ) { return; }
 

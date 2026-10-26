@@ -30,21 +30,87 @@
 #pragma once
 
 #include "Gwen/WindowProvider.h"
+#include "Gwen/Platform/Platform.hpp"
 
 namespace Gwen
 {
+	namespace ControlsInternal
+	{
+		class Dragger;
+	};
+
 	namespace Controls
 	{
+		class GWEN_EXPORT WindowCloseButton : public Button
+		{
+				GWEN_CONTROL_INLINE( WindowCloseButton, Button )
+				{
+					m_pWindow = NULL;
+					SetSize( 31, 31 );
+					SetText( "" );
+				}
+
+				virtual void Render( Skin::Base* skin )
+				{
+					if ( !m_pWindow ) { return; }
+
+					skin->DrawWindowCloseButton( this, IsDepressed() && IsHovered(), IsHovered() && ShouldDrawHover(), IsDisabled() );
+				}
+
+				void SetWindow( Gwen::Controls::Base* p )
+				{
+					m_pWindow = p;
+				}
+
+			protected:
+
+				Controls::Base* m_pWindow;
+		};
+
+		class GWEN_EXPORT WindowMaximizeButton : public WindowCloseButton
+		{
+				GWEN_CONTROL_INLINE( WindowMaximizeButton, WindowCloseButton ) { m_bMaximized = false; };
+
+				virtual void Render( Skin::Base* skin )
+				{
+					if ( !m_pWindow ) { return; }
+
+					skin->DrawWindowMaximizeButton( this, IsDepressed() && IsHovered(), IsHovered() && ShouldDrawHover(), IsDisabled(), m_bMaximized );
+				}
+
+				virtual void SetMaximized( bool b )
+				{
+					m_bMaximized = b;
+				}
+
+			protected:
+
+				bool m_bMaximized;
+		};
+
+		class GWEN_EXPORT WindowMinimizeButton : public WindowCloseButton
+		{
+				GWEN_CONTROL_INLINE( WindowMinimizeButton, WindowCloseButton ) {};
+
+				virtual void Render( Skin::Base* skin )
+				{
+					if ( !m_pWindow ) { return; }
+
+					skin->DrawWindowMinimizeButton( this, IsDepressed() && IsHovered(), IsHovered() && ShouldDrawHover(), IsDisabled() );
+				}
+
+		};
+
 		class GWEN_EXPORT WindowCanvas : public Canvas, public Gwen::WindowProvider
 		{
 			public:
 
 				GWEN_CLASS( WindowCanvas, Controls::Canvas );
 
-				WindowCanvas( int x, int y, int w, int h, Platform::Base::Pointer pPlatform, Skin::Base::Pointer pRenderer, const Gwen::String & strWindowTitle = "" );
+				WindowCanvas( AutoPointer<Platform::Base> &pPlatform, AutoPointer<Skin::Base> &pSkin, int x, int y, int w, int h, const Gwen::String & strWindowTitle = "" );
 				~WindowCanvas( void );
 
-				virtual void DoThink();
+				virtual void DoThink( void );
 
 				virtual bool WantsQuit() { return m_bQuit; }
 
@@ -70,19 +136,20 @@ namespace Gwen
 				virtual bool GetSizable() { return m_Sizer->Visible(); }
 
 			protected:
-				bool									m_bQuit;
-				bool									m_bCanMaximize;
-				bool									m_bIsMaximized;
-				Gwen::Point								m_WindowPos;
-				Gwen::Point								m_HoldPos;
-				Platform::WindowHandle::Pointer			m_pOSWindow;
-				Gwen::Skin::Base::Pointer				m_pSkinChange;
-				ControlsInternal::Dragger*				m_TitleBar;
-				ControlsInternal::Dragger*				m_Sizer;
-				Gwen::Controls::Label*					m_Title;
-				Gwen::Controls::WindowCloseButton*		m_pClose;
-				Gwen::Controls::WindowMaximizeButton*	m_pMaximize;
-				Gwen::Controls::WindowMinimizeButton*	m_pMinimize;
+				bool										m_bQuit;
+				bool										m_bCanMaximize;
+				bool										m_bIsMaximized;
+				Gwen::Point									m_WindowPos;
+				Gwen::Point									m_HoldPos;
+				Platform::WindowHandle::Pointer				m_pOSWindow;
+				AutoPointer<Platform::Base>					m_pOSPlatform;
+				Gwen::Skin::Base::Pointer					m_pSkinChange;
+				ControlsInternal::Dragger::Pointer			m_TitleBar;
+				ControlsInternal::Dragger::Pointer			m_Sizer;
+				Controls::Label::Pointer					m_Title;
+				AutoPointer<Controls::WindowCloseButton>	m_pClose;
+				AutoPointer<Controls::WindowMaximizeButton>	m_pMaximize;
+				AutoPointer<Controls::WindowMinimizeButton>	m_pMinimize;
 
 				virtual void RenderCanvas( void );
 				virtual void DestroyWindow( void );

@@ -85,10 +85,10 @@ set( GWEN_SOURCES
     # Controls 
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Base.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Text.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Canvas.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/Label.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Controls/ImagePanel.cpp

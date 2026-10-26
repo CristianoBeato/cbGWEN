@@ -111,7 +111,7 @@ bool Gwen::Renderer::SDLOpenGL::PresentContext( Gwen::WindowProvider *pWindow )
 
 bool Gwen::Renderer::SDLOpenGL::ResizedContext( Gwen::WindowProvider* pWindow, int w, int h )
 {
-	OpenGL::ResizedContext( pWindow, w, h );
+	return OpenGL::ResizedContext( pWindow, w, h );
 }
 
 bool Gwen::Renderer::SDLOpenGL::BeginContext( Gwen::WindowProvider* pWindow )

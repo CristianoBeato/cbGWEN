@@ -148,7 +148,10 @@ namespace Gwen
 
 				// MoveTo is identical to SetPos except it uses ShouldRestrictToParent()
 				virtual void MoveTo( int x, int y );
+				virtual void MoveTo( const Point in_pos );
+
 				virtual void MoveBy( int x, int y );
+				virtual void MoveBy( const Point in_p );
 
 				virtual const Gwen::Rect & GetBounds() const { return m_Bounds; }
 

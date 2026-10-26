@@ -186,7 +186,7 @@ namespace Gwen
     {
         if( m_pointer )
         {
-            auto p = dynamic_cast<Object*>( m_pointer );
+            Object* p = dynamic_cast<Object*>( m_pointer );
             Object::DecRef( p );
             m_pointer = nullptr;
         }

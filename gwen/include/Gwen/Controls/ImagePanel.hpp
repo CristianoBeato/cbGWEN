@@ -36,6 +36,8 @@ namespace Gwen
 		class GWEN_EXPORT ImagePanel : public Controls::Base
 		{
 			public:
+				typedef AutoPointer<Controls::ImagePanel> Pointer;
+
 				GWEN_CONTROL_INLINE( ImagePanel, Controls::Base )
 				{
 					SetUV( 0, 0, 1, 1 );

@@ -39,17 +39,17 @@ namespace Gwen
 
 				GWEN_CONTROL( Dragger, Controls::Base );
 
-				virtual void OnMouseMoved( int x, int y, int deltaX, int deltaY );
+				virtual void OnMouseMoved( const Gwen::Point &in_mousePos, const Gwen::Point &in_mouseDelta );
 
-				virtual void OnMouseClickLeft( int x, int y, bool bDown );
-				virtual void Render( Skin::Base* skin );
+				virtual void OnMouseClickLeft( const Gwen::Point &in_mousePos, bool bDown );
+				virtual void Render( Skin::Base::Pointer skin );
 
-				virtual void SetTarget( Controls::Base* pBase ) { m_pTarget = pBase; }
-				virtual bool IsDepressed() { return m_bDepressed; }
+				virtual void SetTarget( Controls::Base::Pointer pBase ) { m_pTarget = pBase; }
+				virtual bool IsDepressed( void ) { return m_bDepressed; }
 
 				virtual void SetDoMove( bool b ) { m_bDoMove = b; }
 
-				virtual void OnMouseDoubleClickLeft( int x, int y );
+				virtual void OnMouseDoubleClickLeft( const Gwen::Point &in_mousePos );
 
 				Gwen::Event::Caller	onDragged;
 				Gwen::Event::Caller	onDragStart;
@@ -58,10 +58,10 @@ namespace Gwen
 
 			protected:
 
-				bool				m_bDepressed;
-				Gwen::Point			m_HoldPos;
-				Controls::Base*		m_pTarget;
-				bool				m_bDoMove;
+				bool						m_bDepressed;
+				Gwen::Point					m_HoldPos;
+				Controls::Base::Pointer		m_pTarget;
+				bool						m_bDoMove;
 		};
 	}
 }

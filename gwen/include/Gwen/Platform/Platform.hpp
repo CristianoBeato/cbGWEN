@@ -72,6 +72,8 @@ namespace Gwen
 				
 				virtual ~Base( void ) {}
 
+				virtual WindowHandle::Pointer NewWindow( void ) { return WindowHandle::Pointer(); }; // 
+
 				/// @brief Do nothing for this many milliseconds
 				/// @param in_ms to wait 
 				virtual void Sleep( const uint32_t in_ms ) {};
